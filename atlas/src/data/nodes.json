@@ -1,0 +1,214 @@
+[
+  {
+    "id": "newtons-second-law",
+    "title": "Newton's Second Law",
+    "type": "law",
+    "domain": "mechanics",
+    "formula": "F = ma",
+    "variables": [
+      { "symbol": "F", "name": "Net force", "unit": "N", "description": "Total force acting on an object." },
+      { "symbol": "m", "name": "Mass", "unit": "kg", "description": "A measure of the object's inertia." },
+      { "symbol": "a", "name": "Acceleration", "unit": "m/s^2", "description": "Rate of change of velocity." }
+    ],
+    "description": "The acceleration of an object is proportional to the net force and inversely proportional to its mass.",
+    "connections": ["kinematics-velocity-time", "work-energy-theorem", "coulombs-law", "electric-field-definition"],
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
+      "caption": "Forces and Motion Basics"
+    },
+    "tags": ["dynamics", "force", "acceleration"],
+    "position": { "x": -520, "y": -120 }
+  },
+  {
+    "id": "work-energy-theorem",
+    "title": "Work-Energy Theorem",
+    "type": "theorem",
+    "domain": "mechanics",
+    "formula": "W_{\\text{net}} = \\Delta K",
+    "variables": [
+      { "symbol": "W_{\\text{net}}", "name": "Net work", "unit": "J", "description": "Total work done by all forces." },
+      { "symbol": "\\Delta K", "name": "Change in kinetic energy", "unit": "J", "description": "Difference between final and initial kinetic energy." }
+    ],
+    "description": "Net work on a body changes its kinetic energy, linking force-based motion to energy language.",
+    "connections": ["gravitational-potential-energy"],
+    "visual": {
+      "type": "widget",
+      "url": null,
+      "caption": null
+    },
+    "tags": ["energy", "work", "kinetic-energy"],
+    "position": { "x": -300, "y": 40 }
+  },
+  {
+    "id": "conservation-of-momentum",
+    "title": "Conservation of Momentum",
+    "type": "principle",
+    "domain": "mechanics",
+    "formula": "\\sum \\vec{p}_{\\text{initial}} = \\sum \\vec{p}_{\\text{final}}",
+    "variables": [
+      { "symbol": "\\vec{p}", "name": "Momentum", "unit": "kg\\cdot m/s", "description": "Product of mass and velocity." },
+      { "symbol": "\\sum", "name": "System sum", "unit": "n/a", "description": "Total over all interacting objects." }
+    ],
+    "description": "For an isolated system, total momentum stays constant during interactions like collisions and explosions.",
+    "connections": ["newtons-second-law"],
+    "visual": {
+      "type": "video",
+      "url": null,
+      "caption": null
+    },
+    "tags": ["momentum", "collisions", "systems"],
+    "position": { "x": -540, "y": 210 }
+  },
+  {
+    "id": "kinematics-velocity-time",
+    "title": "Kinematics (v = v0 + at)",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "v = v_0 + at",
+    "variables": [
+      { "symbol": "v", "name": "Final velocity", "unit": "m/s", "description": "Velocity after elapsed time." },
+      { "symbol": "v_0", "name": "Initial velocity", "unit": "m/s", "description": "Velocity at the start of motion." },
+      { "symbol": "a", "name": "Acceleration", "unit": "m/s^2", "description": "Constant acceleration during motion." },
+      { "symbol": "t", "name": "Time", "unit": "s", "description": "Elapsed time interval." }
+    ],
+    "description": "This constant-acceleration relation predicts velocity changes over time without directly using forces.",
+    "connections": ["work-energy-theorem"],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": ["kinematics", "motion", "constant-acceleration"],
+    "position": { "x": -220, "y": -220 }
+  },
+  {
+    "id": "gravitational-potential-energy",
+    "title": "Gravitational Potential Energy",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "U = mgh",
+    "variables": [
+      { "symbol": "U", "name": "Potential energy", "unit": "J", "description": "Energy stored due to height in a gravitational field." },
+      { "symbol": "m", "name": "Mass", "unit": "kg", "description": "Mass of the object." },
+      { "symbol": "g", "name": "Gravitational field strength", "unit": "m/s^2", "description": "Acceleration due to gravity." },
+      { "symbol": "h", "name": "Height", "unit": "m", "description": "Vertical displacement from a reference level." }
+    ],
+    "description": "An object elevated in a gravitational field stores energy that can convert into kinetic energy.",
+    "connections": [],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": ["potential-energy", "gravity", "energy-conservation"],
+    "position": { "x": -360, "y": 260 }
+  },
+  {
+    "id": "coulombs-law",
+    "title": "Coulomb's Law",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "F = k\\frac{|q_1 q_2|}{r^2}",
+    "variables": [
+      { "symbol": "F", "name": "Electrostatic force magnitude", "unit": "N", "description": "Force between two point charges." },
+      { "symbol": "k", "name": "Coulomb constant", "unit": "N\\cdot m^2/C^2", "description": "Proportionality constant in vacuum." },
+      { "symbol": "q_1, q_2", "name": "Charges", "unit": "C", "description": "Point charges producing the interaction." },
+      { "symbol": "r", "name": "Separation distance", "unit": "m", "description": "Distance between charge centers." }
+    ],
+    "description": "The electric force between two point charges scales with charge product and falls with inverse-square distance.",
+    "connections": ["electric-field-definition", "gauss-law"],
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+      "caption": "Charges and Fields"
+    },
+    "tags": ["electrostatics", "inverse-square", "charge"],
+    "position": { "x": 280, "y": -130 }
+  },
+  {
+    "id": "electric-field-definition",
+    "title": "Electric Field (E = F/q)",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{E} = \\frac{\\vec{F}}{q}",
+    "variables": [
+      { "symbol": "\\vec{E}", "name": "Electric field", "unit": "N/C", "description": "Force per unit positive test charge." },
+      { "symbol": "\\vec{F}", "name": "Electric force", "unit": "N", "description": "Force experienced by a test charge." },
+      { "symbol": "q", "name": "Test charge", "unit": "C", "description": "Charge used to probe the field." }
+    ],
+    "description": "Electric field describes how strongly and in what direction charges would be pushed at each point in space.",
+    "connections": ["ohms-law", "gauss-law"],
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+      "caption": "Charges and Fields"
+    },
+    "tags": ["field", "electrostatics", "force"],
+    "position": { "x": 520, "y": -20 }
+  },
+  {
+    "id": "ohms-law",
+    "title": "Ohm's Law (V = IR)",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "V = IR",
+    "variables": [
+      { "symbol": "V", "name": "Voltage", "unit": "V", "description": "Electrical potential difference across a component." },
+      { "symbol": "I", "name": "Current", "unit": "A", "description": "Rate of charge flow." },
+      { "symbol": "R", "name": "Resistance", "unit": "\\Omega", "description": "Opposition to current." }
+    ],
+    "description": "In many conductors, voltage is proportional to current with resistance as the proportionality constant.",
+    "connections": ["faradays-law-induction"],
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
+      "caption": "Circuit Construction Kit: DC"
+    },
+    "tags": ["circuits", "current", "resistance"],
+    "position": { "x": 340, "y": 190 }
+  },
+  {
+    "id": "faradays-law-induction",
+    "title": "Faraday's Law of Induction",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\mathcal{E} = -\\frac{d\\Phi_B}{dt}",
+    "variables": [
+      { "symbol": "\\mathcal{E}", "name": "Induced emf", "unit": "V", "description": "Voltage generated by changing magnetic flux." },
+      { "symbol": "\\Phi_B", "name": "Magnetic flux", "unit": "Wb", "description": "Magnetic field passing through an area." },
+      { "symbol": "t", "name": "Time", "unit": "s", "description": "Time over which flux changes." }
+    ],
+    "description": "A changing magnetic flux induces an emf, which drives current in a closed loop.",
+    "connections": ["gauss-law"],
+    "visual": {
+      "type": "widget",
+      "url": null,
+      "caption": null
+    },
+    "tags": ["induction", "magnetism", "emf"],
+    "position": { "x": 610, "y": 170 }
+  },
+  {
+    "id": "gauss-law",
+    "title": "Gauss's Law",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}",
+    "variables": [
+      { "symbol": "\\vec{E}", "name": "Electric field", "unit": "N/C", "description": "Field passing through a closed surface." },
+      { "symbol": "d\\vec{A}", "name": "Area element", "unit": "m^2", "description": "Outward-oriented differential surface vector." },
+      { "symbol": "Q_{\\text{enc}}", "name": "Enclosed charge", "unit": "C", "description": "Net charge inside the Gaussian surface." },
+      { "symbol": "\\varepsilon_0", "name": "Vacuum permittivity", "unit": "C^2/(N\\cdot m^2)", "description": "Electric constant in free space." }
+    ],
+    "description": "Total electric flux through a closed surface equals enclosed charge divided by vacuum permittivity.",
+    "connections": [],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": ["electrostatics", "flux", "field-symmetry"],
+    "position": { "x": 760, "y": 10 }
+  }
+]

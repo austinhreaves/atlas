@@ -1,0 +1,15 @@
+[
+  { "id": "newtons-second-law--kinematics-velocity-time", "source": "newtons-second-law", "target": "kinematics-velocity-time" },
+  { "id": "newtons-second-law--work-energy-theorem", "source": "newtons-second-law", "target": "work-energy-theorem" },
+  { "id": "newtons-second-law--coulombs-law", "source": "newtons-second-law", "target": "coulombs-law" },
+  { "id": "newtons-second-law--electric-field-definition", "source": "newtons-second-law", "target": "electric-field-definition" },
+  { "id": "work-energy-theorem--gravitational-potential-energy", "source": "work-energy-theorem", "target": "gravitational-potential-energy" },
+  { "id": "conservation-of-momentum--newtons-second-law", "source": "conservation-of-momentum", "target": "newtons-second-law" },
+  { "id": "kinematics-velocity-time--work-energy-theorem", "source": "kinematics-velocity-time", "target": "work-energy-theorem" },
+  { "id": "coulombs-law--electric-field-definition", "source": "coulombs-law", "target": "electric-field-definition" },
+  { "id": "coulombs-law--gauss-law", "source": "coulombs-law", "target": "gauss-law" },
+  { "id": "electric-field-definition--ohms-law", "source": "electric-field-definition", "target": "ohms-law" },
+  { "id": "electric-field-definition--gauss-law", "source": "electric-field-definition", "target": "gauss-law" },
+  { "id": "ohms-law--faradays-law-induction", "source": "ohms-law", "target": "faradays-law-induction" },
+  { "id": "faradays-law-induction--gauss-law", "source": "faradays-law-induction", "target": "gauss-law" }
+]
