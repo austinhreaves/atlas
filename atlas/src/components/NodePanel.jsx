@@ -16,6 +16,7 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
   const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
   const [katexFontVersion, setKatexFontVersion] = useState(0)
   const debugRunId = import.meta.env.DEV ? 'dev' : 'preview'
+  const katexSettings = useMemo(() => ({ output: 'html' }), [])
 
   function sendDebugLog(hypothesisId, location, message, data) {
     // #region agent log
@@ -306,7 +307,11 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
                   Formula
                 </h3>
                 <div className="rounded-lg border border-slate-700/80 bg-slate-950/70 p-3 text-slate-100">
-                  <BlockMath key={`${selectedNode.id}-${katexFontVersion}`} math={selectedNode.formula} />
+                  <BlockMath
+                    key={`${selectedNode.id}-${katexFontVersion}`}
+                    math={selectedNode.formula}
+                    settings={katexSettings}
+                  />
                 </div>
               </section>
 
@@ -327,7 +332,7 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
                     >
                       <div className="mb-1 flex flex-wrap items-center gap-2">
                         <span className="font-mono text-cyan-200">
-                          <InlineMath math={variable.symbol} />
+                          <InlineMath math={variable.symbol} settings={katexSettings} />
                         </span>
                         <span className="rounded border border-slate-500/60 bg-slate-900/60 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
                           {variable.role}
