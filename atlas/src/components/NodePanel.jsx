@@ -14,6 +14,7 @@ function TypeBadge({ type }) {
 /** @param {{ selectedNode: any, onClose: () => void, onUnderstandingChange?: () => void }} props */
 export default function NodePanel({ selectedNode, onClose, onUnderstandingChange }) {
   const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
+  const [katexFontVersion, setKatexFontVersion] = useState(0)
   const debugRunId = import.meta.env.DEV ? 'dev' : 'preview'
 
   function sendDebugLog(hypothesisId, location, message, data) {
@@ -54,6 +55,45 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
   }, [selectedNode, debugRunId])
 
   useEffect(() => {
+    if (!selectedNode?.formula || !document.fonts?.load) {
+      return
+    }
+
+    const formulasThatNeedSizeFonts = selectedNode.formula.includes('\\frac')
+    if (!formulasThatNeedSizeFonts) {
+      return
+    }
+
+    sendDebugLog('H10', 'src/components/NodePanel.jsx:katex-font-load', 'Starting explicit KaTeX font preload', {
+      nodeId: selectedNode.id,
+      title: selectedNode.title,
+      host: window.location.host,
+    })
+
+    Promise.all([
+      document.fonts.load('16px KaTeX_Main'),
+      document.fonts.load('16px KaTeX_Math'),
+      document.fonts.load('16px KaTeX_Size1'),
+      document.fonts.load('16px KaTeX_Size2'),
+      document.fonts.load('16px KaTeX_Size3'),
+      document.fonts.load('16px KaTeX_Size4'),
+    ]).then(() => {
+      sendDebugLog('H10', 'src/components/NodePanel.jsx:katex-font-load', 'Finished explicit KaTeX font preload', {
+        nodeId: selectedNode.id,
+        title: selectedNode.title,
+        kaTeXMainReady: document.fonts.check('16px KaTeX_Main'),
+        kaTeXMathReady: document.fonts.check('16px KaTeX_Math'),
+        kaTeXSize1Ready: document.fonts.check('16px KaTeX_Size1'),
+        kaTeXSize2Ready: document.fonts.check('16px KaTeX_Size2'),
+        kaTeXSize3Ready: document.fonts.check('16px KaTeX_Size3'),
+        kaTeXSize4Ready: document.fonts.check('16px KaTeX_Size4'),
+        host: window.location.host,
+      })
+      setKatexFontVersion((value) => value + 1)
+    })
+  }, [selectedNode, debugRunId])
+
+  useEffect(() => {
     if (!selectedNode?.formula) {
       return
     }
@@ -62,6 +102,7 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
     const katexElement = container?.querySelector('.katex') ?? null
     const katexMathml = container?.querySelector('.katex-mathml') ?? null
     const katexHtml = container?.querySelector('.katex-html') ?? null
+    const fracLine = container?.querySelector('.katex .frac-line') ?? null
 
     if (!katexElement || !katexMathml || !katexHtml) {
       sendDebugLog(
@@ -104,6 +145,25 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
         host: window.location.host,
       },
     )
+
+    if (fracLine) {
+      const fracLineStyle = window.getComputedStyle(fracLine)
+      sendDebugLog(
+        'H9',
+        'src/components/NodePanel.jsx:katex-frac-line',
+        'KaTeX fraction line computed style',
+        {
+          nodeId: selectedNode.id,
+          title: selectedNode.title,
+          borderBottomStyle: fracLineStyle.borderBottomStyle,
+          borderBottomWidth: fracLineStyle.borderBottomWidth,
+          minHeight: fracLineStyle.minHeight,
+          height: fracLineStyle.height,
+          display: fracLineStyle.display,
+          host: window.location.host,
+        },
+      )
+    }
 
     if (document.fonts?.check) {
       sendDebugLog(
@@ -231,7 +291,7 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
                   Formula
                 </h3>
                 <div className="rounded-lg border border-slate-700/80 bg-slate-950/70 p-3 text-slate-100">
-                  <BlockMath math={selectedNode.formula} />
+                  <BlockMath key={`${selectedNode.id}-${katexFontVersion}`} math={selectedNode.formula} />
                 </div>
               </section>
 
