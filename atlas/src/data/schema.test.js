@@ -35,6 +35,30 @@ describe('validateNode', () => {
     expect(errors).toContain('variables[0].symbol must be a non-empty string.')
   })
 
+  it('accepts optional variables[].id for backward compatibility', () => {
+    const nodeWithoutVariableIds = {
+      ...nodes[0],
+      variables: nodes[0].variables.map(({ symbol, role, name, unit, description }) => ({
+        symbol,
+        role,
+        name,
+        unit,
+        description,
+      })),
+    }
+    const errors = validateNode(nodeWithoutVariableIds)
+    expect(errors).toEqual([])
+  })
+
+  it('rejects invalid variables[].id when provided', () => {
+    const badNode = {
+      ...nodes[0],
+      variables: [{ ...nodes[0].variables[0], id: 'ForceMagnitude' }],
+    }
+    const errors = validateNode(badNode)
+    expect(errors).toContain('variables[0].id must be kebab-case when provided.')
+  })
+
   it('rejects legacy connections field', () => {
     const badNode = {
       ...nodes[0],
@@ -52,9 +76,18 @@ describe('validateNode', () => {
     const errors = validateNode(badNode)
     expect(errors).toContain('prerequisites[0].id must be a non-empty string.')
     expect(errors).toContain(
-      'prerequisites[0].type must be one of: foundational, supporting, lateral',
+      'prerequisites[0].type must be one of: foundational, supporting, lateral, definitional',
     )
     expect(errors).toContain('prerequisites[0].weight must be a number between 0 and 1.')
+  })
+
+  it('accepts definitional prerequisite without explicit weight', () => {
+    const okayNode = {
+      ...nodes[0],
+      prerequisites: [{ id: nodes[3].id, type: 'definitional' }],
+    }
+    const errors = validateNode(okayNode)
+    expect(errors).toEqual([])
   })
 
   it('requires conserved variable roles for symmetric structures', () => {

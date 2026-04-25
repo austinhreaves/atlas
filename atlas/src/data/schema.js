@@ -22,7 +22,7 @@ const ALLOWED_VARIABLE_ROLES = [
   'covariate',
   'conserved',
 ]
-const ALLOWED_PREREQUISITE_TYPES = ['foundational', 'supporting', 'lateral']
+const ALLOWED_PREREQUISITE_TYPES = ['foundational', 'supporting', 'lateral', 'definitional']
 const ALLOWED_IDEALIZATION_SCOPES = ['idealized', 'noted', 'primary']
 const KEBAB_CASE_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -80,6 +80,9 @@ export function validateNode(node) {
   if (!Array.isArray(node.variables) || node.variables.length === 0) {
     errors.push('variables must be a non-empty array.')
   } else {
+    // Phase 3a roadmap: variables become first-class addressable entities.
+    // In v2 we keep `variables[].id` optional for backward compatibility.
+    const variableIds = new Set()
     node.variables.forEach((variable, index) => {
       if (!variable || typeof variable !== 'object' || Array.isArray(variable)) {
         errors.push(`variables[${index}] must be an object.`)
@@ -99,6 +102,18 @@ export function validateNode(node) {
         errors.push(
           `variables[${index}].role must be one of: ${ALLOWED_VARIABLE_ROLES.join(', ')}`,
         )
+      }
+
+      if ('id' in variable) {
+        if (!isNonEmptyString(variable.id)) {
+          errors.push(`variables[${index}].id must be a non-empty string when provided.`)
+        } else if (!KEBAB_CASE_PATTERN.test(variable.id)) {
+          errors.push(`variables[${index}].id must be kebab-case when provided.`)
+        } else if (variableIds.has(variable.id)) {
+          errors.push(`variables[].id values must be unique within a node: ${variable.id}`)
+        } else {
+          variableIds.add(variable.id)
+        }
       }
     })
   }
@@ -151,12 +166,14 @@ export function validateNode(node) {
         )
       }
 
-      if (
-        typeof prerequisite.weight !== 'number' ||
-        Number.isNaN(prerequisite.weight) ||
-        prerequisite.weight < 0 ||
-        prerequisite.weight > 1
-      ) {
+      const hasExplicitWeight = typeof prerequisite.weight === 'number'
+      const effectiveWeight =
+        hasExplicitWeight
+          ? prerequisite.weight
+          : prerequisite.weight == null && prerequisite.type === 'definitional'
+            ? 1
+            : NaN
+      if (Number.isNaN(effectiveWeight) || effectiveWeight < 0 || effectiveWeight > 1) {
         errors.push(`prerequisites[${index}].weight must be a number between 0 and 1.`)
       }
     })

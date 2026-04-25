@@ -4,6 +4,13 @@
  * @param {Array<{ id: string, prerequisites: Array<{ id: string, type: string, weight: number }> }>} nodes
  * @returns {Array<{ id: string, source: string, target: string, type: string, weight: number }>}
  */
+export function normalizePrerequisiteWeight(type, weight) {
+  if (typeof weight === 'number' && !Number.isNaN(weight)) {
+    return weight
+  }
+  return type === 'definitional' ? 1 : 0
+}
+
 export function buildEdges(nodes) {
   if (!Array.isArray(nodes)) {
     return []
@@ -21,8 +28,7 @@ export function buildEdges(nodes) {
       if (
         !prerequisite ||
         typeof prerequisite.id !== 'string' ||
-        typeof prerequisite.type !== 'string' ||
-        typeof prerequisite.weight !== 'number'
+        typeof prerequisite.type !== 'string'
       ) {
         continue
       }
@@ -45,7 +51,7 @@ export function buildEdges(nodes) {
         source,
         target,
         type: prerequisite.type,
-        weight: prerequisite.weight,
+        weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
       })
     }
   }

@@ -51,6 +51,72 @@ describe('validateNode unit tests', () => {
     )
   })
 
+  it('accepts missing variables[].id for backward compatibility', () => {
+    const nodeWithoutVariableIds = {
+      ...nodes[0],
+      variables: nodes[0].variables.map(({ symbol, role, name, unit, description }) => ({
+        symbol,
+        role,
+        name,
+        unit,
+        description,
+      })),
+    }
+    const errors = validateNode(nodeWithoutVariableIds)
+    expect(errors).toEqual([])
+  })
+
+  it('accepts kebab-case variables[].id when provided', () => {
+    const nodeWithVariableIds = {
+      ...nodes[0],
+      variables: nodes[0].variables.map((variable, index) => ({
+        ...variable,
+        id: `${nodes[0].id}-${index + 1}`,
+      })),
+    }
+    const errors = validateNode(nodeWithVariableIds)
+    expect(errors).toEqual([])
+  })
+
+  it('rejects non-kebab-case variables[].id', () => {
+    const invalidVariableIdNode = {
+      ...nodes[0],
+      variables: [{ ...nodes[0].variables[0], id: 'ForceMagnitude' }],
+    }
+    const errors = validateNode(invalidVariableIdNode)
+    expect(errors).toContain('variables[0].id must be kebab-case when provided.')
+  })
+
+  it('rejects duplicate variables[].id values in a node', () => {
+    const duplicateVariableIdNode = {
+      ...nodes[0],
+      variables: [
+        { ...nodes[0].variables[0], id: 'force-magnitude' },
+        { ...nodes[0].variables[1], id: 'force-magnitude' },
+      ],
+    }
+    const errors = validateNode(duplicateVariableIdNode)
+    expect(errors).toContain('variables[].id values must be unique within a node: force-magnitude')
+  })
+
+  it('accepts definitional prerequisites without explicit weight', () => {
+    const definitionalNode = {
+      ...nodes[0],
+      prerequisites: [{ id: nodes[3].id, type: 'definitional' }],
+    }
+    const errors = validateNode(definitionalNode)
+    expect(errors).toEqual([])
+  })
+
+  it('rejects missing weight for non-definitional prerequisites', () => {
+    const missingWeightNode = {
+      ...nodes[0],
+      prerequisites: [{ id: nodes[3].id, type: 'foundational' }],
+    }
+    const errors = validateNode(missingWeightNode)
+    expect(errors).toContain('prerequisites[0].weight must be a number between 0 and 1.')
+  })
+
   it("rejects variable with role 'contextual'", () => {
     const minimalValidNode = {
       id: 'test-node',

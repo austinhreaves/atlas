@@ -105,6 +105,17 @@ describe('nodes data integrity', () => {
     expect(actual).toEqual(expected)
   })
 
+  it('buildEdges defaults definitional edge weight to 1 when omitted', () => {
+    const syntheticNodes = [
+      { id: 'source', prerequisites: [] },
+      { id: 'target', prerequisites: [{ id: 'source', type: 'definitional' }] },
+    ]
+    const edges = buildEdges(syntheticNodes)
+    expect(edges).toEqual([
+      { id: 'source--target--definitional', source: 'source', target: 'target', type: 'definitional', weight: 1 },
+    ])
+  })
+
   it('every node formula parses with KaTeX', () => {
     const formulaErrors = nodes.flatMap((node) => {
       try {

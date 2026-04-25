@@ -44,4 +44,49 @@ describe('NodePanel formula rendering - integration', () => {
     const katexEls = container.querySelectorAll('.katex')
     expect(katexEls.length).toBeGreaterThanOrEqual(1 + node.variables.length)
   })
+
+  it('renders prerequisites and enables lists when provided', () => {
+    const node = nodes[0]
+    const prerequisiteLinks = [
+      { id: 'electric-field', title: 'Electric Field', type: 'foundational', weight: 0.9 },
+    ]
+    const enablesLinks = [
+      { id: 'gausss-law', title: "Gauss's Law", type: 'supporting', weight: 0.7 },
+      { id: 'coulomb-applications', title: "Coulomb's Law Applications", type: 'lateral', weight: 0.5 },
+    ]
+
+    const { container } = render(
+      <NodePanel
+        selectedNode={node}
+        prerequisiteLinks={prerequisiteLinks}
+        enablesLinks={enablesLinks}
+        onClose={() => {}}
+      />,
+    )
+
+    const text = container.textContent || ''
+    expect(text).toContain('Concept Links')
+    expect(text).toContain('Prerequisites')
+    expect(text).toContain('Electric Field')
+    expect(text).toContain('<- (0.90)')
+    expect(text).toContain('Enables')
+    expect(text).toContain("Gauss's Law")
+    expect(text).toContain('(0.70)')
+  })
+
+  it('renders empty state text when no prerequisite or enables links are present', () => {
+    const node = nodes[3]
+    const { container } = render(
+      <NodePanel
+        selectedNode={node}
+        prerequisiteLinks={[]}
+        enablesLinks={[]}
+        onClose={() => {}}
+      />,
+    )
+
+    const text = container.textContent || ''
+    expect(text).toContain('No prerequisite concepts.')
+    expect(text).toContain('No downstream concepts unlocked yet.')
+  })
 })

@@ -10,8 +10,14 @@ function TypeBadge({ type }) {
   )
 }
 
-/** @param {{ selectedNode: any, onClose: () => void, onUnderstandingChange?: () => void }} props */
-export default function NodePanel({ selectedNode, onClose, onUnderstandingChange }) {
+/** @param {{ selectedNode: any, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingChange?: () => void }} props */
+export default function NodePanel({
+  selectedNode,
+  prerequisiteLinks = [],
+  enablesLinks = [],
+  onClose,
+  onUnderstandingChange,
+}) {
   const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
   const title = selectedNode?.title ?? ''
   const formulaInTitle =
@@ -68,6 +74,13 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
       return 'border-sky-400/30 bg-sky-500/15 text-sky-200'
     }
     return 'border-slate-600/60 bg-slate-800/70 text-slate-300'
+  }
+
+  function formatWeight(weight) {
+    if (typeof weight !== 'number' || Number.isNaN(weight)) {
+      return '0.00'
+    }
+    return weight.toFixed(2)
   }
 
   return (
@@ -234,6 +247,55 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
                 <p className="rounded-lg border border-slate-700/80 bg-slate-950/60 p-3 text-sm leading-relaxed text-slate-200">
                   {selectedNode.description}
                 </p>
+              </section>
+
+              <section>
+                <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-300">
+                  Concept Links
+                </h3>
+                <div className="space-y-3">
+                  <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3">
+                    <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-300">
+                      Prerequisites
+                    </h4>
+                    {prerequisiteLinks.length > 0 ? (
+                      <ul className="space-y-1.5 text-xs text-slate-200">
+                        {prerequisiteLinks.map((link) => (
+                          <li
+                            key={`prerequisite-${selectedNode.id}-${link.id}-${link.type}`}
+                            className="flex items-center justify-between gap-3 rounded border border-slate-700/70 bg-slate-900/40 px-2 py-1.5"
+                          >
+                            <span className="truncate">{link.title}</span>
+                            <span className="shrink-0 text-slate-400">{`<- (${formatWeight(link.weight)})`}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-xs text-slate-400">No prerequisite concepts.</p>
+                    )}
+                  </div>
+
+                  <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3">
+                    <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-300">
+                      Enables
+                    </h4>
+                    {enablesLinks.length > 0 ? (
+                      <ul className="space-y-1.5 text-xs text-slate-200">
+                        {enablesLinks.map((link) => (
+                          <li
+                            key={`enables-${selectedNode.id}-${link.id}-${link.type}`}
+                            className="flex items-center justify-between gap-3 rounded border border-slate-700/70 bg-slate-900/40 px-2 py-1.5"
+                          >
+                            <span className="truncate">{link.title}</span>
+                            <span className="shrink-0 text-slate-400">{`(${formatWeight(link.weight)})`}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-xs text-slate-400">No downstream concepts unlocked yet.</p>
+                    )}
+                  </div>
+                </div>
               </section>
 
               <section>

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import NodePanel from './components/NodePanel.jsx'
 import nodesData from './data/nodes.json'
-import { buildEdges } from './data/edges'
+import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { computeLayout, computeMass } from './lib/layout'
 import { getUnderstood } from './lib/understanding'
 
@@ -51,6 +51,10 @@ export default function App() {
   const [selectedNodeId, setSelectedNodeId] = useState(null)
   const [understandingVersion, setUnderstandingVersion] = useState(0)
   const edges = useMemo(() => buildEdges(nodesData), [])
+  const nodeById = useMemo(
+    () => new Map(nodesData.map((node) => [node.id, node])),
+    [],
+  )
   const understoodNodeIds = useMemo(() => getUnderstood(), [understandingVersion])
 
   const positionedNodes = useMemo(() => {
@@ -109,6 +113,53 @@ export default function App() {
     [positionedNodes, selectedNodeId],
   )
 
+  const enablesByNodeId = useMemo(() => {
+    const map = new Map()
+    for (const node of nodesData) {
+      for (const prerequisite of node.prerequisites ?? []) {
+        if (!map.has(prerequisite.id)) {
+          map.set(prerequisite.id, [])
+        }
+        map.get(prerequisite.id).push({
+          id: node.id,
+          title: node.title,
+          type: prerequisite.type,
+          weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
+        })
+      }
+    }
+
+    for (const dependents of map.values()) {
+      dependents.sort((a, b) => b.weight - a.weight || a.title.localeCompare(b.title))
+    }
+    return map
+  }, [])
+
+  const prerequisiteLinks = useMemo(() => {
+    if (!selectedNode) {
+      return []
+    }
+
+    return (selectedNode.prerequisites ?? [])
+      .map((prerequisite) => {
+        const prerequisiteNode = nodeById.get(prerequisite.id)
+        return {
+          id: prerequisite.id,
+          title: prerequisiteNode?.title ?? prerequisite.id,
+          type: prerequisite.type,
+          weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
+        }
+      })
+      .sort((a, b) => b.weight - a.weight || a.title.localeCompare(b.title))
+  }, [nodeById, selectedNode])
+
+  const enablesLinks = useMemo(() => {
+    if (!selectedNodeId) {
+      return []
+    }
+    return enablesByNodeId.get(selectedNodeId) ?? []
+  }, [enablesByNodeId, selectedNodeId])
+
   return (
     <main className="relative h-screen w-screen overflow-hidden">
       <GraphCanvas
@@ -123,6 +174,8 @@ export default function App() {
       />
       <NodePanel
         selectedNode={selectedNode}
+        prerequisiteLinks={prerequisiteLinks}
+        enablesLinks={enablesLinks}
         onClose={handleClosePanel}
         onUnderstandingChange={handleUnderstandingChange}
       />

@@ -4,18 +4,18 @@
     "title": "Newton's Second Law",
     "type": "law",
     "domain": "mechanics",
-    "formula": "F = ma",
+    "formula": "\\vec{a} = \\vec{F}_{\\text{net}}/m",
     "causal_structure": "asymmetric",
     "variables": [
       {
-        "symbol": "F",
+        "symbol": "\\vec{F}_{\\text{net}}",
         "role": "driver",
         "name": "Net force",
         "unit": "N",
         "description": "Total force acting on an object."
       },
       {
-        "symbol": "a",
+        "symbol": "\\vec{a}",
         "role": "response",
         "name": "Acceleration",
         "unit": "m/s^2",
@@ -67,7 +67,7 @@
     "title": "Work-Energy Theorem",
     "type": "theorem",
     "domain": "mechanics",
-    "formula": "W_{\\text{net}} = \\Delta K",
+    "formula": "\\Delta K = W_{\\text{net}}",
     "causal_structure": "asymmetric",
     "variables": [
       {
@@ -179,11 +179,11 @@
     "title": "Kinematics (v = v0 + at)",
     "type": "equation",
     "domain": "mechanics",
-    "formula": "v = v_0 + at",
+    "formula": "\\vec{v} = \\vec{v}_0 + \\vec{a}t",
     "causal_structure": "asymmetric",
     "variables": [
       {
-        "symbol": "a",
+        "symbol": "\\vec{a}",
         "role": "driver",
         "name": "Acceleration",
         "unit": "m/s^2",
@@ -197,14 +197,14 @@
         "description": "Elapsed time interval."
       },
       {
-        "symbol": "v_0",
+        "symbol": "\\vec{v}_0",
         "role": "parameter",
         "name": "Initial velocity",
         "unit": "m/s",
         "description": "Velocity at the start of motion."
       },
       {
-        "symbol": "v",
+        "symbol": "\\vec{v}",
         "role": "response",
         "name": "Final velocity",
         "unit": "m/s",
@@ -364,18 +364,18 @@
   },
   {
     "id": "electric-field-definition",
-    "title": "Electric Field (E = F/q)",
+    "title": "Electric Field (F = qE)",
     "type": "definition",
     "domain": "electromagnetism",
-    "formula": "\\vec{E} = \\frac{\\vec{F}}{q}",
+    "formula": "\\vec{F} = q\\vec{E}",
     "causal_structure": "asymmetric",
     "variables": [
       {
-        "symbol": "\\vec{F}",
-        "role": "response",
-        "name": "Electric force",
-        "unit": "N",
-        "description": "Force experienced by a test charge."
+        "symbol": "\\vec{E}",
+        "role": "driver",
+        "name": "Electric field",
+        "unit": "N/C",
+        "description": "Force per unit positive test charge."
       },
       {
         "symbol": "q",
@@ -385,11 +385,11 @@
         "description": "Charge used to probe the field."
       },
       {
-        "symbol": "\\vec{E}",
-        "role": "driver",
-        "name": "Electric field",
-        "unit": "N/C",
-        "description": "Force per unit positive test charge."
+        "symbol": "\\vec{F}",
+        "role": "response",
+        "name": "Electric force",
+        "unit": "N",
+        "description": "Force experienced by a test charge."
       }
     ],
     "description": "Electric field describes how strongly and in what direction charges would be pushed at each point in space.",
@@ -422,10 +422,10 @@
   },
   {
     "id": "ohms-law",
-    "title": "Ohm's Law (V = IR)",
+    "title": "Ohm's Law (I = V/R)",
     "type": "law",
     "domain": "electromagnetism",
-    "formula": "V = IR",
+    "formula": "I = V/R",
     "causal_structure": "asymmetric",
     "variables": [
       {

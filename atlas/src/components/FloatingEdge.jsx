@@ -3,7 +3,7 @@ import { BaseEdge, MarkerType, Position, getBezierPath, useStore } from 'reactfl
 const EDGE_STROKE = '#94a3b8'
 const BRIGHT_EDGE_STROKE = '#cbd5e1'
 
-function getEdgeVisuals(edgeType, weight) {
+export function getEdgeVisuals(edgeType, weight) {
   const clampedWeight = Math.max(0, Math.min(1, typeof weight === 'number' ? weight : 0))
 
   if (edgeType === 'foundational') {
@@ -21,6 +21,16 @@ function getEdgeVisuals(edgeType, weight) {
       strokeWidth: 1.0 + 1.5 * clampedWeight,
       opacity: 0.4 + 0.4 * clampedWeight,
       markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_STROKE },
+    }
+  }
+
+  if (edgeType === 'definitional') {
+    return {
+      strokeDasharray: undefined,
+      strokeWidth: 1.8 + 1.4 * clampedWeight,
+      opacity: 0.7 + 0.3 * clampedWeight,
+      markerEnd: undefined,
+      targetGlyph: '≡',
     }
   }
 
@@ -142,20 +152,46 @@ export default function FloatingEdge({ id, source, target, data }) {
     targetPosition,
   })
 
+  const dx = targetPoint.x - sourcePoint.x
+  const dy = targetPoint.y - sourcePoint.y
+  const length = Math.hypot(dx, dy)
+  const unitX = length > 0 ? dx / length : 0
+  const unitY = length > 0 ? dy / length : 0
+  const glyphInset = 10 + strokeWidth / 2
+  const glyphX = targetPoint.x - unitX * glyphInset
+  const glyphY = targetPoint.y - unitY * glyphInset
+
   return (
-    <BaseEdge
-      id={id}
-      path={path}
-      markerEnd={markerEnd}
-      className={shouldPulse ? 'atlas-frontier-edge' : undefined}
-      style={{
-        stroke,
-        strokeWidth,
-        opacity,
-        strokeDasharray: visuals.strokeDasharray,
-        '--atlas-frontier-opacity-min': String(pulseMin),
-        '--atlas-frontier-opacity-max': String(pulseMax),
-      }}
-    />
+    <>
+      <BaseEdge
+        id={id}
+        path={path}
+        markerEnd={markerEnd}
+        className={shouldPulse ? 'atlas-frontier-edge' : undefined}
+        style={{
+          stroke,
+          strokeWidth,
+          opacity,
+          strokeDasharray: visuals.strokeDasharray,
+          '--atlas-frontier-opacity-min': String(pulseMin),
+          '--atlas-frontier-opacity-max': String(pulseMax),
+        }}
+      />
+      {visuals.targetGlyph ? (
+        <text
+          x={glyphX}
+          y={glyphY}
+          fill={stroke}
+          opacity={opacity}
+          fontSize={14}
+          fontWeight={700}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          style={{ pointerEvents: 'none', userSelect: 'none' }}
+        >
+          {visuals.targetGlyph}
+        </text>
+      ) : null}
+    </>
   )
 }

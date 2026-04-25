@@ -8,7 +8,8 @@ Phase 2 turns Atlas into a weighted, directed concept graph with deterministic f
 
 - Schema v2 data model:
   - `prerequisites[]` replaces flat `connections[]`
-  - typed and weighted directed dependency edges (`foundational`, `supporting`, `lateral`)
+  - typed and weighted directed dependency edges (`foundational`, `supporting`, `lateral`, `definitional`)
+  - `definitional` prerequisites default to weight `1.0` when omitted
   - role-aware variables and causal structure per node
   - `idealizations[]` with scope values (`idealized`, `noted`, `primary`)
 - Force-directed layout:
