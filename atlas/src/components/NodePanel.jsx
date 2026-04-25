@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import katex from 'katex'
+import KatexText from './KatexText'
 import { isUnderstood, setUnderstood } from '../lib/understanding'
 
 function TypeBadge({ type }) {
@@ -10,28 +10,13 @@ function TypeBadge({ type }) {
   )
 }
 
-// KaTeX formulas are trusted content from nodes.json (not user input).
-// dangerouslySetInnerHTML is necessary to render KaTeX's HTML output.
-// If formulas ever become user-generated, add input sanitization here.
-function KatexText({ math, displayMode = false }) {
-  const rendered = useMemo(() => {
-    try {
-      return katex.renderToString(math, {
-        throwOnError: false,
-        displayMode,
-        output: 'html',
-      })
-    } catch {
-      return `<span class="katex-error">${math}</span>`
-    }
-  }, [displayMode, math])
-
-  return <span dangerouslySetInnerHTML={{ __html: rendered }} />
-}
-
 /** @param {{ selectedNode: any, onClose: () => void, onUnderstandingChange?: () => void }} props */
 export default function NodePanel({ selectedNode, onClose, onUnderstandingChange }) {
   const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
+  const title = selectedNode?.title ?? ''
+  const formulaInTitle =
+    selectedNode?.formula && title.includes(selectedNode.formula) ? selectedNode.formula : null
+  const titleParts = formulaInTitle ? title.split(formulaInTitle) : [title]
 
   const variableRows = selectedNode?.variables ?? []
   const hasUnifiedConservedBand =
@@ -105,7 +90,15 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-xl font-semibold tracking-tight text-slate-100">
-                    {selectedNode.title}
+                    {formulaInTitle ? (
+                      <>
+                        {titleParts[0]}
+                        <KatexText math={formulaInTitle} />
+                        {titleParts.slice(1).join(formulaInTitle)}
+                      </>
+                    ) : (
+                      selectedNode.title
+                    )}
                   </h2>
                   <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">
                     {selectedNode.domain}
