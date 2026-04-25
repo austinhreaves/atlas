@@ -1,0 +1,12 @@
+---
+description: Constrains component state ownership, file growth, and localStorage access boundaries.
+globs: ["src/components/**"]
+alwaysApply: false
+---
+
+# Component Discipline
+
+- Components are single-purpose. If a component file exceeds approximately 200 lines, flag it and propose a split — do not block progress, but do not continue adding to the file without surfacing the concern.
+- Selection state, understanding state, and domain filter state are owned by App.jsx or a single React context. Components receive them as props or via context — they do not maintain their own copies in local state.
+- Do not prop-drill more than 2 levels. If a value needs to reach a deeply nested component, lift state or use context.
+- No component directly reads from or writes to localStorage. localStorage access is encapsulated in src/lib/understanding.js and the layout cache logic in App.jsx only.

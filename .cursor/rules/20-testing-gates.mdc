@@ -1,0 +1,11 @@
+---
+description: Treats phase/session test gates as hard requirements and prevents assertion weakening.
+alwaysApply: true
+---
+
+# Testing Gates
+
+- Tests must pass before any session boundary is crossed. The spec states explicitly which sessions gate on green tests — treat those gates as hard stops, not suggestions.
+- When a migration or refactor breaks a test, do not silently weaken the assertion to make it pass. Either fix the code, or surface the conflict to Austin in chat with: (a) the specific assertion that failed, (b) the current behavior, (c) why the spec may need adjustment.
+- New behavior requires a new test in the same commit. Do not defer test writing.
+- Test files live in src/data/__tests__/ and src/lib/__tests__/. Do not scatter test files elsewhere.

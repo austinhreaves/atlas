@@ -1,0 +1,11 @@
+---
+description: Keeps Atlas commit history session-scoped, traceable, and non-overlapping by concern.
+alwaysApply: true
+---
+
+# Commit Hygiene
+
+- Each commit is scoped to a single concern. Schema migration, layout engine, and edge rendering changes belong in separate commits.
+- Commit messages must reference the session that produced them, e.g. "[Session 2] Add d3-force layout engine" or "[Session 1] Migrate nodes.json to schema v2".
+- Do not amend or rewrite a session commit once its tests are green. The git history is a record of which Cursor session produced which change.
+- Do not bundle Phase 2 work with Phase 1 cleanup in the same commit.

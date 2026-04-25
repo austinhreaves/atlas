@@ -1,0 +1,12 @@
+---
+description: Preserves deterministic, cached layout behavior and forbids interaction-driven recomputation.
+globs: ["src/components/GraphCanvas*", "src/lib/layout*"]
+alwaysApply: false
+---
+
+# Layout Stability
+
+- Logical node positions — the x, y values React Flow uses for layout — are computed once per unique node-id-set and cached in localStorage under the key "atlas_layout_v1". They are never recomputed in response to user interaction.
+- Selection state, understanding state, domain filter, and hover state must never trigger a layout recomputation or mutate logical node positions. Visual emphasis is expressed through opacity, stroke width, CSS transform (translate/scale), and filter only.
+- The layout function computeLayout() must be deterministic for identical input. Use the seeded LCG (d3.randomLcg or equivalent). Never use Math.random() inside the layout pipeline.
+- Nodes with position.pinned === true in nodes.json must remain frozen at their declared position throughout the force simulation. The simulation must not move them.

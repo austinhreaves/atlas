@@ -1,0 +1,12 @@
+---
+description: Keeps schema v2 changes synchronized across validator, tests, docs, and node data.
+globs: ["src/data/**", "src/lib/**"]
+alwaysApply: false
+---
+
+# Schema Discipline
+
+- validateNode() in src/data/schema.js is the single source of truth for schema shape. If documentation and the validator disagree, fix the documentation.
+- Any change to the schema requires updating all four of the following in the same commit: (1) the validator in schema.js, (2) at least one test in src/data/__tests__/schema.test.js, (3) all affected nodes in nodes.json, (4) the schema section of README.md. Partial updates are not acceptable.
+- edges.json does not exist in Phase 2. Edges are derived at runtime by buildEdges(nodes) in src/data/edges.js. Any reference to a static edges.json file is a bug — flag it immediately. If edges.json is present in the repo, treat it as a migration defect and do not edit it outside of a rules cleanup task.
+- The connections[] field from schema v1 must not be present in any v2 node. validateNode() rejects it as an error. If it appears, it is a migration bug, not a legacy field to silently ignore.

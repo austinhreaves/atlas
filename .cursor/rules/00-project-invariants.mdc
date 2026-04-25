@@ -1,0 +1,12 @@
+---
+description: Enforces Atlas stack, data source, and phase-boundary invariants.
+alwaysApply: true
+---
+
+# Project Invariants
+
+- The stack is locked: React + Vite + Tailwind + React Flow + KaTeX + Vitest + d3-force. No new runtime dependencies may be added without explicit approval from Austin in chat. If a session prompt implies a new dependency not on this list, stop and flag it before proceeding.
+- JSON files in src/data/ are the source of truth for all node and edge data. Never hardcode node data in components.
+- All styling via Tailwind CSS. No CSS modules, no styled-components, no inline <style> tags except where React Flow explicitly requires them.
+- No backend, no authentication, no network calls beyond PhET iframe embeds. localStorage is the only persistence mechanism.
+- Phase boundaries are enforced. If a task implies Phase 3 or later work (search, permalinks, cross-node variable linking, mobile responsive layout, new node authoring, backend, accounts), stop and flag it in chat rather than scaffolding it.

@@ -1,0 +1,56 @@
+---
+description: Enforces mechanistic causality, role assignment, prerequisite typing, and idealization scope for node authoring.
+globs: ["src/data/nodes.json", "src/data/**"]
+alwaysApply: false
+---
+
+# Physics Correctness
+
+These rules govern node authoring in `src/data/nodes.json`. They address the most common failure mode of an LLM editing this file: assigning roles, weights, and structures by equation convention or surface pattern instead of by physical mechanism. Where any rule below conflicts with `validateNode()` in `src/data/schema.js`, raise the conflict in chat — do not silently relax either side.
+
+## 1. Causality is mechanistic
+
+Determine variable roles, formula form, and edge direction from the underlying physical mechanism — what produces what at the level of charges, fields, forces, and energy flow. Do not infer them from equation rearrangement, textbook left-hand-side convention, or higher-level abstractions like "current source." When a relationship looks causally ambiguous, resolve it by going one level deeper into the mechanism, not by picking a convention.
+
+**Worked example — Ohm's Law (the canonical trap).** A potential difference across a conductor establishes a non-uniform surface charge distribution, which produces the internal E field that drives drift current. Therefore `V = driver`, `I = response`, `R = parameter`, and `causal_structure: "asymmetric"`. "Current source" components are voltage sources with feedback; the abstraction is not a mechanism and does not make the relationship contextual.
+
+**Worked example — Newton's Second Law.** Forces are the mechanism, acceleration is the kinematic consequence: `F = driver`, `a = response`, `m = parameter`. Rearranging to `a = F_net / m` does not change the roles — it reveals them.
+
+**Worked example — Coulomb / Gauss / Faraday.** Charges source fields; changing flux drives induced EMF. Sources are drivers, field/EMF quantities are responses.
+
+## 2. Write formulas in causal form
+
+Place the response on the left and drivers and parameters on the right. Prefer `\vec{a} = \vec{F}_{net} / m` over `\vec{F} = m\vec{a}`. Conservation laws (`causal_structure: "symmetric"`) and bidirectional relationships (`causal_structure: "contextual"`) are exempt — they have no causal arrow to honor. Use `\vec{}` notation consistently for vector quantities, in both the `formula` field and every `variables[].symbol`; the symbol in each variable row must match the formula exactly.
+
+## 3. Variable roles are physical, not positional
+
+A variable's role is determined by its physical function, never by where it sits in the equation as written.
+
+- `driver` — the quantity whose change produces the effect.
+- `response` — the quantity that changes as a consequence.
+- `parameter` — a system property that mediates the relationship without being caused or causing.
+- `conserved` — **the conserved quantity itself**, not its constituent ingredients. For `E = (1/2) m v^2 + m g h`, only `E` is `conserved`; `m`, `v`, `g`, `h` are `parameter`. Labeling ingredients as conserved misrepresents what is actually invariant.
+- `covariate` — a variable the equation acknowledges but does not engage with at this scope (paired with an entry in `idealizations[]`).
+
+## 4. Causal structure follows the physics
+
+- `asymmetric` — a clear mechanistic arrow exists; the node has drivers and responses.
+- `symmetric` — conservation law. The conserved quantity has `role: "conserved"`; ingredients have `role: "parameter"`. No drivers or responses.
+- `contextual` — mechanism exists, but its direction depends on experimental setup (e.g. Gauss's Law: charge configuration determines field, but the integral form also infers enclosed charge from a measured field). Roles are assigned by the conventional intro-physics framing; the `contextual` flag exists to surface the bidirectional reading in the UI, not to license role ambiguity.
+
+Genuine setup-dependence is rarer than it looks. Before reaching for `contextual`, confirm the relationship is not actually `asymmetric` with a misleading textbook framing — Ohm's Law is the canonical trap.
+
+## 5. Prerequisite types reflect epistemic relationship, not difficulty
+
+- `foundational` — partial grasp of the prior is required for the dependent concept to be meaningful. Default weight `0.85`.
+- `supporting` — the prior reinforces or contextualizes the dependent concept but is not strictly required. Default weight `0.55`.
+- `lateral` — the prior is a sibling concept that illuminates by analogy or contrast. Default weight `0.2`.
+- `definitional` — the dependent concept *is* the prior, expressed in different language (e.g. `\vec{a} \equiv \Delta\vec{v} / \Delta t`). Default weight `1.0`; omit the `weight` field to inherit the default. Distinct from `foundational`: foundational means "you need some of X to grasp Y"; definitional means "Y is constituted by X."
+
+Default weights are the right answer absent a specific pedagogical reason. Deviations require justification in the commit message.
+
+## 6. Idealizations encode pedagogical scope
+
+- `scope: "idealized"` — the default for intro-physics idealizations (friction, air resistance, R(T), small-angle approximations). The node acknowledges the effect exists but does not engage with it.
+- `scope: "noted"` — the node treats the effect qualitatively.
+- `scope: "primary"` — the effect is central to the node's meaning. During Phase 2 migration, encountering `scope: "primary"` indicates the node belongs in Phase 3b authoring work — stop and flag rather than implementing.
