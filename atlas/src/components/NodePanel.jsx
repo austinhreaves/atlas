@@ -10,6 +10,9 @@ function TypeBadge({ type }) {
   )
 }
 
+// KaTeX formulas are trusted content from nodes.json (not user input).
+// dangerouslySetInnerHTML is necessary to render KaTeX's HTML output.
+// If formulas ever become user-generated, add input sanitization here.
 function KatexText({ math, displayMode = false }) {
   const rendered = useMemo(() => {
     try {

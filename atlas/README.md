@@ -25,3 +25,10 @@ Phase 2 turns Atlas into a weighted, directed concept graph with deterministic f
   - localStorage-backed understanding tracking (`atlas_understood_v1`)
   - understood-node dimming/check indicators
   - foundational frontier pulse into unknown concepts
+
+## KaTeX Rendering Safety
+
+- Node formulas are rendered directly with `katex.renderToString(...)` in `NodePanel`.
+- The rendered HTML is injected with `dangerouslySetInnerHTML` to display KaTeX output.
+- This is safe for the current app because formulas come from trusted `nodes.json` content.
+- If formulas ever become user-generated input, sanitize or strictly validate input before rendering.
