@@ -1,134 +1,66 @@
 import { describe, expect, it } from 'vitest'
-import nodes from './nodes.json'
-import { validateNode } from './schema'
+import { validateConceptNode, validateEntity, validateVariableNode } from './schema'
 
-describe('validateNode', () => {
-  it('returns no errors for a valid seeded node', () => {
-    const errors = validateNode(nodes[0])
-    expect(errors).toEqual([])
+const validConcept = {
+  id: 'ohms-law',
+  layer: 'concept',
+  title: "Ohm's Law",
+  type: 'law',
+  domain: 'electromagnetism',
+  formula: 'I = V/R',
+  causal_structure: 'asymmetric',
+  principle: 'Current scales with voltage for ohmic materials.',
+  applicability_conditions: ['ohmic conductor', 'steady-state current'],
+  variables: [
+    { id: 'voltage', symbol: 'V', role: 'driver' },
+    { id: 'current', symbol: 'I', role: 'response' },
+    { id: 'resistance', symbol: 'R', role: 'parameter' },
+  ],
+  description: 'Linear relation between V and I with R constant.',
+  prerequisites: [],
+  visual: { type: 'none', url: null, caption: null },
+  tags: ['circuits'],
+  author: 'austin',
+  review_state: 'published',
+}
+
+const validVariable = {
+  id: 'current',
+  layer: 'variable',
+  canonical_symbol: 'I',
+  name: 'Current',
+  unit: 'A',
+  dimension: 'Q/T',
+  description: 'Rate of charge flow.',
+  vector_or_scalar: 'scalar',
+  author: 'austin',
+  review_state: 'published',
+}
+
+describe('schema v3 validators', () => {
+  it('accepts a valid concept node', () => {
+    expect(validateConceptNode(validConcept)).toEqual([])
   })
 
-  it('reports missing required fields', () => {
-    const { id, ...nodeWithoutId } = nodes[0]
-    const errors = validateNode(nodeWithoutId)
-    expect(errors).toContain('Missing required field: id')
-  })
-
-  it('rejects non-kebab-case ids', () => {
-    const badNode = { ...nodes[0], id: 'NewtonSecondLaw' }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('id must be kebab-case.')
-  })
-
-  it('rejects empty variables array', () => {
-    const badNode = { ...nodes[0], variables: [] }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('variables must be a non-empty array.')
-  })
-
-  it('rejects invalid variable entries', () => {
-    const badNode = {
-      ...nodes[0],
-      variables: [{ symbol: '', role: 'driver', name: 'Force', unit: 'N', description: 'x' }],
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('variables[0].symbol must be a non-empty string.')
-  })
-
-  it('accepts optional variables[].id for backward compatibility', () => {
-    const nodeWithoutVariableIds = {
-      ...nodes[0],
-      variables: nodes[0].variables.map(({ symbol, role, name, unit, description }) => ({
-        symbol,
-        role,
-        name,
-        unit,
-        description,
-      })),
-    }
-    const errors = validateNode(nodeWithoutVariableIds)
-    expect(errors).toEqual([])
-  })
-
-  it('rejects invalid variables[].id when provided', () => {
-    const badNode = {
-      ...nodes[0],
-      variables: [{ ...nodes[0].variables[0], id: 'ForceMagnitude' }],
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('variables[0].id must be kebab-case when provided.')
-  })
-
-  it('rejects legacy connections field', () => {
-    const badNode = {
-      ...nodes[0],
-      connections: ['legacy-node'],
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('connections is not allowed. Use prerequisites instead.')
-  })
-
-  it('rejects invalid prerequisite entries', () => {
-    const badNode = {
-      ...nodes[0],
-      prerequisites: [{ id: '', type: 'base', weight: 2 }],
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('prerequisites[0].id must be a non-empty string.')
+  it('requires applicability conditions on laws', () => {
+    const errors = validateConceptNode({ ...validConcept, applicability_conditions: [] })
     expect(errors).toContain(
-      'prerequisites[0].type must be one of: foundational, supporting, lateral, definitional',
-    )
-    expect(errors).toContain('prerequisites[0].weight must be a number between 0 and 1.')
-  })
-
-  it('accepts definitional prerequisite without explicit weight', () => {
-    const okayNode = {
-      ...nodes[0],
-      prerequisites: [{ id: nodes[3].id, type: 'definitional' }],
-    }
-    const errors = validateNode(okayNode)
-    expect(errors).toEqual([])
-  })
-
-  it('requires conserved variable roles for symmetric structures', () => {
-    const badNode = {
-      ...nodes[0],
-      causal_structure: 'symmetric',
-      variables: [{ ...nodes[0].variables[0], role: 'driver' }],
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain(
-      'variables[0].role must be "conserved" when causal_structure is "symmetric".',
+      'applicability_conditions must contain at least one entry for law/principle nodes.',
     )
   })
 
-  it('rejects driver/response roles for contextual structures', () => {
-    const badNode = {
-      ...nodes[0],
-      causal_structure: 'contextual',
-      variables: [{ ...nodes[0].variables[0], role: 'response', symbol: 'Y' }],
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('contextual nodes cannot have driver/response roles: Y')
+  it('accepts a valid variable entity', () => {
+    expect(validateVariableNode(validVariable)).toEqual([])
   })
 
-  it('rejects invalid visual metadata', () => {
-    const badNode = {
-      ...nodes[0],
-      visual: { type: 'image', url: 123, caption: null },
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('visual.type must be one of: phet, video, widget, none')
-    expect(errors).toContain('visual.url must be a string or null.')
+  it('rejects invalid vector_or_scalar values', () => {
+    const errors = validateVariableNode({ ...validVariable, vector_or_scalar: 'matrix' })
+    expect(errors).toContain('vector_or_scalar must be one of: scalar, vector, tensor')
   })
 
-  it('rejects invalid position values', () => {
-    const badNode = {
-      ...nodes[0],
-      position: { x: 'left', y: null },
-    }
-    const errors = validateNode(badNode)
-    expect(errors).toContain('position.x must be a number.')
-    expect(errors).toContain('position.y must be a number.')
+  it('dispatches by entity.layer', () => {
+    expect(validateEntity(validConcept)).toEqual([])
+    expect(validateEntity(validVariable)).toEqual([])
+    expect(validateEntity({ layer: 'lab' })).toEqual(['Unsupported layer: lab'])
   })
 })

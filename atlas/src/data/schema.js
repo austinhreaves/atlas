@@ -1,43 +1,87 @@
-const REQUIRED_FIELDS = [
+const REQUIRED_CONCEPT_FIELDS = [
   'id',
+  'layer',
   'title',
   'type',
   'domain',
   'formula',
   'causal_structure',
+  'principle',
   'variables',
   'description',
   'prerequisites',
   'visual',
   'tags',
+  'author',
+  'review_state',
+]
+const REQUIRED_VARIABLE_FIELDS = [
+  'id',
+  'layer',
+  'canonical_symbol',
+  'name',
+  'unit',
+  'dimension',
+  'description',
+  'vector_or_scalar',
+  'author',
+  'review_state',
 ]
 
 const ALLOWED_TYPES = ['law', 'equation', 'principle', 'definition', 'theorem']
 const ALLOWED_VISUAL_TYPES = ['phet', 'video', 'widget', 'none']
 const ALLOWED_CAUSAL_STRUCTURES = ['asymmetric', 'symmetric', 'contextual']
-const ALLOWED_VARIABLE_ROLES = [
-  'driver',
-  'response',
-  'parameter',
-  'covariate',
-  'conserved',
-]
+const ALLOWED_VARIABLE_ROLES = ['driver', 'response', 'parameter', 'covariate', 'conserved']
 const ALLOWED_PREREQUISITE_TYPES = ['foundational', 'supporting', 'lateral', 'definitional']
 const ALLOWED_IDEALIZATION_SCOPES = ['idealized', 'noted', 'primary']
+const ALLOWED_REVIEW_STATES = ['draft', 'reviewed', 'published']
+const ALLOWED_VECTOR_OR_SCALAR = ['scalar', 'vector', 'tensor']
+const ALLOWED_GEOMETRIES = ['cylindrical', 'spherical', 'planar', 'axial', 'none', 'other']
 const KEBAB_CASE_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0
 }
 
-export function validateNode(node) {
+function validateLastReviewed(value, errors) {
+  if (value == null) {
+    return
+  }
+
+  if (!isNonEmptyString(value) || !ISO_DATE_PATTERN.test(value)) {
+    errors.push('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
+    return
+  }
+
+  const parsedDate = new Date(value)
+  if (Number.isNaN(parsedDate.getTime())) {
+    errors.push('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
+  }
+}
+
+function validateMetadata(entity, errors) {
+  if (!isNonEmptyString(entity.author)) {
+    errors.push('author must be a non-empty string.')
+  }
+
+  if (!ALLOWED_REVIEW_STATES.includes(entity.review_state)) {
+    errors.push(`review_state must be one of: ${ALLOWED_REVIEW_STATES.join(', ')}`)
+  }
+
+  if ('last_reviewed' in entity) {
+    validateLastReviewed(entity.last_reviewed, errors)
+  }
+}
+
+export function validateConceptNode(node) {
   const errors = []
 
   if (!node || typeof node !== 'object' || Array.isArray(node)) {
     return ['Node must be an object.']
   }
 
-  for (const field of REQUIRED_FIELDS) {
+  for (const field of REQUIRED_CONCEPT_FIELDS) {
     if (!(field in node)) {
       errors.push(`Missing required field: ${field}`)
     }
@@ -47,6 +91,10 @@ export function validateNode(node) {
     errors.push('id must be a non-empty string.')
   } else if (!KEBAB_CASE_PATTERN.test(node.id)) {
     errors.push('id must be kebab-case.')
+  }
+
+  if (node.layer !== 'concept') {
+    errors.push('layer must be "concept".')
   }
 
   if (!isNonEmptyString(node.title)) {
@@ -62,58 +110,58 @@ export function validateNode(node) {
   }
 
   // The formula field is TRUSTED CONTENT in the current Atlas data model.
-  // It is rendered through <KatexText /> using trusted defaults
-  // (source: "trusted" once that prop exists).
-  // Any future schema accepting user-generated LaTeX must route rendering
-  // through <KatexText source="user" /> and apply additional sanitization/
-  // validation safeguards at this schema-validation layer.
+  // It is rendered through <KatexText /> using trusted defaults.
   if (!isNonEmptyString(node.formula)) {
     errors.push('formula must be a non-empty string.')
   }
 
   if (!ALLOWED_CAUSAL_STRUCTURES.includes(node.causal_structure)) {
-    errors.push(
-      `causal_structure must be one of: ${ALLOWED_CAUSAL_STRUCTURES.join(', ')}`,
-    )
+    errors.push(`causal_structure must be one of: ${ALLOWED_CAUSAL_STRUCTURES.join(', ')}`)
+  }
+
+  if (!isNonEmptyString(node.principle)) {
+    errors.push('principle must be a non-empty string.')
   }
 
   if (!Array.isArray(node.variables) || node.variables.length === 0) {
     errors.push('variables must be a non-empty array.')
   } else {
-    // Phase 3a roadmap: variables become first-class addressable entities.
-    // In v2 we keep `variables[].id` optional for backward compatibility.
     const variableIds = new Set()
+
     node.variables.forEach((variable, index) => {
       if (!variable || typeof variable !== 'object' || Array.isArray(variable)) {
         errors.push(`variables[${index}] must be an object.`)
         return
       }
 
-      for (const key of ['symbol', 'role', 'name', 'unit', 'description']) {
-        if (!isNonEmptyString(variable[key])) {
-          errors.push(`variables[${index}].${key} must be a non-empty string.`)
-        }
+      if (!isNonEmptyString(variable.id)) {
+        errors.push(`variables[${index}].id must be a non-empty string.`)
+      } else if (!KEBAB_CASE_PATTERN.test(variable.id)) {
+        errors.push(`variables[${index}].id must be kebab-case.`)
+      } else if (variableIds.has(variable.id)) {
+        errors.push(`variables[].id values must be unique within a node: ${variable.id}`)
+      } else {
+        variableIds.add(variable.id)
       }
 
-      if (
-        typeof variable.role === 'string' &&
-        !ALLOWED_VARIABLE_ROLES.includes(variable.role)
-      ) {
-        errors.push(
-          `variables[${index}].role must be one of: ${ALLOWED_VARIABLE_ROLES.join(', ')}`,
-        )
+      if (!isNonEmptyString(variable.symbol)) {
+        errors.push(`variables[${index}].symbol must be a non-empty string.`)
       }
 
-      if ('id' in variable) {
-        if (!isNonEmptyString(variable.id)) {
-          errors.push(`variables[${index}].id must be a non-empty string when provided.`)
-        } else if (!KEBAB_CASE_PATTERN.test(variable.id)) {
-          errors.push(`variables[${index}].id must be kebab-case when provided.`)
-        } else if (variableIds.has(variable.id)) {
-          errors.push(`variables[].id values must be unique within a node: ${variable.id}`)
-        } else {
-          variableIds.add(variable.id)
-        }
+      if (!ALLOWED_VARIABLE_ROLES.includes(variable.role)) {
+        errors.push(`variables[${index}].role must be one of: ${ALLOWED_VARIABLE_ROLES.join(', ')}`)
+      }
+
+      if ('name' in variable && !isNonEmptyString(variable.name)) {
+        errors.push(`variables[${index}].name must be a non-empty string when provided.`)
+      }
+
+      if ('unit' in variable && !isNonEmptyString(variable.unit)) {
+        errors.push(`variables[${index}].unit must be a non-empty string when provided.`)
+      }
+
+      if ('description' in variable && !isNonEmptyString(variable.description)) {
+        errors.push(`variables[${index}].description must be a non-empty string when provided.`)
       }
     })
   }
@@ -133,9 +181,7 @@ export function validateNode(node) {
       .filter((variable) => variable?.role === 'driver' || variable?.role === 'response')
       .map((variable) => variable.symbol)
     if (invalidRoles.length > 0) {
-      errors.push(
-        `contextual nodes cannot have driver/response roles: ${invalidRoles.join(', ')}`,
-      )
+      errors.push(`contextual nodes cannot have driver/response roles: ${invalidRoles.join(', ')}`)
     }
   }
 
@@ -179,6 +225,82 @@ export function validateNode(node) {
     })
   }
 
+  if (
+    (node.type === 'law' || node.type === 'principle') &&
+    (!Array.isArray(node.applicability_conditions) || node.applicability_conditions.length === 0)
+  ) {
+    errors.push('applicability_conditions must contain at least one entry for law/principle nodes.')
+  }
+
+  if ('applicability_conditions' in node) {
+    if (
+      !Array.isArray(node.applicability_conditions) ||
+      node.applicability_conditions.some((item) => !isNonEmptyString(item))
+    ) {
+      errors.push('applicability_conditions must be an array of non-empty strings.')
+    }
+  }
+
+  if ('limiting_cases' in node) {
+    if (!Array.isArray(node.limiting_cases)) {
+      errors.push('limiting_cases must be an array when provided.')
+    } else {
+      node.limiting_cases.forEach((item, index) => {
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+          errors.push(`limiting_cases[${index}] must be an object.`)
+          return
+        }
+
+        if (!isNonEmptyString(item.case)) {
+          errors.push(`limiting_cases[${index}].case must be a non-empty string.`)
+        }
+
+        if (!isNonEmptyString(item.result)) {
+          errors.push(`limiting_cases[${index}].result must be a non-empty string.`)
+        }
+      })
+    }
+  }
+
+  if ('misconceptions' in node) {
+    if (!Array.isArray(node.misconceptions)) {
+      errors.push('misconceptions must be an array when provided.')
+    } else {
+      node.misconceptions.forEach((item, index) => {
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+          errors.push(`misconceptions[${index}] must be an object.`)
+          return
+        }
+
+        if (!isNonEmptyString(item.wrong_model)) {
+          errors.push(`misconceptions[${index}].wrong_model must be a non-empty string.`)
+        }
+
+        if (!isNonEmptyString(item.correction)) {
+          errors.push(`misconceptions[${index}].correction must be a non-empty string.`)
+        }
+      })
+    }
+  }
+
+  if ('historical_context' in node && !isNonEmptyString(node.historical_context)) {
+    errors.push('historical_context must be a non-empty string when provided.')
+  }
+
+  if ('geometries' in node) {
+    if (!Array.isArray(node.geometries)) {
+      errors.push('geometries must be an array when provided.')
+    } else {
+      node.geometries.forEach((geometry, index) => {
+        if (!ALLOWED_GEOMETRIES.includes(geometry)) {
+          errors.push(
+            `geometries[${index}] must be one of: ${ALLOWED_GEOMETRIES.join(', ')}`,
+          )
+        }
+      })
+    }
+  }
+
   if ('idealizations' in node) {
     if (!Array.isArray(node.idealizations)) {
       errors.push('idealizations must be an array when provided.')
@@ -199,11 +321,7 @@ export function validateNode(node) {
           )
         }
 
-        if (!('note' in idealization)) {
-          return
-        }
-
-        if (!(typeof idealization.note === 'string' && idealization.note.trim().length > 0)) {
+        if ('note' in idealization && !isNonEmptyString(idealization.note)) {
           errors.push(`idealizations[${index}].note must be a non-empty string when provided.`)
         }
       })
@@ -230,9 +348,7 @@ export function validateNode(node) {
     }
   }
 
-  if (!Array.isArray(node.tags)) {
-    errors.push('tags must be an array of strings.')
-  } else if (node.tags.some((tag) => typeof tag !== 'string')) {
+  if (!Array.isArray(node.tags) || node.tags.some((tag) => !isNonEmptyString(tag))) {
     errors.push('tags must be an array of strings.')
   }
 
@@ -252,5 +368,111 @@ export function validateNode(node) {
     }
   }
 
+  validateMetadata(node, errors)
   return errors
 }
+
+export function validateVariableNode(variable) {
+  const errors = []
+
+  if (!variable || typeof variable !== 'object' || Array.isArray(variable)) {
+    return ['Node must be an object.']
+  }
+
+  for (const field of REQUIRED_VARIABLE_FIELDS) {
+    if (!(field in variable)) {
+      errors.push(`Missing required field: ${field}`)
+    }
+  }
+
+  if (!isNonEmptyString(variable.id)) {
+    errors.push('id must be a non-empty string.')
+  } else if (!KEBAB_CASE_PATTERN.test(variable.id)) {
+    errors.push('id must be kebab-case.')
+  }
+
+  if (variable.layer !== 'variable') {
+    errors.push('layer must be "variable".')
+  }
+
+  if (!isNonEmptyString(variable.canonical_symbol)) {
+    errors.push('canonical_symbol must be a non-empty string.')
+  }
+
+  if (!isNonEmptyString(variable.name)) {
+    errors.push('name must be a non-empty string.')
+  }
+
+  if (!isNonEmptyString(variable.unit)) {
+    errors.push('unit must be a non-empty string.')
+  }
+
+  if (!isNonEmptyString(variable.dimension)) {
+    errors.push('dimension must be a non-empty string.')
+  }
+
+  if (!isNonEmptyString(variable.description)) {
+    errors.push('description must be a non-empty string.')
+  }
+
+  if (!ALLOWED_VECTOR_OR_SCALAR.includes(variable.vector_or_scalar)) {
+    errors.push(`vector_or_scalar must be one of: ${ALLOWED_VECTOR_OR_SCALAR.join(', ')}`)
+  }
+
+  if ('sign_convention' in variable && !isNonEmptyString(variable.sign_convention)) {
+    errors.push('sign_convention must be a non-empty string when provided.')
+  }
+
+  if ('common_aliases' in variable) {
+    if (!Array.isArray(variable.common_aliases)) {
+      errors.push('common_aliases must be an array when provided.')
+    } else {
+      variable.common_aliases.forEach((alias, index) => {
+        if (!alias || typeof alias !== 'object' || Array.isArray(alias)) {
+          errors.push(`common_aliases[${index}] must be an object.`)
+          return
+        }
+
+        if (!isNonEmptyString(alias.symbol)) {
+          errors.push(`common_aliases[${index}].symbol must be a non-empty string.`)
+        }
+
+        if (!isNonEmptyString(alias.context)) {
+          errors.push(`common_aliases[${index}].context must be a non-empty string.`)
+        }
+      })
+    }
+  }
+
+  if ('tags' in variable) {
+    if (!Array.isArray(variable.tags) || variable.tags.some((tag) => !isNonEmptyString(tag))) {
+      errors.push('tags must be an array of strings when provided.')
+    }
+  }
+
+  validateMetadata(variable, errors)
+  return errors
+}
+
+export function validateEntity(entity) {
+  if (!entity || typeof entity !== 'object' || Array.isArray(entity)) {
+    return ['Node must be an object.']
+  }
+
+  if (!isNonEmptyString(entity.layer)) {
+    return ['Missing required field: layer']
+  }
+
+  if (entity.layer === 'concept') {
+    return validateConceptNode(entity)
+  }
+
+  if (entity.layer === 'variable') {
+    return validateVariableNode(entity)
+  }
+
+  return [`Unsupported layer: ${entity.layer}`]
+}
+
+// Backward-compat alias during v2->v3 transition.
+export const validateNode = validateConceptNode

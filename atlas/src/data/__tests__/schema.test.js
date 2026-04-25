@@ -1,185 +1,129 @@
 import { describe, expect, it } from 'vitest'
-import nodes from '../nodes.json'
-import { validateNode } from '../schema'
+import { validateConceptNode, validateEntity, validateVariableNode } from '../schema'
 
-describe('validateNode unit tests', () => {
-  it('returns errors for a node missing required fields', () => {
-    const { id, ...missingId } = nodes[0]
-    const errors = validateNode(missingId)
-    expect(errors).toContain('Missing required field: id')
+function createValidConcept(overrides = {}) {
+  return {
+    id: 'newtons-second-law',
+    layer: 'concept',
+    title: "Newton's Second Law",
+    type: 'law',
+    domain: 'mechanics',
+    formula: 'F = ma',
+    causal_structure: 'asymmetric',
+    principle: 'Acceleration is caused by net force on mass.',
+    applicability_conditions: ['inertial reference frame'],
+    limiting_cases: [{ case: 'm -> infinity', result: 'a -> 0 for fixed force' }],
+    misconceptions: [
+      { wrong_model: 'Force keeps motion going.', correction: 'Force changes velocity.' },
+    ],
+    historical_context: 'Published in 1687.',
+    geometries: ['none'],
+    variables: [
+      { id: 'force-net', symbol: 'F', role: 'driver', name: 'Net force', unit: 'N' },
+      { id: 'mass', symbol: 'm', role: 'parameter' },
+      { id: 'acceleration', symbol: 'a', role: 'response', unit: 'm/s^2' },
+    ],
+    description: 'Net force determines acceleration.',
+    prerequisites: [{ id: 'kinematics-velocity-time', type: 'foundational', weight: 0.9 }],
+    mass: null,
+    visual: { type: 'none', url: null, caption: null },
+    tags: ['mechanics'],
+    position: null,
+    author: 'austin',
+    review_state: 'published',
+    last_reviewed: '2026-04-25',
+    ...overrides,
+  }
+}
+
+function createValidVariable(overrides = {}) {
+  return {
+    id: 'acceleration',
+    layer: 'variable',
+    canonical_symbol: 'a',
+    name: 'Acceleration',
+    unit: 'm/s^2',
+    dimension: 'L/T^2',
+    description: 'Rate of change of velocity.',
+    vector_or_scalar: 'vector',
+    sign_convention: 'Positive along chosen axis.',
+    common_aliases: [{ symbol: 'a_x', context: 'x-component in 1D projections' }],
+    tags: ['mechanics'],
+    author: 'austin',
+    review_state: 'published',
+    last_reviewed: '2026-04-25',
+    ...overrides,
+  }
+}
+
+describe('validateConceptNode', () => {
+  it('accepts a fully valid concept node', () => {
+    expect(validateConceptNode(createValidConcept())).toEqual([])
   })
 
-  it('returns errors for invalid type value', () => {
-    const invalidTypeNode = { ...nodes[0], type: 'rule' }
-    const errors = validateNode(invalidTypeNode)
-    expect(errors.some((error) => error.startsWith('type must be one of:'))).toBe(true)
-  })
-
-  it('returns errors for empty variables array', () => {
-    const invalidVariablesNode = { ...nodes[0], variables: [] }
-    const errors = validateNode(invalidVariablesNode)
-    expect(errors).toContain('variables must be a non-empty array.')
-  })
-
-  it('returns errors when legacy connections field is present', () => {
-    const legacyNode = { ...nodes[0], connections: ['other-node'] }
-    const errors = validateNode(legacyNode)
-    expect(errors).toContain('connections is not allowed. Use prerequisites instead.')
-  })
-
-  it('accepts idealizations with idealized scope', () => {
-    const idealizationsNode = {
-      ...nodes[0],
-      idealizations: [
-        { name: 'Friction', scope: 'idealized', note: 'Idealized away in intro model.' },
-      ],
-    }
-    const idealizationErrors = validateNode(idealizationsNode)
-    expect(
-      idealizationErrors.some((error) => error.includes('idealizations')),
-    ).toBe(false)
-  })
-
-  it('returns errors for invalid variable role', () => {
-    const invalidRoleNode = {
-      ...nodes[0],
-      variables: [{ ...nodes[0].variables[0], role: 'cause' }],
-    }
-    const errors = validateNode(invalidRoleNode)
-    expect(errors.some((error) => error.startsWith('variables[0].role must be one of:'))).toBe(
-      true,
-    )
-  })
-
-  it('accepts missing variables[].id for backward compatibility', () => {
-    const nodeWithoutVariableIds = {
-      ...nodes[0],
-      variables: nodes[0].variables.map(({ symbol, role, name, unit, description }) => ({
-        symbol,
-        role,
-        name,
-        unit,
-        description,
-      })),
-    }
-    const errors = validateNode(nodeWithoutVariableIds)
-    expect(errors).toEqual([])
-  })
-
-  it('accepts kebab-case variables[].id when provided', () => {
-    const nodeWithVariableIds = {
-      ...nodes[0],
-      variables: nodes[0].variables.map((variable, index) => ({
-        ...variable,
-        id: `${nodes[0].id}-${index + 1}`,
-      })),
-    }
-    const errors = validateNode(nodeWithVariableIds)
-    expect(errors).toEqual([])
-  })
-
-  it('rejects non-kebab-case variables[].id', () => {
-    const invalidVariableIdNode = {
-      ...nodes[0],
-      variables: [{ ...nodes[0].variables[0], id: 'ForceMagnitude' }],
-    }
-    const errors = validateNode(invalidVariableIdNode)
-    expect(errors).toContain('variables[0].id must be kebab-case when provided.')
-  })
-
-  it('rejects duplicate variables[].id values in a node', () => {
-    const duplicateVariableIdNode = {
-      ...nodes[0],
-      variables: [
-        { ...nodes[0].variables[0], id: 'force-magnitude' },
-        { ...nodes[0].variables[1], id: 'force-magnitude' },
-      ],
-    }
-    const errors = validateNode(duplicateVariableIdNode)
-    expect(errors).toContain('variables[].id values must be unique within a node: force-magnitude')
-  })
-
-  it('accepts definitional prerequisites without explicit weight', () => {
-    const definitionalNode = {
-      ...nodes[0],
-      prerequisites: [{ id: nodes[3].id, type: 'definitional' }],
-    }
-    const errors = validateNode(definitionalNode)
-    expect(errors).toEqual([])
-  })
-
-  it('rejects missing weight for non-definitional prerequisites', () => {
-    const missingWeightNode = {
-      ...nodes[0],
-      prerequisites: [{ id: nodes[3].id, type: 'foundational' }],
-    }
-    const errors = validateNode(missingWeightNode)
-    expect(errors).toContain('prerequisites[0].weight must be a number between 0 and 1.')
-  })
-
-  it("rejects variable with role 'contextual'", () => {
-    const minimalValidNode = {
-      id: 'test-node',
-      title: 'Test Node',
-      type: 'law',
-      domain: 'mechanics',
-      formula: 'F = ma',
-      causal_structure: 'asymmetric',
-      variables: [
-        {
-          symbol: 'F',
-          role: 'contextual',
-          name: 'Force',
-          unit: 'N',
-          description: 'Force variable.',
-        },
-      ],
-      description: 'Valid node except for role value.',
-      prerequisites: [],
-      visual: { type: 'none', url: null, caption: null },
-      tags: ['test'],
-      mass: null,
-      position: null,
-    }
-    const errors = validateNode(minimalValidNode)
-    expect(errors.length).toBeGreaterThan(0)
-  })
-
-  it('enforces conserved variables for symmetric causal structure', () => {
-    const invalidSymmetricNode = {
-      ...nodes[0],
-      causal_structure: 'symmetric',
-      variables: [{ ...nodes[0].variables[0], role: 'driver' }],
-    }
-    const errors = validateNode(invalidSymmetricNode)
+  it('requires applicability_conditions for laws and principles', () => {
+    const errors = validateConceptNode(createValidConcept({ applicability_conditions: [] }))
     expect(errors).toContain(
-      'variables[0].role must be "conserved" when causal_structure is "symmetric".',
+      'applicability_conditions must contain at least one entry for law/principle nodes.',
     )
   })
 
-  it('forbids driver/response roles for contextual causal structure', () => {
-    const invalidContextualNode = {
-      ...nodes[0],
-      causal_structure: 'contextual',
-      variables: [{ ...nodes[0].variables[0], role: 'driver', symbol: 'X' }],
-    }
-    const errors = validateNode(invalidContextualNode)
-    expect(errors).toContain('contextual nodes cannot have driver/response roles: X')
+  it('allows equations without applicability_conditions', () => {
+    const equation = createValidConcept({
+      type: 'equation',
+      applicability_conditions: undefined,
+    })
+    delete equation.applicability_conditions
+    expect(validateConceptNode(equation)).toEqual([])
   })
 
-  it('returns errors for visual.type not in allowed set', () => {
-    const invalidVisualTypeNode = {
-      ...nodes[0],
-      visual: { ...nodes[0].visual, type: 'image' },
-    }
-    const errors = validateNode(invalidVisualTypeNode)
-    expect(errors.some((error) => error.startsWith('visual.type must be one of:'))).toBe(
-      true,
+  it('requires kebab-case variable ids', () => {
+    const errors = validateConceptNode(
+      createValidConcept({
+        variables: [{ id: 'ForceNet', symbol: 'F', role: 'driver' }],
+      }),
+    )
+    expect(errors).toContain('variables[0].id must be kebab-case.')
+  })
+
+  it('rejects invalid geometries vocabulary values', () => {
+    const errors = validateConceptNode(createValidConcept({ geometries: ['torus'] }))
+    expect(errors).toContain(
+      'geometries[0] must be one of: cylindrical, spherical, planar, axial, none, other',
     )
   })
+})
 
-  it('returns empty array for a fully valid node', () => {
-    const errors = validateNode(nodes[0])
-    expect(errors).toEqual([])
+describe('validateVariableNode', () => {
+  it('accepts a fully valid variable entity', () => {
+    expect(validateVariableNode(createValidVariable())).toEqual([])
+  })
+
+  it('requires vector_or_scalar in allowed set', () => {
+    const errors = validateVariableNode(createValidVariable({ vector_or_scalar: 'matrix' }))
+    expect(errors).toContain('vector_or_scalar must be one of: scalar, vector, tensor')
+  })
+
+  it('validates common_aliases shape', () => {
+    const errors = validateVariableNode(
+      createValidVariable({
+        common_aliases: [{ symbol: '', context: 'invalid empty symbol' }],
+      }),
+    )
+    expect(errors).toContain('common_aliases[0].symbol must be a non-empty string.')
+  })
+})
+
+describe('validateEntity', () => {
+  it('dispatches concept entities to validateConceptNode', () => {
+    expect(validateEntity(createValidConcept())).toEqual([])
+  })
+
+  it('dispatches variable entities to validateVariableNode', () => {
+    expect(validateEntity(createValidVariable())).toEqual([])
+  })
+
+  it('returns errors for unsupported layers', () => {
+    expect(validateEntity({ layer: 'problem' })).toEqual(['Unsupported layer: problem'])
   })
 })

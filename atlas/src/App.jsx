@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import NodePanel from './components/NodePanel.jsx'
-import nodesData from './data/nodes.json'
+import nodesData from './data/concepts.json'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { computeLayout, computeMass } from './lib/layout'
 import { getUnderstood } from './lib/understanding'

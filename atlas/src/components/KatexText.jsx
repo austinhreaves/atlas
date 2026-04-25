@@ -4,10 +4,10 @@ import katex from 'katex'
 /**
  * Single source of truth for formula rendering in Atlas.
  *
- * All formulas currently come from src/data/nodes.json and are TRUSTED CONTENT
+ * All formulas currently come from src/data/concepts.json and are TRUSTED CONTENT
  * (hand-authored, code-reviewed, and committed to this repository).
  *
- * Any future caller that renders formulas from outside nodes.json must pass
+ * Any future caller that renders formulas from outside concepts.json must pass
  * source: "user" once that prop is implemented.
  */
 export default function KatexText({ math, displayMode = false, className }) {

@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { render } from '@testing-library/react'
 import NodePanel from '../NodePanel'
-import nodes from '../../data/nodes.json'
+import nodes from '../../data/concepts.json'
 
 describe('NodePanel formula rendering - integration', () => {
   beforeEach(() => {
