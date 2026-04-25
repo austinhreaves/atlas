@@ -1,0 +1,10 @@
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H1","location":"src/App.jsx:57","message":"edge build input sizes","data":{"conceptCount":10,"entityCount":36},"timestamp":1777121560810}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H2","location":"src/data/edges.js:37","message":"buildEdges strict mode and entity count","data":{"strict":true,"entityCount":36},"timestamp":1777121560811}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H4","location":"src/App.jsx:62","message":"buildEdges returned","data":{"edgeCount":44},"timestamp":1777121560811}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H1","location":"src/App.jsx:57","message":"edge build input sizes","data":{"conceptCount":10,"entityCount":36},"timestamp":1777121560811}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H4","location":"src/App.jsx:62","message":"buildEdges returned","data":{"edgeCount":44},"timestamp":1777121560810}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H2","location":"src/data/edges.js:37","message":"buildEdges strict mode and entity count","data":{"strict":true,"entityCount":36},"timestamp":1777121560810}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H2","location":"src/data/edges.js:37","message":"buildEdges strict mode and entity count","data":{"strict":true,"entityCount":36},"timestamp":1777121603618}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H2","location":"src/data/edges.js:37","message":"buildEdges strict mode and entity count","data":{"strict":true,"entityCount":36},"timestamp":1777121603617}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H2","location":"src/data/edges.js:37","message":"buildEdges strict mode and entity count","data":{"strict":true,"entityCount":36},"timestamp":1777121603616}
+{"sessionId":"fe8bdf","runId":"pre-fix","hypothesisId":"H2","location":"src/data/edges.js:37","message":"buildEdges strict mode and entity count","data":{"strict":true,"entityCount":36},"timestamp":1777121603619}

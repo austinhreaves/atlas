@@ -2,11 +2,20 @@ import { useCallback, useMemo, useState } from 'react'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import NodePanel from './components/NodePanel.jsx'
 import nodesData from './data/concepts.json'
+import { getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { computeLayout, computeMass } from './lib/layout'
 import { getUnderstood } from './lib/understanding'
 
 const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
+const DEFAULT_PANEL_WIDTH_FALLBACK = 440
+
+function getInitialPanelWidth() {
+  if (typeof window === 'undefined') {
+    return DEFAULT_PANEL_WIDTH_FALLBACK
+  }
+  return Math.max(1, Math.floor(window.innerWidth * 0.55))
+}
 
 function getNodeIdSet(nodes) {
   return nodes
@@ -50,7 +59,12 @@ function getLayoutPositions(nodes, edges) {
 export default function App() {
   const [selectedNodeId, setSelectedNodeId] = useState(null)
   const [understandingVersion, setUnderstandingVersion] = useState(0)
-  const edges = useMemo(() => buildEdges(nodesData), [])
+  const [panelWidth, setPanelWidth] = useState(() => getInitialPanelWidth())
+  const isPanelOpen = Boolean(selectedNodeId)
+  const edges = useMemo(() => {
+    const allEntities = getAllEntities()
+    return buildEdges(allEntities)
+  }, [])
   const nodeById = useMemo(
     () => new Map(nodesData.map((node) => [node.id, node])),
     [],
@@ -76,6 +90,10 @@ export default function App() {
 
   const handleUnderstandingChange = useCallback(() => {
     setUnderstandingVersion((value) => value + 1)
+  }, [])
+
+  const handlePanelWidthChange = useCallback((nextWidth) => {
+    setPanelWidth(nextWidth)
   }, [])
 
   const focalNodeIds = useMemo(
@@ -166,6 +184,8 @@ export default function App() {
         nodes={positionedNodes}
         edges={edges}
         selectedNodeId={selectedNodeId}
+        isPanelOpen={isPanelOpen}
+        panelWidth={panelWidth}
         focalNodeIds={focalNodeIds}
         neighborNodeIds={neighborNodeIds}
         distantNodeIds={distantNodeIds}
@@ -174,6 +194,8 @@ export default function App() {
       />
       <NodePanel
         selectedNode={selectedNode}
+        panelWidth={panelWidth}
+        onPanelWidthChange={handlePanelWidthChange}
         prerequisiteLinks={prerequisiteLinks}
         enablesLinks={enablesLinks}
         onClose={handleClosePanel}

@@ -8,6 +8,7 @@ import {
   ReactFlow,
 } from 'reactflow'
 import FloatingEdge from './FloatingEdge.jsx'
+import CameraController from './graph/CameraController.jsx'
 
 const domainCardClass = {
   mechanics:
@@ -168,11 +169,13 @@ function toFlowEdges(edges, selectedNodeId, neighborNodeIds, understoodNodeIds) 
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void }} props */
 export default function GraphCanvas({
   nodes,
   edges,
   selectedNodeId,
+  isPanelOpen = false,
+  panelWidth = 440,
   focalNodeIds,
   neighborNodeIds,
   distantNodeIds,
@@ -184,6 +187,7 @@ export default function GraphCanvas({
     [nodes],
   )
   const [visibleDomains, setVisibleDomains] = useState(() => new Set(domains))
+  const [userMoveEndCount, setUserMoveEndCount] = useState(0)
 
   const toggleDomain = useCallback((domain) => {
     setVisibleDomains((current) => {
@@ -235,6 +239,14 @@ export default function GraphCanvas({
     [onNodeClick],
   )
 
+  const handleMoveEnd = useCallback((event) => {
+    // React Flow emits null/undefined event for programmatic viewport moves.
+    if (!event) {
+      return
+    }
+    setUserMoveEndCount((value) => value + 1)
+  }, [])
+
   return (
     <div className="h-screen w-screen bg-surface">
       <div className="pointer-events-none absolute left-4 top-4 z-20">
@@ -277,8 +289,15 @@ export default function GraphCanvas({
         zoomOnPinch
         proOptions={{ hideAttribution: true }}
         onNodeClick={handleNodeClick}
+        onMoveEnd={handleMoveEnd}
         className="atlas-react-flow h-full w-full"
       >
+        <CameraController
+          selectedNodeId={selectedNodeId}
+          isPanelOpen={isPanelOpen}
+          panelWidth={panelWidth}
+          userMoveEndCount={userMoveEndCount}
+        />
         <Background
           variant={BackgroundVariant.Dots}
           gap={18}

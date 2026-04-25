@@ -1,0 +1,14 @@
+---
+description: Enforces behavioral test quality and low complexity as hard gates on AI-assisted development.
+alwaysApply: true
+---
+
+# AI Quality Gates
+
+- Assume AI can generate implementation and tests quickly; use that leverage to raise quality standards, not to ship faster with weak checks.
+- Line or branch coverage is necessary but not the final gate. A test that executes a line without asserting a meaningful outcome is not a test — it is a placeholder.
+- Every test for non-trivial logic must assert at least one of: (a) the return value or output under a valid input, (b) the behavior under an invalid or edge-case input, or (c) a side effect or state transition that the spec depends on. Tests that only confirm "no exception thrown" do not satisfy this.
+- Atlas schema invariants are the highest-value test targets. Cross-layer edge validity, authoring state transitions (`draft → reviewed → published`), mass formula correctness, and prerequisite-cycle detection should each have explicit failure-mode tests — not just happy-path tests.
+- Keep complexity low. Prefer small, single-purpose functions over large logic blocks. When a function handles multiple cases, ask whether those cases can be separate functions with their own tests.
+- Target CRAP score ≤ 5 (prefer ≤ 4) for new or modified logic. Document the reason if a unit must exceed this.
+- Do not weaken assertions to make tests pass. (See also: rule 20.) Fix the code, split the function, or surface the conflict.

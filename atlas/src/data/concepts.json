@@ -5,7 +5,7 @@
     "title": "Newton's Second Law",
     "type": "law",
     "domain": "mechanics",
-    "formula": "\\vec{a} = \\vec{F}_{\\text{net}}/m",
+    "formula": "\\vec{a} = \\frac{\\vec{F}_{\\text{net}}}{m}",
     "causal_structure": "asymmetric",
     "principle": "Net force changes motion by producing acceleration inversely proportional to mass.",
     "applicability_conditions": [
@@ -299,7 +299,7 @@
     "title": "Ohm's Law (I = V/R)",
     "type": "law",
     "domain": "electromagnetism",
-    "formula": "I = V/R",
+    "formula": "I = \\frac{V}{R}",
     "causal_structure": "asymmetric",
     "principle": "For ohmic conductors, current is proportional to voltage with resistance as proportionality constant.",
     "applicability_conditions": [
@@ -308,8 +308,8 @@
       "Steady-state circuit conditions apply"
     ],
     "limiting_cases": [
-      { "case": "R -> 0", "result": "Ideal short-circuit behavior with very large current for finite voltage." },
-      { "case": "R -> infinity", "result": "Open-circuit behavior with current approaching zero." }
+      { "case": "R \\rightarrow 0", "result": "Ideal short-circuit behavior with very large current for finite voltage." },
+      { "case": "R \\rightarrow \\infty", "result": "Open-circuit behavior with current approaching zero." }
     ],
     "misconceptions": [
       {
