@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import { BlockMath, InlineMath } from 'react-katex'
+import { useMemo, useState } from 'react'
 import katex from 'katex'
 import { isUnderstood, setUnderstood } from '../lib/understanding'
 
@@ -11,192 +10,25 @@ function TypeBadge({ type }) {
   )
 }
 
+function KatexText({ math, displayMode = false }) {
+  const rendered = useMemo(() => {
+    try {
+      return katex.renderToString(math, {
+        throwOnError: false,
+        displayMode,
+        output: 'html',
+      })
+    } catch {
+      return `<span class="katex-error">${math}</span>`
+    }
+  }, [displayMode, math])
+
+  return <span dangerouslySetInnerHTML={{ __html: rendered }} />
+}
+
 /** @param {{ selectedNode: any, onClose: () => void, onUnderstandingChange?: () => void }} props */
 export default function NodePanel({ selectedNode, onClose, onUnderstandingChange }) {
   const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
-  const [katexFontVersion, setKatexFontVersion] = useState(0)
-  const debugRunId = import.meta.env.DEV ? 'dev' : 'preview'
-  const katexSettings = useMemo(() => ({ output: 'html' }), [])
-
-  function sendDebugLog(hypothesisId, location, message, data) {
-    // #region agent log
-    fetch('http://127.0.0.1:7345/ingest/ca2f758a-0dbe-41e4-ae1c-34dcf25cdf07',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'0c833b'},body:JSON.stringify({sessionId:'0c833b',runId:debugRunId,hypothesisId,location,message,data,timestamp:Date.now()})}).catch(()=>{})
-    // #endregion
-  }
-
-  useEffect(() => {
-    if (!selectedNode?.formula) {
-      return
-    }
-
-    const formula = selectedNode.formula
-    sendDebugLog('H1/H3', 'src/components/NodePanel.jsx:formula-input', 'Formula passed to BlockMath', {
-      nodeId: selectedNode.id,
-      title: selectedNode.title,
-      formula,
-      length: formula.length,
-      charCodes: Array.from(formula).map((char) => char.charCodeAt(0)),
-    })
-
-    try {
-      katex.renderToString(formula, { throwOnError: true, displayMode: true })
-      sendDebugLog('H2/H4', 'src/components/NodePanel.jsx:katex-parse', 'KaTeX parse success', {
-        nodeId: selectedNode.id,
-        title: selectedNode.title,
-      })
-    } catch (error) {
-      sendDebugLog('H2/H4', 'src/components/NodePanel.jsx:katex-parse', 'KaTeX parse error', {
-        nodeId: selectedNode.id,
-        title: selectedNode.title,
-        errorName: error?.name ?? 'UnknownError',
-        errorMessage: error?.message ?? 'Unknown message',
-        formula,
-      })
-    }
-  }, [selectedNode, debugRunId])
-
-  useEffect(() => {
-    if (!selectedNode?.formula || !document.fonts?.load) {
-      return
-    }
-
-    const formulasThatNeedSizeFonts = selectedNode.formula.includes('\\frac')
-    if (!formulasThatNeedSizeFonts) {
-      return
-    }
-
-    sendDebugLog('H10', 'src/components/NodePanel.jsx:katex-font-load', 'Starting explicit KaTeX font preload', {
-      nodeId: selectedNode.id,
-      title: selectedNode.title,
-      host: window.location.host,
-    })
-
-    Promise.all([
-      document.fonts.load('16px KaTeX_Main'),
-      document.fonts.load('16px KaTeX_Math'),
-      document.fonts.load('16px KaTeX_Size1'),
-      document.fonts.load('16px KaTeX_Size2'),
-      document.fonts.load('16px KaTeX_Size3'),
-      document.fonts.load('16px KaTeX_Size4'),
-    ]).then(() => {
-      sendDebugLog('H10', 'src/components/NodePanel.jsx:katex-font-load', 'Finished explicit KaTeX font preload', {
-        nodeId: selectedNode.id,
-        title: selectedNode.title,
-        kaTeXMainReady: document.fonts.check('16px KaTeX_Main'),
-        kaTeXMathReady: document.fonts.check('16px KaTeX_Math'),
-        kaTeXSize1Ready: document.fonts.check('16px KaTeX_Size1'),
-        kaTeXSize2Ready: document.fonts.check('16px KaTeX_Size2'),
-        kaTeXSize3Ready: document.fonts.check('16px KaTeX_Size3'),
-        kaTeXSize4Ready: document.fonts.check('16px KaTeX_Size4'),
-        host: window.location.host,
-      })
-      setKatexFontVersion((value) => value + 1)
-    })
-  }, [selectedNode, debugRunId])
-
-  useEffect(() => {
-    if (!selectedNode?.formula) {
-      return
-    }
-
-    const animationFrameId = window.requestAnimationFrame(() => {
-      const container = document.querySelector('aside')
-      const katexElement = container?.querySelector('.katex') ?? null
-      const katexMathml = container?.querySelector('.katex-mathml') ?? null
-      const katexHtml = container?.querySelector('.katex-html') ?? null
-      const fracLine = container?.querySelector('.katex .frac-line') ?? null
-
-      if (!katexElement || !katexMathml || !katexHtml) {
-        sendDebugLog(
-          'H6/H8',
-          'src/components/NodePanel.jsx:katex-dom',
-          'KaTeX DOM structure missing in panel',
-          {
-            nodeId: selectedNode.id,
-            title: selectedNode.title,
-            hasKatex: Boolean(katexElement),
-            hasMathml: Boolean(katexMathml),
-            hasHtmlLayer: Boolean(katexHtml),
-            stylesheetCount: Array.from(document.styleSheets).length,
-            host: window.location.host,
-          },
-        )
-        return
-      }
-
-      const mathmlStyle = window.getComputedStyle(katexMathml)
-      const htmlStyle = window.getComputedStyle(katexHtml)
-      const katexStyle = window.getComputedStyle(katexElement)
-      const styleSheetHrefs = Array.from(document.styleSheets)
-        .map((styleSheet) => styleSheet.href)
-        .filter(Boolean)
-        .slice(0, 20)
-
-      sendDebugLog(
-        'H6/H8',
-        'src/components/NodePanel.jsx:katex-dom',
-        'KaTeX DOM and stylesheet state',
-        {
-          nodeId: selectedNode.id,
-          title: selectedNode.title,
-          mathmlDisplay: mathmlStyle.display,
-          mathmlPosition: mathmlStyle.position,
-          mathmlClip: mathmlStyle.clip,
-          mathmlOverflow: mathmlStyle.overflow,
-          mathmlWidth: mathmlStyle.width,
-          mathmlHeight: mathmlStyle.height,
-          htmlDisplay: htmlStyle.display,
-          htmlWhiteSpace: htmlStyle.whiteSpace,
-          katexFontFamily: katexStyle.fontFamily,
-          katexTextIndent: katexStyle.textIndent,
-          hasKatexStylesheet: styleSheetHrefs.some(
-            (href) => href.includes('index-') || href.includes('katex'),
-          ),
-          styleSheetHrefs,
-          host: window.location.host,
-        },
-      )
-
-      if (fracLine) {
-        const fracLineStyle = window.getComputedStyle(fracLine)
-        sendDebugLog(
-          'H9',
-          'src/components/NodePanel.jsx:katex-frac-line',
-          'KaTeX fraction line computed style',
-          {
-            nodeId: selectedNode.id,
-            title: selectedNode.title,
-            borderBottomStyle: fracLineStyle.borderBottomStyle,
-            borderBottomWidth: fracLineStyle.borderBottomWidth,
-            minHeight: fracLineStyle.minHeight,
-            height: fracLineStyle.height,
-            display: fracLineStyle.display,
-            host: window.location.host,
-          },
-        )
-      }
-
-      if (document.fonts?.check) {
-        sendDebugLog(
-          'H7',
-          'src/components/NodePanel.jsx:katex-fonts',
-          'KaTeX font readiness',
-          {
-            nodeId: selectedNode.id,
-            title: selectedNode.title,
-            kaTeXMainReady: document.fonts.check('16px KaTeX_Main'),
-            kaTeXMathReady: document.fonts.check('16px KaTeX_Math'),
-            kaTeXSizeReady: document.fonts.check('16px KaTeX_Size1'),
-            host: window.location.host,
-          },
-        )
-      }
-    })
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId)
-    }
-  }, [selectedNode, debugRunId, katexFontVersion])
 
   const variableRows = selectedNode?.variables ?? []
   const hasUnifiedConservedBand =
@@ -307,11 +139,7 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
                   Formula
                 </h3>
                 <div className="rounded-lg border border-slate-700/80 bg-slate-950/70 p-3 text-slate-100">
-                  <BlockMath
-                    key={`${selectedNode.id}-${katexFontVersion}`}
-                    math={selectedNode.formula}
-                    settings={katexSettings}
-                  />
+                  <KatexText math={selectedNode.formula} displayMode />
                 </div>
               </section>
 
@@ -332,7 +160,7 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
                     >
                       <div className="mb-1 flex flex-wrap items-center gap-2">
                         <span className="font-mono text-cyan-200">
-                          <InlineMath math={variable.symbol} settings={katexSettings} />
+                          <KatexText math={variable.symbol} />
                         </span>
                         <span className="rounded border border-slate-500/60 bg-slate-900/60 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
                           {variable.role}
