@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes atlas-frontier-pulse {
+  0%,
+  100% {
+    opacity: var(--atlas-frontier-opacity-min, 0.5);
+  }
+  50% {
+    opacity: var(--atlas-frontier-opacity-max, 0.7);
+  }
+}
+
+.atlas-frontier-edge {
+  animation: atlas-frontier-pulse 2s ease-in-out infinite;
+}
+
 @layer base {
   :root {
     color-scheme: dark;

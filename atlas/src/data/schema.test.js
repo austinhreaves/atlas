@@ -29,10 +29,54 @@ describe('validateNode', () => {
   it('rejects invalid variable entries', () => {
     const badNode = {
       ...nodes[0],
-      variables: [{ symbol: '', name: 'Force', unit: 'N', description: 'x' }],
+      variables: [{ symbol: '', role: 'driver', name: 'Force', unit: 'N', description: 'x' }],
     }
     const errors = validateNode(badNode)
     expect(errors).toContain('variables[0].symbol must be a non-empty string.')
+  })
+
+  it('rejects legacy connections field', () => {
+    const badNode = {
+      ...nodes[0],
+      connections: ['legacy-node'],
+    }
+    const errors = validateNode(badNode)
+    expect(errors).toContain('connections is not allowed. Use prerequisites instead.')
+  })
+
+  it('rejects invalid prerequisite entries', () => {
+    const badNode = {
+      ...nodes[0],
+      prerequisites: [{ id: '', type: 'base', weight: 2 }],
+    }
+    const errors = validateNode(badNode)
+    expect(errors).toContain('prerequisites[0].id must be a non-empty string.')
+    expect(errors).toContain(
+      'prerequisites[0].type must be one of: foundational, supporting, lateral',
+    )
+    expect(errors).toContain('prerequisites[0].weight must be a number between 0 and 1.')
+  })
+
+  it('requires conserved variable roles for symmetric structures', () => {
+    const badNode = {
+      ...nodes[0],
+      causal_structure: 'symmetric',
+      variables: [{ ...nodes[0].variables[0], role: 'driver' }],
+    }
+    const errors = validateNode(badNode)
+    expect(errors).toContain(
+      'variables[0].role must be "conserved" when causal_structure is "symmetric".',
+    )
+  })
+
+  it('rejects driver/response roles for contextual structures', () => {
+    const badNode = {
+      ...nodes[0],
+      causal_structure: 'contextual',
+      variables: [{ ...nodes[0].variables[0], role: 'response', symbol: 'Y' }],
+    }
+    const errors = validateNode(badNode)
+    expect(errors).toContain('contextual nodes cannot have driver/response roles: Y')
   })
 
   it('rejects invalid visual metadata', () => {

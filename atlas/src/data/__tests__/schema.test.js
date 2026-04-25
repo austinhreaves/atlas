@@ -21,6 +21,86 @@ describe('validateNode unit tests', () => {
     expect(errors).toContain('variables must be a non-empty array.')
   })
 
+  it('returns errors when legacy connections field is present', () => {
+    const legacyNode = { ...nodes[0], connections: ['other-node'] }
+    const errors = validateNode(legacyNode)
+    expect(errors).toContain('connections is not allowed. Use prerequisites instead.')
+  })
+
+  it('accepts idealizations with idealized scope', () => {
+    const idealizationsNode = {
+      ...nodes[0],
+      idealizations: [
+        { name: 'Friction', scope: 'idealized', note: 'Idealized away in intro model.' },
+      ],
+    }
+    const idealizationErrors = validateNode(idealizationsNode)
+    expect(
+      idealizationErrors.some((error) => error.includes('idealizations')),
+    ).toBe(false)
+  })
+
+  it('returns errors for invalid variable role', () => {
+    const invalidRoleNode = {
+      ...nodes[0],
+      variables: [{ ...nodes[0].variables[0], role: 'cause' }],
+    }
+    const errors = validateNode(invalidRoleNode)
+    expect(errors.some((error) => error.startsWith('variables[0].role must be one of:'))).toBe(
+      true,
+    )
+  })
+
+  it("rejects variable with role 'contextual'", () => {
+    const minimalValidNode = {
+      id: 'test-node',
+      title: 'Test Node',
+      type: 'law',
+      domain: 'mechanics',
+      formula: 'F = ma',
+      causal_structure: 'asymmetric',
+      variables: [
+        {
+          symbol: 'F',
+          role: 'contextual',
+          name: 'Force',
+          unit: 'N',
+          description: 'Force variable.',
+        },
+      ],
+      description: 'Valid node except for role value.',
+      prerequisites: [],
+      visual: { type: 'none', url: null, caption: null },
+      tags: ['test'],
+      mass: null,
+      position: null,
+    }
+    const errors = validateNode(minimalValidNode)
+    expect(errors.length).toBeGreaterThan(0)
+  })
+
+  it('enforces conserved variables for symmetric causal structure', () => {
+    const invalidSymmetricNode = {
+      ...nodes[0],
+      causal_structure: 'symmetric',
+      variables: [{ ...nodes[0].variables[0], role: 'driver' }],
+    }
+    const errors = validateNode(invalidSymmetricNode)
+    expect(errors).toContain(
+      'variables[0].role must be "conserved" when causal_structure is "symmetric".',
+    )
+  })
+
+  it('forbids driver/response roles for contextual causal structure', () => {
+    const invalidContextualNode = {
+      ...nodes[0],
+      causal_structure: 'contextual',
+      variables: [{ ...nodes[0].variables[0], role: 'driver', symbol: 'X' }],
+    }
+    const errors = validateNode(invalidContextualNode)
+    expect(errors).toContain('contextual nodes cannot have driver/response roles: X')
+  })
+
   it('returns errors for visual.type not in allowed set', () => {
     const invalidVisualTypeNode = {
       ...nodes[0],

@@ -1,4 +1,7 @@
-import { BlockMath } from 'react-katex'
+import { useEffect, useMemo, useState } from 'react'
+import { BlockMath, InlineMath } from 'react-katex'
+import katex from 'katex'
+import { isUnderstood, setUnderstood } from '../lib/understanding'
 
 function TypeBadge({ type }) {
   return (
@@ -8,8 +11,169 @@ function TypeBadge({ type }) {
   )
 }
 
-/** @param {{ selectedNode: any, onClose: () => void }} props */
-export default function NodePanel({ selectedNode, onClose }) {
+/** @param {{ selectedNode: any, onClose: () => void, onUnderstandingChange?: () => void }} props */
+export default function NodePanel({ selectedNode, onClose, onUnderstandingChange }) {
+  const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
+  const debugRunId = import.meta.env.DEV ? 'dev' : 'preview'
+
+  function sendDebugLog(hypothesisId, location, message, data) {
+    // #region agent log
+    fetch('http://127.0.0.1:7345/ingest/ca2f758a-0dbe-41e4-ae1c-34dcf25cdf07',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'0c833b'},body:JSON.stringify({sessionId:'0c833b',runId:debugRunId,hypothesisId,location,message,data,timestamp:Date.now()})}).catch(()=>{})
+    // #endregion
+  }
+
+  useEffect(() => {
+    if (!selectedNode?.formula) {
+      return
+    }
+
+    const formula = selectedNode.formula
+    sendDebugLog('H1/H3', 'src/components/NodePanel.jsx:formula-input', 'Formula passed to BlockMath', {
+      nodeId: selectedNode.id,
+      title: selectedNode.title,
+      formula,
+      length: formula.length,
+      charCodes: Array.from(formula).map((char) => char.charCodeAt(0)),
+    })
+
+    try {
+      katex.renderToString(formula, { throwOnError: true, displayMode: true })
+      sendDebugLog('H2/H4', 'src/components/NodePanel.jsx:katex-parse', 'KaTeX parse success', {
+        nodeId: selectedNode.id,
+        title: selectedNode.title,
+      })
+    } catch (error) {
+      sendDebugLog('H2/H4', 'src/components/NodePanel.jsx:katex-parse', 'KaTeX parse error', {
+        nodeId: selectedNode.id,
+        title: selectedNode.title,
+        errorName: error?.name ?? 'UnknownError',
+        errorMessage: error?.message ?? 'Unknown message',
+        formula,
+      })
+    }
+  }, [selectedNode, debugRunId])
+
+  useEffect(() => {
+    if (!selectedNode?.formula) {
+      return
+    }
+
+    const container = document.querySelector('aside')
+    const katexElement = container?.querySelector('.katex') ?? null
+    const katexMathml = container?.querySelector('.katex-mathml') ?? null
+    const katexHtml = container?.querySelector('.katex-html') ?? null
+
+    if (!katexElement || !katexMathml || !katexHtml) {
+      sendDebugLog(
+        'H6/H8',
+        'src/components/NodePanel.jsx:katex-dom',
+        'KaTeX DOM structure missing in panel',
+        {
+          nodeId: selectedNode.id,
+          title: selectedNode.title,
+          hasKatex: Boolean(katexElement),
+          hasMathml: Boolean(katexMathml),
+          hasHtmlLayer: Boolean(katexHtml),
+          stylesheetCount: Array.from(document.styleSheets).length,
+          host: window.location.host,
+        },
+      )
+      return
+    }
+
+    const mathmlStyle = window.getComputedStyle(katexMathml)
+    const htmlStyle = window.getComputedStyle(katexHtml)
+    const styleSheetHrefs = Array.from(document.styleSheets)
+      .map((styleSheet) => styleSheet.href)
+      .filter(Boolean)
+      .slice(0, 20)
+
+    sendDebugLog(
+      'H6/H8',
+      'src/components/NodePanel.jsx:katex-dom',
+      'KaTeX DOM and stylesheet state',
+      {
+        nodeId: selectedNode.id,
+        title: selectedNode.title,
+        mathmlDisplay: mathmlStyle.display,
+        mathmlPosition: mathmlStyle.position,
+        htmlDisplay: htmlStyle.display,
+        htmlWhiteSpace: htmlStyle.whiteSpace,
+        hasKatexStylesheet: styleSheetHrefs.some((href) => href.includes('index-') || href.includes('katex')),
+        styleSheetHrefs,
+        host: window.location.host,
+      },
+    )
+
+    if (document.fonts?.check) {
+      sendDebugLog(
+        'H7',
+        'src/components/NodePanel.jsx:katex-fonts',
+        'KaTeX font readiness',
+        {
+          nodeId: selectedNode.id,
+          title: selectedNode.title,
+          kaTeXMainReady: document.fonts.check('16px KaTeX_Main'),
+          kaTeXMathReady: document.fonts.check('16px KaTeX_Math'),
+          kaTeXSizeReady: document.fonts.check('16px KaTeX_Size1'),
+          host: window.location.host,
+        },
+      )
+    }
+  }, [selectedNode, debugRunId])
+
+  const variableRows = selectedNode?.variables ?? []
+  const hasUnifiedConservedBand =
+    selectedNode?.causal_structure === 'symmetric' &&
+    variableRows.length > 0 &&
+    variableRows.every((variable) => variable.role === 'conserved')
+
+  const idealizations = selectedNode?.idealizations ?? []
+  const visibleIdealizations = useMemo(
+    () => idealizations.filter((idealization) => idealization.scope !== 'idealized'),
+    [idealizations],
+  )
+  const idealizedAssumptions = useMemo(
+    () => idealizations.filter((idealization) => idealization.scope === 'idealized'),
+    [idealizations],
+  )
+
+  const causalStructureLabel =
+    selectedNode?.causal_structure === 'symmetric'
+      ? 'Conservation law'
+      : selectedNode?.causal_structure === 'contextual'
+        ? 'Bidirectional relationship'
+        : 'driver(s) -> response via parameter(s)'
+
+  function getVariableRowClass(role) {
+    if (hasUnifiedConservedBand) {
+      return 'border-emerald-400/25 bg-emerald-500/10'
+    }
+    if (role === 'driver') {
+      return 'border-amber-400/30 bg-amber-500/10'
+    }
+    if (role === 'response') {
+      return 'border-sky-400/30 bg-sky-500/10'
+    }
+    if (role === 'covariate') {
+      return 'border-slate-500/40 bg-slate-800/40 italic text-slate-300'
+    }
+    if (role === 'conserved') {
+      return 'border-emerald-400/25 bg-emerald-500/10'
+    }
+    return 'border-slate-600/50 bg-slate-800/40'
+  }
+
+  function getScopeBadgeClass(scope) {
+    if (scope === 'primary') {
+      return 'border-amber-400/30 bg-amber-500/15 text-amber-200'
+    }
+    if (scope === 'noted') {
+      return 'border-sky-400/30 bg-sky-500/15 text-sky-200'
+    }
+    return 'border-slate-600/60 bg-slate-800/70 text-slate-300'
+  }
+
   return (
     <>
       {!selectedNode ? (
@@ -35,6 +199,20 @@ export default function NodePanel({ selectedNode, onClose }) {
                   <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">
                     {selectedNode.domain}
                   </p>
+                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-xs text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={isUnderstood(selectedNode.id)}
+                      onChange={(event) => {
+                        setUnderstood(selectedNode.id, event.target.checked)
+                        if (typeof onUnderstandingChange === 'function') {
+                          onUnderstandingChange()
+                        }
+                      }}
+                      className="h-3.5 w-3.5 rounded border-slate-500 bg-slate-800 text-cyan-400 focus:ring-cyan-400/60"
+                    />
+                    <span>I understand this concept.</span>
+                  </label>
                 </div>
                 <button
                   type="button"
@@ -61,31 +239,89 @@ export default function NodePanel({ selectedNode, onClose }) {
                 <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-300">
                   Variables
                 </h3>
-                <div className="overflow-x-auto rounded-lg border border-slate-700/80">
-                  <table className="min-w-full divide-y divide-slate-700 text-left text-xs">
-                    <thead className="bg-slate-800/80 text-slate-300">
-                      <tr>
-                        <th className="px-3 py-2 font-semibold">Symbol</th>
-                        <th className="px-3 py-2 font-semibold">Name</th>
-                        <th className="px-3 py-2 font-semibold">Unit</th>
-                        <th className="px-3 py-2 font-semibold">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800 bg-slate-900/70 text-slate-200">
-                      {selectedNode.variables.map((variable) => (
-                        <tr key={`${selectedNode.id}-${variable.symbol}`}>
-                          <td className="whitespace-nowrap px-3 py-2 font-mono text-cyan-200">
-                            {variable.symbol}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-2">{variable.name}</td>
-                          <td className="whitespace-nowrap px-3 py-2">{variable.unit}</td>
-                          <td className="px-3 py-2">{variable.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="mb-2">
+                  <span className="inline-flex rounded-md border border-slate-600/70 bg-slate-800/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+                    {causalStructureLabel}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {variableRows.map((variable) => (
+                    <div
+                      key={`${selectedNode.id}-${variable.symbol}`}
+                      className={`rounded-lg border px-3 py-2 text-xs text-slate-200 ${getVariableRowClass(variable.role)}`}
+                    >
+                      <div className="mb-1 flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-cyan-200">
+                          <InlineMath math={variable.symbol} />
+                        </span>
+                        <span className="rounded border border-slate-500/60 bg-slate-900/60 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
+                          {variable.role}
+                        </span>
+                        <span className="font-semibold text-slate-100">{variable.name}</span>
+                        <span className="text-slate-400">({variable.unit})</span>
+                      </div>
+                      <p className="leading-relaxed text-slate-300">{variable.description}</p>
+                    </div>
+                  ))}
                 </div>
               </section>
+
+              {idealizations.length > 0 ? (
+                <section>
+                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-300">
+                    Simplifying assumptions
+                  </h3>
+                  <div className="space-y-2">
+                    {visibleIdealizations.map((idealization) => (
+                      <div
+                        key={`${selectedNode.id}-idealization-${idealization.name}`}
+                        className="rounded-lg border border-slate-700/80 bg-slate-950/50 px-3 py-2 text-xs text-slate-200"
+                      >
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="font-semibold text-slate-100">{idealization.name}</span>
+                          <span
+                            className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${getScopeBadgeClass(idealization.scope)}`}
+                          >
+                            {idealization.scope}
+                          </span>
+                        </div>
+                        {idealization.note ? (
+                          <p className="leading-relaxed text-slate-300">{idealization.note}</p>
+                        ) : null}
+                      </div>
+                    ))}
+
+                    {idealizedAssumptions.length > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowIdealizedAssumptions((value) => !value)}
+                        className="text-xs font-semibold text-slate-400 underline decoration-slate-600 underline-offset-2 transition hover:text-slate-300"
+                      >
+                        Show simplifying assumptions ({idealizedAssumptions.length})
+                      </button>
+                    ) : null}
+
+                    {showIdealizedAssumptions
+                      ? idealizedAssumptions.map((idealization) => (
+                          <div
+                            key={`${selectedNode.id}-idealized-assumption-${idealization.name}`}
+                            className="rounded-lg border border-slate-700/60 bg-slate-950/40 px-3 py-2 text-xs italic text-slate-400"
+                          >
+                            <div className="mb-1 flex items-center gap-2">
+                              <span className="font-semibold">{idealization.name}</span>
+                              <span className="rounded border border-slate-600/60 bg-slate-900/70 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                                {idealization.scope}
+                              </span>
+                            </div>
+                            {idealization.note ? (
+                              <p className="leading-relaxed">{idealization.note}</p>
+                            ) : null}
+                          </div>
+                        ))
+                      : null}
+                  </div>
+                </section>
+              ) : null}
 
               <section>
                 <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-300">

@@ -5,20 +5,62 @@
     "type": "law",
     "domain": "mechanics",
     "formula": "F = ma",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "F", "name": "Net force", "unit": "N", "description": "Total force acting on an object." },
-      { "symbol": "m", "name": "Mass", "unit": "kg", "description": "A measure of the object's inertia." },
-      { "symbol": "a", "name": "Acceleration", "unit": "m/s^2", "description": "Rate of change of velocity." }
+      {
+        "symbol": "F",
+        "role": "driver",
+        "name": "Net force",
+        "unit": "N",
+        "description": "Total force acting on an object."
+      },
+      {
+        "symbol": "a",
+        "role": "response",
+        "name": "Acceleration",
+        "unit": "m/s^2",
+        "description": "Rate of change of velocity."
+      },
+      {
+        "symbol": "m",
+        "role": "parameter",
+        "name": "Mass",
+        "unit": "kg",
+        "description": "A measure of the object's inertia."
+      }
     ],
     "description": "The acceleration of an object is proportional to the net force and inversely proportional to its mass.",
-    "connections": ["kinematics-velocity-time", "work-energy-theorem", "coulombs-law", "electric-field-definition"],
+    "prerequisites": [
+      {
+        "id": "kinematics-velocity-time",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "phet",
       "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
       "caption": "Forces and Motion Basics"
     },
-    "tags": ["dynamics", "force", "acceleration"],
-    "position": { "x": -520, "y": -120 }
+    "tags": [
+      "dynamics",
+      "force",
+      "acceleration"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Friction",
+        "scope": "idealized",
+        "note": "Intro derivations usually assume idealized low-friction motion."
+      },
+      {
+        "name": "Air resistance",
+        "scope": "idealized",
+        "note": "Drag is neglected to keep acceleration approximately constant."
+      }
+    ]
   },
   {
     "id": "work-energy-theorem",
@@ -26,19 +68,60 @@
     "type": "theorem",
     "domain": "mechanics",
     "formula": "W_{\\text{net}} = \\Delta K",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "W_{\\text{net}}", "name": "Net work", "unit": "J", "description": "Total work done by all forces." },
-      { "symbol": "\\Delta K", "name": "Change in kinetic energy", "unit": "J", "description": "Difference between final and initial kinetic energy." }
+      {
+        "symbol": "W_{\\text{net}}",
+        "role": "driver",
+        "name": "Net work",
+        "unit": "J",
+        "description": "Total work done by all forces."
+      },
+      {
+        "symbol": "\\Delta K",
+        "role": "response",
+        "name": "Change in kinetic energy",
+        "unit": "J",
+        "description": "Difference between final and initial kinetic energy."
+      }
     ],
     "description": "Net work on a body changes its kinetic energy, linking force-based motion to energy language.",
-    "connections": ["gravitational-potential-energy"],
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "foundational",
+        "weight": 0.85
+      },
+      {
+        "id": "kinematics-velocity-time",
+        "type": "supporting",
+        "weight": 0.6
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "widget",
       "url": null,
       "caption": null
     },
-    "tags": ["energy", "work", "kinetic-energy"],
-    "position": { "x": -300, "y": 40 }
+    "tags": [
+      "energy",
+      "work",
+      "kinetic-energy"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Friction",
+        "scope": "idealized",
+        "note": "Dissipative losses are often ignored in first-pass applications."
+      },
+      {
+        "name": "Air resistance",
+        "scope": "idealized",
+        "note": "Drag work is omitted in idealized work-energy examples."
+      }
+    ]
   },
   {
     "id": "conservation-of-momentum",
@@ -46,19 +129,50 @@
     "type": "principle",
     "domain": "mechanics",
     "formula": "\\sum \\vec{p}_{\\text{initial}} = \\sum \\vec{p}_{\\text{final}}",
+    "causal_structure": "symmetric",
     "variables": [
-      { "symbol": "\\vec{p}", "name": "Momentum", "unit": "kg\\cdot m/s", "description": "Product of mass and velocity." },
-      { "symbol": "\\sum", "name": "System sum", "unit": "n/a", "description": "Total over all interacting objects." }
+      {
+        "symbol": "\\vec{p}",
+        "role": "conserved",
+        "name": "Momentum",
+        "unit": "kg\\cdot m/s",
+        "description": "Product of mass and velocity."
+      },
+      {
+        "symbol": "\\sum \\vec{p}",
+        "role": "conserved",
+        "name": "System momentum sum",
+        "unit": "kg\\cdot m/s",
+        "description": "Total momentum over all objects in the system."
+      }
     ],
     "description": "For an isolated system, total momentum stays constant during interactions like collisions and explosions.",
-    "connections": ["newtons-second-law"],
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "video",
       "url": null,
       "caption": null
     },
-    "tags": ["momentum", "collisions", "systems"],
-    "position": { "x": -540, "y": 210 }
+    "tags": [
+      "momentum",
+      "collisions",
+      "systems"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "External impulses",
+        "scope": "idealized",
+        "note": "The principle is introduced assuming negligible external force over collision time."
+      }
+    ]
   },
   {
     "id": "kinematics-velocity-time",
@@ -66,21 +180,63 @@
     "type": "equation",
     "domain": "mechanics",
     "formula": "v = v_0 + at",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "v", "name": "Final velocity", "unit": "m/s", "description": "Velocity after elapsed time." },
-      { "symbol": "v_0", "name": "Initial velocity", "unit": "m/s", "description": "Velocity at the start of motion." },
-      { "symbol": "a", "name": "Acceleration", "unit": "m/s^2", "description": "Constant acceleration during motion." },
-      { "symbol": "t", "name": "Time", "unit": "s", "description": "Elapsed time interval." }
+      {
+        "symbol": "a",
+        "role": "driver",
+        "name": "Acceleration",
+        "unit": "m/s^2",
+        "description": "Constant acceleration during motion."
+      },
+      {
+        "symbol": "t",
+        "role": "driver",
+        "name": "Time",
+        "unit": "s",
+        "description": "Elapsed time interval."
+      },
+      {
+        "symbol": "v_0",
+        "role": "parameter",
+        "name": "Initial velocity",
+        "unit": "m/s",
+        "description": "Velocity at the start of motion."
+      },
+      {
+        "symbol": "v",
+        "role": "response",
+        "name": "Final velocity",
+        "unit": "m/s",
+        "description": "Velocity after elapsed time."
+      }
     ],
     "description": "This constant-acceleration relation predicts velocity changes over time without directly using forces.",
-    "connections": ["work-energy-theorem"],
+    "prerequisites": [],
+    "mass": null,
     "visual": {
       "type": "none",
       "url": null,
       "caption": null
     },
-    "tags": ["kinematics", "motion", "constant-acceleration"],
-    "position": { "x": -220, "y": -220 }
+    "tags": [
+      "kinematics",
+      "motion",
+      "constant-acceleration"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Air resistance",
+        "scope": "idealized",
+        "note": "Constant-acceleration forms assume negligible drag."
+      },
+      {
+        "name": "Friction",
+        "scope": "idealized",
+        "note": "Surface interactions are typically neglected in introductory kinematics."
+      }
+    ]
   },
   {
     "id": "gravitational-potential-energy",
@@ -88,21 +244,64 @@
     "type": "definition",
     "domain": "mechanics",
     "formula": "U = mgh",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "U", "name": "Potential energy", "unit": "J", "description": "Energy stored due to height in a gravitational field." },
-      { "symbol": "m", "name": "Mass", "unit": "kg", "description": "Mass of the object." },
-      { "symbol": "g", "name": "Gravitational field strength", "unit": "m/s^2", "description": "Acceleration due to gravity." },
-      { "symbol": "h", "name": "Height", "unit": "m", "description": "Vertical displacement from a reference level." }
+      {
+        "symbol": "m",
+        "role": "parameter",
+        "name": "Mass",
+        "unit": "kg",
+        "description": "Mass of the object."
+      },
+      {
+        "symbol": "g",
+        "role": "parameter",
+        "name": "Gravitational field strength",
+        "unit": "m/s^2",
+        "description": "Acceleration due to gravity."
+      },
+      {
+        "symbol": "h",
+        "role": "driver",
+        "name": "Height",
+        "unit": "m",
+        "description": "Vertical displacement from a reference level."
+      },
+      {
+        "symbol": "U",
+        "role": "response",
+        "name": "Potential energy",
+        "unit": "J",
+        "description": "Energy stored due to height in a gravitational field."
+      }
     ],
     "description": "An object elevated in a gravitational field stores energy that can convert into kinetic energy.",
-    "connections": [],
+    "prerequisites": [
+      {
+        "id": "work-energy-theorem",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "none",
       "url": null,
       "caption": null
     },
-    "tags": ["potential-energy", "gravity", "energy-conservation"],
-    "position": { "x": -360, "y": 260 }
+    "tags": [
+      "potential-energy",
+      "gravity",
+      "energy-conservation"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Local gravity variation",
+        "scope": "idealized",
+        "note": "Intro treatments assume constant g near Earth's surface."
+      }
+    ]
   },
   {
     "id": "coulombs-law",
@@ -110,21 +309,58 @@
     "type": "law",
     "domain": "electromagnetism",
     "formula": "F = k\\frac{|q_1 q_2|}{r^2}",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "F", "name": "Electrostatic force magnitude", "unit": "N", "description": "Force between two point charges." },
-      { "symbol": "k", "name": "Coulomb constant", "unit": "N\\cdot m^2/C^2", "description": "Proportionality constant in vacuum." },
-      { "symbol": "q_1, q_2", "name": "Charges", "unit": "C", "description": "Point charges producing the interaction." },
-      { "symbol": "r", "name": "Separation distance", "unit": "m", "description": "Distance between charge centers." }
+      {
+        "symbol": "q_1, q_2",
+        "role": "driver",
+        "name": "Charges",
+        "unit": "C",
+        "description": "Point charges producing the interaction."
+      },
+      {
+        "symbol": "r",
+        "role": "driver",
+        "name": "Separation distance",
+        "unit": "m",
+        "description": "Distance between charge centers."
+      },
+      {
+        "symbol": "k",
+        "role": "parameter",
+        "name": "Coulomb constant",
+        "unit": "N\\cdot m^2/C^2",
+        "description": "Proportionality constant in vacuum."
+      },
+      {
+        "symbol": "F",
+        "role": "response",
+        "name": "Electrostatic force magnitude",
+        "unit": "N",
+        "description": "Force between two point charges."
+      }
     ],
     "description": "The electric force between two point charges scales with charge product and falls with inverse-square distance.",
-    "connections": ["electric-field-definition", "gauss-law"],
+    "prerequisites": [],
+    "mass": null,
     "visual": {
       "type": "phet",
       "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
       "caption": "Charges and Fields"
     },
-    "tags": ["electrostatics", "inverse-square", "charge"],
-    "position": { "x": 280, "y": -130 }
+    "tags": [
+      "electrostatics",
+      "inverse-square",
+      "charge"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Material medium",
+        "scope": "idealized",
+        "note": "The vacuum form is emphasized before introducing dielectric effects."
+      }
+    ]
   },
   {
     "id": "electric-field-definition",
@@ -132,20 +368,57 @@
     "type": "definition",
     "domain": "electromagnetism",
     "formula": "\\vec{E} = \\frac{\\vec{F}}{q}",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "\\vec{E}", "name": "Electric field", "unit": "N/C", "description": "Force per unit positive test charge." },
-      { "symbol": "\\vec{F}", "name": "Electric force", "unit": "N", "description": "Force experienced by a test charge." },
-      { "symbol": "q", "name": "Test charge", "unit": "C", "description": "Charge used to probe the field." }
+      {
+        "symbol": "\\vec{F}",
+        "role": "response",
+        "name": "Electric force",
+        "unit": "N",
+        "description": "Force experienced by a test charge."
+      },
+      {
+        "symbol": "q",
+        "role": "parameter",
+        "name": "Test charge",
+        "unit": "C",
+        "description": "Charge used to probe the field."
+      },
+      {
+        "symbol": "\\vec{E}",
+        "role": "driver",
+        "name": "Electric field",
+        "unit": "N/C",
+        "description": "Force per unit positive test charge."
+      }
     ],
     "description": "Electric field describes how strongly and in what direction charges would be pushed at each point in space.",
-    "connections": ["ohms-law", "gauss-law"],
+    "prerequisites": [
+      {
+        "id": "coulombs-law",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "phet",
       "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
       "caption": "Charges and Fields"
     },
-    "tags": ["field", "electrostatics", "force"],
-    "position": { "x": 520, "y": -20 }
+    "tags": [
+      "field",
+      "electrostatics",
+      "force"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Polarization effects",
+        "scope": "idealized",
+        "note": "Intro field definitions assume simple media or vacuum behavior."
+      }
+    ]
   },
   {
     "id": "ohms-law",
@@ -153,20 +426,62 @@
     "type": "law",
     "domain": "electromagnetism",
     "formula": "V = IR",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "V", "name": "Voltage", "unit": "V", "description": "Electrical potential difference across a component." },
-      { "symbol": "I", "name": "Current", "unit": "A", "description": "Rate of charge flow." },
-      { "symbol": "R", "name": "Resistance", "unit": "\\Omega", "description": "Opposition to current." }
+      {
+        "symbol": "V",
+        "role": "driver",
+        "name": "Voltage",
+        "unit": "V",
+        "description": "Electrical potential difference across a component."
+      },
+      {
+        "symbol": "I",
+        "role": "response",
+        "name": "Current",
+        "unit": "A",
+        "description": "Rate of charge flow."
+      },
+      {
+        "symbol": "R",
+        "role": "parameter",
+        "name": "Resistance",
+        "unit": "\\Omega",
+        "description": "Opposition to current."
+      }
     ],
     "description": "In many conductors, voltage is proportional to current with resistance as the proportionality constant.",
-    "connections": ["faradays-law-induction"],
+    "prerequisites": [
+      {
+        "id": "electric-field-definition",
+        "type": "supporting",
+        "weight": 0.55
+      },
+      {
+        "id": "coulombs-law",
+        "type": "lateral",
+        "weight": 0.2
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "phet",
       "url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
       "caption": "Circuit Construction Kit: DC"
     },
-    "tags": ["circuits", "current", "resistance"],
-    "position": { "x": 340, "y": 190 }
+    "tags": [
+      "circuits",
+      "current",
+      "resistance"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Temperature",
+        "scope": "idealized",
+        "note": "Resistance is treated as constant in the linear ohmic regime."
+      }
+    ]
   },
   {
     "id": "faradays-law-induction",
@@ -174,20 +489,62 @@
     "type": "law",
     "domain": "electromagnetism",
     "formula": "\\mathcal{E} = -\\frac{d\\Phi_B}{dt}",
+    "causal_structure": "asymmetric",
     "variables": [
-      { "symbol": "\\mathcal{E}", "name": "Induced emf", "unit": "V", "description": "Voltage generated by changing magnetic flux." },
-      { "symbol": "\\Phi_B", "name": "Magnetic flux", "unit": "Wb", "description": "Magnetic field passing through an area." },
-      { "symbol": "t", "name": "Time", "unit": "s", "description": "Time over which flux changes." }
+      {
+        "symbol": "\\Phi_B",
+        "role": "driver",
+        "name": "Magnetic flux",
+        "unit": "Wb",
+        "description": "Magnetic field passing through an area."
+      },
+      {
+        "symbol": "t",
+        "role": "driver",
+        "name": "Time",
+        "unit": "s",
+        "description": "Time over which flux changes."
+      },
+      {
+        "symbol": "\\mathcal{E}",
+        "role": "response",
+        "name": "Induced emf",
+        "unit": "V",
+        "description": "Voltage generated by changing magnetic flux."
+      }
     ],
     "description": "A changing magnetic flux induces an emf, which drives current in a closed loop.",
-    "connections": ["gauss-law"],
+    "prerequisites": [
+      {
+        "id": "ohms-law",
+        "type": "lateral",
+        "weight": 0.2
+      },
+      {
+        "id": "gauss-law",
+        "type": "supporting",
+        "weight": 0.45
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "widget",
       "url": null,
       "caption": null
     },
-    "tags": ["induction", "magnetism", "emf"],
-    "position": { "x": 610, "y": 170 }
+    "tags": [
+      "induction",
+      "magnetism",
+      "emf"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Circuit resistance",
+        "scope": "idealized",
+        "note": "The flux-emf relation is introduced independent of resistive details."
+      }
+    ]
   },
   {
     "id": "gauss-law",
@@ -195,20 +552,68 @@
     "type": "law",
     "domain": "electromagnetism",
     "formula": "\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}",
+    "causal_structure": "contextual",
     "variables": [
-      { "symbol": "\\vec{E}", "name": "Electric field", "unit": "N/C", "description": "Field passing through a closed surface." },
-      { "symbol": "d\\vec{A}", "name": "Area element", "unit": "m^2", "description": "Outward-oriented differential surface vector." },
-      { "symbol": "Q_{\\text{enc}}", "name": "Enclosed charge", "unit": "C", "description": "Net charge inside the Gaussian surface." },
-      { "symbol": "\\varepsilon_0", "name": "Vacuum permittivity", "unit": "C^2/(N\\cdot m^2)", "description": "Electric constant in free space." }
+      {
+        "symbol": "Q_{\\text{enc}}",
+        "role": "parameter",
+        "name": "Enclosed charge",
+        "unit": "C",
+        "description": "Net charge inside the Gaussian surface."
+      },
+      {
+        "symbol": "\\varepsilon_0",
+        "role": "parameter",
+        "name": "Vacuum permittivity",
+        "unit": "C^2/(N\\cdot m^2)",
+        "description": "Electric constant in free space."
+      },
+      {
+        "symbol": "d\\vec{A}",
+        "role": "parameter",
+        "name": "Area element",
+        "unit": "m^2",
+        "description": "Outward-oriented differential surface vector."
+      },
+      {
+        "symbol": "\\vec{E}",
+        "role": "parameter",
+        "name": "Electric field",
+        "unit": "N/C",
+        "description": "Field passing through a closed surface."
+      }
     ],
     "description": "Total electric flux through a closed surface equals enclosed charge divided by vacuum permittivity.",
-    "connections": [],
+    "prerequisites": [
+      {
+        "id": "electric-field-definition",
+        "type": "foundational",
+        "weight": 0.8
+      },
+      {
+        "id": "coulombs-law",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "mass": null,
     "visual": {
       "type": "none",
       "url": null,
       "caption": null
     },
-    "tags": ["electrostatics", "flux", "field-symmetry"],
-    "position": { "x": 760, "y": 10 }
+    "tags": [
+      "electrostatics",
+      "flux",
+      "field-symmetry"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Symmetry imperfections",
+        "scope": "idealized",
+        "note": "Canonical examples assume ideal geometric symmetry for tractable flux integrals."
+      }
+    ]
   }
 ]
