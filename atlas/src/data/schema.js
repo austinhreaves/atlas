@@ -61,6 +61,12 @@ export function validateNode(node) {
     errors.push('domain must be a non-empty string.')
   }
 
+  // The formula field is TRUSTED CONTENT in the current Atlas data model.
+  // It is rendered through <KatexText /> using trusted defaults
+  // (source: "trusted" once that prop exists).
+  // Any future schema accepting user-generated LaTeX must route rendering
+  // through <KatexText source="user" /> and apply additional sanitization/
+  // validation safeguards at this schema-validation layer.
   if (!isNonEmptyString(node.formula)) {
     errors.push('formula must be a non-empty string.')
   }
