@@ -98,89 +98,104 @@ export default function NodePanel({ selectedNode, onClose, onUnderstandingChange
       return
     }
 
-    const container = document.querySelector('aside')
-    const katexElement = container?.querySelector('.katex') ?? null
-    const katexMathml = container?.querySelector('.katex-mathml') ?? null
-    const katexHtml = container?.querySelector('.katex-html') ?? null
-    const fracLine = container?.querySelector('.katex .frac-line') ?? null
+    const animationFrameId = window.requestAnimationFrame(() => {
+      const container = document.querySelector('aside')
+      const katexElement = container?.querySelector('.katex') ?? null
+      const katexMathml = container?.querySelector('.katex-mathml') ?? null
+      const katexHtml = container?.querySelector('.katex-html') ?? null
+      const fracLine = container?.querySelector('.katex .frac-line') ?? null
 
-    if (!katexElement || !katexMathml || !katexHtml) {
+      if (!katexElement || !katexMathml || !katexHtml) {
+        sendDebugLog(
+          'H6/H8',
+          'src/components/NodePanel.jsx:katex-dom',
+          'KaTeX DOM structure missing in panel',
+          {
+            nodeId: selectedNode.id,
+            title: selectedNode.title,
+            hasKatex: Boolean(katexElement),
+            hasMathml: Boolean(katexMathml),
+            hasHtmlLayer: Boolean(katexHtml),
+            stylesheetCount: Array.from(document.styleSheets).length,
+            host: window.location.host,
+          },
+        )
+        return
+      }
+
+      const mathmlStyle = window.getComputedStyle(katexMathml)
+      const htmlStyle = window.getComputedStyle(katexHtml)
+      const katexStyle = window.getComputedStyle(katexElement)
+      const styleSheetHrefs = Array.from(document.styleSheets)
+        .map((styleSheet) => styleSheet.href)
+        .filter(Boolean)
+        .slice(0, 20)
+
       sendDebugLog(
         'H6/H8',
         'src/components/NodePanel.jsx:katex-dom',
-        'KaTeX DOM structure missing in panel',
+        'KaTeX DOM and stylesheet state',
         {
           nodeId: selectedNode.id,
           title: selectedNode.title,
-          hasKatex: Boolean(katexElement),
-          hasMathml: Boolean(katexMathml),
-          hasHtmlLayer: Boolean(katexHtml),
-          stylesheetCount: Array.from(document.styleSheets).length,
+          mathmlDisplay: mathmlStyle.display,
+          mathmlPosition: mathmlStyle.position,
+          mathmlClip: mathmlStyle.clip,
+          mathmlOverflow: mathmlStyle.overflow,
+          mathmlWidth: mathmlStyle.width,
+          mathmlHeight: mathmlStyle.height,
+          htmlDisplay: htmlStyle.display,
+          htmlWhiteSpace: htmlStyle.whiteSpace,
+          katexFontFamily: katexStyle.fontFamily,
+          katexTextIndent: katexStyle.textIndent,
+          hasKatexStylesheet: styleSheetHrefs.some(
+            (href) => href.includes('index-') || href.includes('katex'),
+          ),
+          styleSheetHrefs,
           host: window.location.host,
         },
       )
-      return
+
+      if (fracLine) {
+        const fracLineStyle = window.getComputedStyle(fracLine)
+        sendDebugLog(
+          'H9',
+          'src/components/NodePanel.jsx:katex-frac-line',
+          'KaTeX fraction line computed style',
+          {
+            nodeId: selectedNode.id,
+            title: selectedNode.title,
+            borderBottomStyle: fracLineStyle.borderBottomStyle,
+            borderBottomWidth: fracLineStyle.borderBottomWidth,
+            minHeight: fracLineStyle.minHeight,
+            height: fracLineStyle.height,
+            display: fracLineStyle.display,
+            host: window.location.host,
+          },
+        )
+      }
+
+      if (document.fonts?.check) {
+        sendDebugLog(
+          'H7',
+          'src/components/NodePanel.jsx:katex-fonts',
+          'KaTeX font readiness',
+          {
+            nodeId: selectedNode.id,
+            title: selectedNode.title,
+            kaTeXMainReady: document.fonts.check('16px KaTeX_Main'),
+            kaTeXMathReady: document.fonts.check('16px KaTeX_Math'),
+            kaTeXSizeReady: document.fonts.check('16px KaTeX_Size1'),
+            host: window.location.host,
+          },
+        )
+      }
+    })
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId)
     }
-
-    const mathmlStyle = window.getComputedStyle(katexMathml)
-    const htmlStyle = window.getComputedStyle(katexHtml)
-    const styleSheetHrefs = Array.from(document.styleSheets)
-      .map((styleSheet) => styleSheet.href)
-      .filter(Boolean)
-      .slice(0, 20)
-
-    sendDebugLog(
-      'H6/H8',
-      'src/components/NodePanel.jsx:katex-dom',
-      'KaTeX DOM and stylesheet state',
-      {
-        nodeId: selectedNode.id,
-        title: selectedNode.title,
-        mathmlDisplay: mathmlStyle.display,
-        mathmlPosition: mathmlStyle.position,
-        htmlDisplay: htmlStyle.display,
-        htmlWhiteSpace: htmlStyle.whiteSpace,
-        hasKatexStylesheet: styleSheetHrefs.some((href) => href.includes('index-') || href.includes('katex')),
-        styleSheetHrefs,
-        host: window.location.host,
-      },
-    )
-
-    if (fracLine) {
-      const fracLineStyle = window.getComputedStyle(fracLine)
-      sendDebugLog(
-        'H9',
-        'src/components/NodePanel.jsx:katex-frac-line',
-        'KaTeX fraction line computed style',
-        {
-          nodeId: selectedNode.id,
-          title: selectedNode.title,
-          borderBottomStyle: fracLineStyle.borderBottomStyle,
-          borderBottomWidth: fracLineStyle.borderBottomWidth,
-          minHeight: fracLineStyle.minHeight,
-          height: fracLineStyle.height,
-          display: fracLineStyle.display,
-          host: window.location.host,
-        },
-      )
-    }
-
-    if (document.fonts?.check) {
-      sendDebugLog(
-        'H7',
-        'src/components/NodePanel.jsx:katex-fonts',
-        'KaTeX font readiness',
-        {
-          nodeId: selectedNode.id,
-          title: selectedNode.title,
-          kaTeXMainReady: document.fonts.check('16px KaTeX_Main'),
-          kaTeXMathReady: document.fonts.check('16px KaTeX_Math'),
-          kaTeXSizeReady: document.fonts.check('16px KaTeX_Size1'),
-          host: window.location.host,
-        },
-      )
-    }
-  }, [selectedNode, debugRunId])
+  }, [selectedNode, debugRunId, katexFontVersion])
 
   const variableRows = selectedNode?.variables ?? []
   const hasUnifiedConservedBand =
