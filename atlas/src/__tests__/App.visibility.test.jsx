@@ -35,9 +35,11 @@ vi.mock('../data', () => ({
       id: 'concept-mechanics',
       layer: 'concept',
       review_state: 'published',
+      subject: 'physics',
       title: 'Mechanics Concept',
       domain: 'mechanics',
-      tags: ['mechanics'],
+      sub_domains: ['kinematics'],
+      tags: ['kw-mechanics'],
       prerequisites: [],
       position: { x: 0, y: 0 },
     },
@@ -45,9 +47,11 @@ vi.mock('../data', () => ({
       id: 'concept-electromagnetism',
       layer: 'concept',
       review_state: 'published',
+      subject: 'physics',
       title: 'EM Concept',
       domain: 'electromagnetism',
-      tags: ['electromagnetism'],
+      sub_domains: ['electrostatics'],
+      tags: ['kw-electromagnetism'],
       prerequisites: [],
       position: { x: 20, y: 20 },
     },
@@ -63,9 +67,11 @@ vi.mock('../data', () => ({
       id: 'concept-draft',
       layer: 'concept',
       review_state: 'draft',
+      subject: 'physics',
       title: 'Draft Concept',
       domain: 'mechanics',
-      tags: ['dynamics'],
+      sub_domains: ['dynamics'],
+      tags: ['kw-mechanics'],
       prerequisites: [],
       position: { x: 60, y: 60 },
     },
@@ -401,21 +407,21 @@ describe('App visibility controls', () => {
     })
   })
 
-  it('filters concepts by active tags and hides untagged concepts when subset is active', async () => {
+  it('filters concepts by active sub-domains when a subset is active', async () => {
     render(<App />)
     await waitFor(() => {
       expect(appState.graphProps).not.toBeNull()
     })
 
     fireEvent.click(screen.getByRole('button', { name: 'View' }))
-    const tagToggleButton = screen.getByRole('button', { name: /Tags \(/i })
+    const tagToggleButton = screen.getByRole('button', { name: /Sub-domains \(/i })
     fireEvent.click(tagToggleButton)
     const tagPanel = tagToggleButton.closest('section')
     if (!tagPanel) {
-      throw new Error('Expected Tags panel container to exist')
+      throw new Error('Expected Sub-domains panel container to exist')
     }
     fireEvent.click(within(tagPanel).getByRole('button', { name: 'None' }))
-    fireEvent.click(within(tagPanel).getByRole('button', { name: 'Mechanics' }))
+    fireEvent.click(within(tagPanel).getByRole('button', { name: 'Kinematics' }))
 
     expect(screen.getByRole('button', { name: 'mechanics' })).not.toBeNull()
     expect(screen.getByRole('button', { name: 'electromagnetism' })).not.toBeNull()
@@ -427,17 +433,17 @@ describe('App visibility controls', () => {
     })
   })
 
-  it('round-trips active tags through localStorage and drops unknown ids', async () => {
+  it('round-trips active sub-domains through localStorage and drops unknown ids', async () => {
     window.localStorage.setItem(
-      'atlas_active_tags_v1',
-      JSON.stringify(['mechanics', 'definitely-old-tag']),
+      'atlas_active_subdomains_v1',
+      JSON.stringify(['kinematics', 'definitely-old-tag']),
     )
     render(<App />)
 
     await waitFor(() => {
       expect(appState.graphProps).not.toBeNull()
-      const stored = JSON.parse(window.localStorage.getItem('atlas_active_tags_v1') ?? '[]')
-      expect(stored).toContain('mechanics')
+      const stored = JSON.parse(window.localStorage.getItem('atlas_active_subdomains_v1') ?? '[]')
+      expect(stored).toContain('kinematics')
       expect(stored).not.toContain('definitely-old-tag')
     })
   })

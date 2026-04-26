@@ -1,363 +1,285 @@
 {
   "tags": [
     {
-      "id": "one-d-motion",
-      "label": "1D motion",
-      "description": "Concepts and variables related to one-dimensional kinematics and motion analysis.",
-      "review_state": "published"
-    },
-    {
-      "id": "two-d-motion",
-      "label": "2D motion",
-      "description": "Concepts and variables related to two-dimensional trajectories and vector decomposition.",
-      "review_state": "published"
-    },
-    {
-      "id": "acceleration",
+      "id": "kw-acceleration",
       "label": "Acceleration",
-      "description": "Content focused on acceleration, its causes, and quantitative relationships.",
+      "description": "Keywords for acceleration definitions and kinematic relations.",
       "review_state": "published"
     },
     {
-      "id": "application",
+      "id": "kw-application",
       "label": "Application",
-      "description": "Applied problem-solving and contextual use of core physics relationships.",
+      "description": "Keywords for applied use-cases and transfer tasks.",
       "review_state": "published"
     },
     {
-      "id": "approximation",
+      "id": "kw-approximation",
       "label": "Approximation",
-      "description": "Modeling assumptions and approximations used to simplify physical systems.",
+      "description": "Keywords for assumptions, linearization, and idealized approximations.",
       "review_state": "published"
     },
     {
-      "id": "charge",
+      "id": "kw-charge",
       "label": "Charge",
-      "description": "Concepts and variables involving electric charge and related properties.",
+      "description": "Keywords for electric charge in electrostatic contexts.",
       "review_state": "published"
     },
     {
-      "id": "circuits",
-      "label": "Circuits",
-      "description": "Circuit behavior including current, resistance, emf, and network relationships.",
-      "review_state": "published"
-    },
-    {
-      "id": "collisions",
-      "label": "Collisions",
-      "description": "Momentum-transfer events and collision analysis across physical systems.",
-      "review_state": "published"
-    },
-    {
-      "id": "components",
+      "id": "kw-components",
       "label": "Components",
-      "description": "Component-wise decomposition of vectors and forces in analysis workflows.",
+      "description": "Keywords for vector and force component decomposition.",
       "review_state": "published"
     },
     {
-      "id": "constant-acceleration",
+      "id": "kw-constant-acceleration",
       "label": "Constant acceleration",
-      "description": "Kinematic cases where acceleration is constant in magnitude and direction.",
+      "description": "Keywords for constant-acceleration kinematic models.",
       "review_state": "published"
     },
     {
-      "id": "constants",
-      "label": "Constants",
-      "description": "Physical constants and fixed parameters used in equations and models.",
-      "review_state": "published"
-    },
-    {
-      "id": "contact-force",
+      "id": "kw-contact-force",
       "label": "Contact force",
-      "description": "Forces arising from contact interactions such as normal, friction, and tension.",
+      "description": "Keywords for normal, friction, and other contact interactions.",
       "review_state": "published"
     },
     {
-      "id": "current",
+      "id": "kw-constants",
+      "label": "Constants",
+      "description": "Keywords for physical constants and reference values.",
+      "review_state": "published"
+    },
+    {
+      "id": "kw-current",
       "label": "Current",
-      "description": "Electric current, current flow constraints, and current-related quantities.",
+      "description": "Keywords for electric current in circuits.",
       "review_state": "published"
     },
     {
-      "id": "displacement",
+      "id": "kw-displacement",
       "label": "Displacement",
-      "description": "Position change and related vector descriptions in motion problems.",
+      "description": "Keywords for displacement and path vs net-change distinctions.",
       "review_state": "published"
     },
     {
-      "id": "dynamics",
-      "label": "Dynamics",
-      "description": "Force-motion relationships governed by Newtonian dynamics.",
+      "id": "kw-electromagnetism",
+      "label": "Electromagnetism quantities",
+      "description": "Keywords for variables primarily used in electromagnetism contexts.",
       "review_state": "published"
     },
     {
-      "id": "electromagnetism",
-      "label": "Electromagnetism",
-      "description": "Broad electromagnetism topics spanning electric and magnetic phenomena.",
-      "review_state": "published"
-    },
-    {
-      "id": "electrostatics",
-      "label": "Electrostatics",
-      "description": "Electric forces and fields in static or quasi-static charge configurations.",
-      "review_state": "published"
-    },
-    {
-      "id": "emf",
+      "id": "kw-emf",
       "label": "EMF",
-      "description": "Electromotive force, potential sources, and induced voltage behavior.",
+      "description": "Keywords for electromotive force and induced voltage.",
       "review_state": "published"
     },
     {
-      "id": "energy",
+      "id": "kw-energy",
       "label": "Energy",
-      "description": "Work-energy relationships and energetic state descriptions.",
+      "description": "Keywords for energy accounting and transfer.",
       "review_state": "published"
     },
     {
-      "id": "energy-conservation",
+      "id": "kw-energy-conservation",
       "label": "Energy conservation",
-      "description": "Conservation-based reasoning and equations for closed-system energy analysis.",
+      "description": "Keywords for conservation-based energy reasoning.",
       "review_state": "published"
     },
     {
-      "id": "estimation",
+      "id": "kw-estimation",
       "label": "Estimation",
-      "description": "Order-of-magnitude and approximate quantitative reasoning strategies.",
+      "description": "Keywords for order-of-magnitude and estimation techniques.",
       "review_state": "published"
     },
     {
-      "id": "field",
-      "label": "Field",
-      "description": "Field-based representations of interactions in space.",
-      "review_state": "published"
-    },
-    {
-      "id": "field-symmetry",
+      "id": "kw-field-symmetry",
       "label": "Field symmetry",
-      "description": "Use of geometric symmetry to simplify field calculations and reasoning.",
+      "description": "Keywords for symmetry arguments in field and flux problems.",
       "review_state": "published"
     },
     {
-      "id": "fields",
+      "id": "kw-fields",
       "label": "Fields",
-      "description": "General electric and magnetic field concepts and quantitative relations.",
+      "description": "Keywords for field quantities and field-based representations.",
       "review_state": "published"
     },
     {
-      "id": "flux",
+      "id": "kw-flux",
       "label": "Flux",
-      "description": "Flux through surfaces and its relation to sources and induced effects.",
+      "description": "Keywords for electric or magnetic flux in integral laws.",
       "review_state": "published"
     },
     {
-      "id": "force",
+      "id": "kw-force",
       "label": "Force",
-      "description": "Forces, interactions, and net-force descriptions in mechanics.",
+      "description": "Keywords for force quantities and force-based reasoning.",
       "review_state": "published"
     },
     {
-      "id": "force-components",
+      "id": "kw-force-components",
       "label": "Force components",
-      "description": "Resolution of forces into components for analytical setup.",
+      "description": "Keywords for resolving forces along chosen axes.",
       "review_state": "published"
     },
     {
-      "id": "foundations",
+      "id": "kw-foundations",
       "label": "Foundations",
-      "description": "Foundational concepts that support broad portions of the corpus.",
+      "description": "Keywords for core foundational ideas used across units.",
       "review_state": "published"
     },
     {
-      "id": "free-fall",
+      "id": "kw-free-fall",
       "label": "Free fall",
-      "description": "Motion under gravity neglecting air resistance and related approximations.",
+      "description": "Keywords for vertical motion under gravity without drag.",
       "review_state": "published"
     },
     {
-      "id": "geometry",
+      "id": "kw-geometry",
       "label": "Geometry",
-      "description": "Geometric framing and relationships used in physics derivations and setups.",
+      "description": "Keywords for geometric constructs used in modeling.",
       "review_state": "published"
     },
     {
-      "id": "gravity",
-      "label": "Gravity",
-      "description": "Gravitational interactions, fields, and near-Earth approximations.",
-      "review_state": "published"
-    },
-    {
-      "id": "inclines",
+      "id": "kw-inclines",
       "label": "Inclines",
-      "description": "Dynamics and force decomposition on inclined surfaces.",
+      "description": "Keywords for inclined-plane setups and geometry.",
       "review_state": "published"
     },
     {
-      "id": "induction",
-      "label": "Induction",
-      "description": "Electromagnetic induction and changing-flux relationships.",
-      "review_state": "published"
-    },
-    {
-      "id": "inertia",
+      "id": "kw-inertia",
       "label": "Inertia",
-      "description": "Inertial behavior and resistance to acceleration under applied force.",
+      "description": "Keywords for inertial behavior and Newton's first law.",
       "review_state": "published"
     },
     {
-      "id": "interaction-pairs",
+      "id": "kw-interaction-pairs",
       "label": "Interaction pairs",
-      "description": "Newton's third-law interaction pairs and mutual force relations.",
+      "description": "Keywords for Newton's third-law pairs and action-reaction language.",
       "review_state": "published"
     },
     {
-      "id": "inverse-square",
+      "id": "kw-inverse-square",
       "label": "Inverse square",
-      "description": "Inverse-square dependence in force and field strength models.",
+      "description": "Keywords for inverse-square force and field scaling.",
       "review_state": "published"
     },
     {
-      "id": "kinematics",
-      "label": "Kinematics",
-      "description": "Descriptive motion analysis independent of causal force modeling.",
-      "review_state": "published"
-    },
-    {
-      "id": "kinetic-energy",
+      "id": "kw-kinetic-energy",
       "label": "Kinetic energy",
-      "description": "Energy associated with motion and velocity-dependent changes.",
+      "description": "Keywords for kinetic energy and its changes.",
       "review_state": "published"
     },
     {
-      "id": "magnetism",
-      "label": "Magnetism",
-      "description": "Magnetic fields, forces, and induction-adjacent magnetic effects.",
-      "review_state": "published"
-    },
-    {
-      "id": "measurement",
+      "id": "kw-measurement",
       "label": "Measurement",
-      "description": "Measurement practice, units, and interpretation constraints.",
+      "description": "Keywords for measurement process and data interpretation.",
       "review_state": "published"
     },
     {
-      "id": "mechanics",
-      "label": "Mechanics",
-      "description": "Broad mechanics topics including motion, forces, and conservation laws.",
+      "id": "kw-mechanics",
+      "label": "Mechanics quantities",
+      "description": "Keywords for variables primarily used in mechanics contexts.",
       "review_state": "published"
     },
     {
-      "id": "method",
+      "id": "kw-method",
       "label": "Method",
-      "description": "Problem-solving methods and structured analysis workflows.",
+      "description": "Keywords for procedural solution methods.",
       "review_state": "published"
     },
     {
-      "id": "momentum",
-      "label": "Momentum",
-      "description": "Linear momentum and momentum-conservation reasoning across systems.",
-      "review_state": "published"
-    },
-    {
-      "id": "motion",
+      "id": "kw-motion",
       "label": "Motion",
-      "description": "General motion concepts covering position, velocity, and acceleration.",
+      "description": "Keywords for general motion and kinematic state variables.",
       "review_state": "published"
     },
     {
-      "id": "newton",
-      "label": "Newton",
-      "description": "Content centered on Newtonian laws and interpretations.",
+      "id": "kw-newton",
+      "label": "Newton's laws",
+      "description": "Keywords for Newtonian law statements and interpretations.",
       "review_state": "published"
     },
     {
-      "id": "position",
+      "id": "kw-position",
       "label": "Position",
-      "description": "Position-based kinematic descriptions and coordinate framing.",
+      "description": "Keywords for position and coordinates in kinematics.",
       "review_state": "published"
     },
     {
-      "id": "potential-energy",
+      "id": "kw-potential-energy",
       "label": "Potential energy",
-      "description": "Stored energy associated with configuration and conservative interactions.",
+      "description": "Keywords for potential energy and configuration dependence.",
       "review_state": "published"
     },
     {
-      "id": "problem-solving",
+      "id": "kw-problem-solving",
       "label": "Problem solving",
-      "description": "General strategy tags for solving and checking quantitative physics problems.",
+      "description": "Keywords for strategy and multi-step solution workflows.",
       "review_state": "published"
     },
     {
-      "id": "projectile",
-      "label": "Projectile",
-      "description": "Projectile motion models and trajectory analysis.",
-      "review_state": "published"
-    },
-    {
-      "id": "projectile-foundation",
+      "id": "kw-projectile-foundation",
       "label": "Projectile foundation",
-      "description": "Foundational ideas needed for projectile-motion problem setup.",
+      "description": "Keywords for prerequisites and setup for projectile models.",
       "review_state": "published"
     },
     {
-      "id": "range",
+      "id": "kw-range",
       "label": "Range",
-      "description": "Range-focused trajectory outcomes and dependencies.",
+      "description": "Keywords for horizontal range and trajectory outcomes.",
       "review_state": "published"
     },
     {
-      "id": "resistance",
+      "id": "kw-resistance",
       "label": "Resistance",
-      "description": "Electrical resistance and related current-voltage behavior.",
+      "description": "Keywords for electrical resistance in circuits.",
       "review_state": "published"
     },
     {
-      "id": "systems",
+      "id": "kw-systems",
       "label": "Systems",
-      "description": "System-boundary and interaction modeling decisions.",
+      "description": "Keywords for system-boundary and interaction framing.",
       "review_state": "published"
     },
     {
-      "id": "tension",
+      "id": "kw-tension",
       "label": "Tension",
-      "description": "Tension-force behavior in connected-body mechanics.",
+      "description": "Keywords for tension in ropes and connectors.",
       "review_state": "published"
     },
     {
-      "id": "timeless-equation",
-      "label": "Timeless equation",
-      "description": "Equation forms that remove explicit time variables in kinematics.",
+      "id": "kw-timeless-equation",
+      "label": "Timeless kinematic equation",
+      "description": "Keywords for kinematic relations without explicit time.",
       "review_state": "published"
     },
     {
-      "id": "uncertainty",
+      "id": "kw-uncertainty",
       "label": "Uncertainty",
-      "description": "Uncertainty, precision limits, and error-aware reasoning.",
+      "description": "Keywords for uncertainty propagation and reporting.",
       "review_state": "published"
     },
     {
-      "id": "vectors",
+      "id": "kw-vectors",
       "label": "Vectors",
-      "description": "Vector operations, representation, and component reasoning.",
+      "description": "Keywords for vector representation and operations.",
       "review_state": "published"
     },
     {
-      "id": "velocity",
+      "id": "kw-velocity",
       "label": "Velocity",
-      "description": "Velocity definitions, interpretation, and change over time.",
+      "description": "Keywords for velocity definitions and changes.",
       "review_state": "published"
     },
     {
-      "id": "weight",
+      "id": "kw-weight",
       "label": "Weight",
-      "description": "Weight force modeling and its relation to gravitational fields.",
+      "description": "Keywords for weight and gravitational force on a body.",
       "review_state": "published"
     },
     {
-      "id": "work",
+      "id": "kw-work",
       "label": "Work",
-      "description": "Mechanical work and energy-transfer relationships.",
+      "description": "Keywords for mechanical work and energy transfer.",
       "review_state": "published"
     }
   ]

@@ -1,0 +1,95 @@
+{
+  "sub_domains": [
+    {
+      "id": "circuits",
+      "label": "Circuits",
+      "description": "Circuit behavior including current, resistance, emf, and network relationships.",
+      "review_state": "published",
+      "domains": ["electromagnetism"]
+    },
+    {
+      "id": "collisions",
+      "label": "Collisions",
+      "description": "Momentum-transfer events and collision analysis across physical systems.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "dynamics",
+      "label": "Dynamics",
+      "description": "Force-motion relationships governed by Newtonian dynamics.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "electrostatics",
+      "label": "Electrostatics",
+      "description": "Electric forces and fields in static or quasi-static charge configurations.",
+      "review_state": "published",
+      "domains": ["electromagnetism"]
+    },
+    {
+      "id": "energy",
+      "label": "Energy",
+      "description": "Work-energy relationships, potential energy, and conservation-based energy reasoning.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "gravity",
+      "label": "Gravity",
+      "description": "Gravitational interactions, fields, and near-Earth approximations.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "induction",
+      "label": "Induction",
+      "description": "Electromagnetic induction and changing-flux relationships.",
+      "review_state": "published",
+      "domains": ["electromagnetism"]
+    },
+    {
+      "id": "kinematics",
+      "label": "Kinematics",
+      "description": "Descriptive motion analysis independent of causal force modeling.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "magnetism",
+      "label": "Magnetism",
+      "description": "Magnetic fields, forces, and induction-adjacent magnetic effects.",
+      "review_state": "published",
+      "domains": ["electromagnetism"]
+    },
+    {
+      "id": "momentum",
+      "label": "Momentum",
+      "description": "Linear momentum and momentum-conservation reasoning across systems.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "one-d-motion",
+      "label": "1D motion",
+      "description": "Concepts and variables related to one-dimensional kinematics and motion analysis.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "projectile",
+      "label": "Projectile motion",
+      "description": "Projectile trajectories and range analysis under idealized gravity.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    },
+    {
+      "id": "two-d-motion",
+      "label": "2D motion",
+      "description": "Concepts and variables related to two-dimensional trajectories and vector decomposition.",
+      "review_state": "published",
+      "domains": ["mechanics"]
+    }
+  ]
+}

@@ -75,11 +75,6 @@
       "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
       "caption": "Charges and Fields"
     },
-    "tags": [
-      "electrostatics",
-      "inverse-square",
-      "charge"
-    ],
     "position": {
       "x": 1291.4752247998294,
       "y": -558.4001102621294
@@ -93,7 +88,10 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"],
+    "tags": ["kw-inverse-square", "kw-charge", "kw-electromagnetism"]
   },
   {
     "id": "electric-field-definition",
@@ -150,11 +148,7 @@
       "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
       "caption": "Charges and Fields"
     },
-    "tags": [
-      "field",
-      "electrostatics",
-      "force"
-    ],
+    "tags": ["kw-force", "kw-fields", "kw-electromagnetism"],
     "position": {
       "x": 1297.2489916392278,
       "y": -310.3618099441385
@@ -168,7 +162,9 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
   },
   {
     "id": "ohms-law",
@@ -250,11 +246,6 @@
       "url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
       "caption": "Circuit Construction Kit: DC"
     },
-    "tags": [
-      "circuits",
-      "current",
-      "resistance"
-    ],
     "position": {
       "x": 1569.2898247463684,
       "y": -315.228723273842
@@ -268,7 +259,10 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "subject": "physics",
+    "sub_domains": ["circuits"],
+    "tags": ["kw-current", "kw-resistance", "kw-electromagnetism"]
   },
   {
     "id": "faradays-law-induction",
@@ -335,11 +329,6 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "induction",
-      "magnetism",
-      "emf"
-    ],
     "position": {
       "x": 1318.3503843554804,
       "y": -42.58590236713444
@@ -353,7 +342,10 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism"],
+    "tags": ["kw-emf", "kw-flux", "kw-electromagnetism"]
   },
   {
     "id": "gauss-law",
@@ -438,11 +430,6 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "electrostatics",
-      "flux",
-      "field-symmetry"
-    ],
     "position": {
       "x": 1100.4755272771538,
       "y": -328.39341948750655
@@ -456,6 +443,9 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"],
+    "tags": ["kw-flux", "kw-field-symmetry", "kw-electromagnetism"]
   }
 ]

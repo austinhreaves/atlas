@@ -49,9 +49,9 @@
       "caption": null
     },
     "tags": [
-      "measurement",
-      "uncertainty",
-      "foundations"
+      "kw-measurement",
+      "kw-uncertainty",
+      "kw-foundations"
     ],
     "author": "austin",
     "review_state": "published",
@@ -59,7 +59,9 @@
     "position": {
       "x": -1714.4726394536938,
       "y": 353.5360146466599
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics"]
   },
   {
     "id": "order-of-magnitude-estimation",
@@ -94,9 +96,9 @@
       "caption": null
     },
     "tags": [
-      "approximation",
-      "estimation",
-      "foundations"
+      "kw-approximation",
+      "kw-estimation",
+      "kw-foundations"
     ],
     "author": "austin",
     "review_state": "published",
@@ -104,7 +106,9 @@
     "position": {
       "x": -1685.9560240138755,
       "y": 191.0861939652259
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics"]
   },
   {
     "id": "displacement-1d",
@@ -151,18 +155,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "displacement",
-      "one-d-motion"
-    ],
+    "tags": ["kw-displacement", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1706.087009933154,
       "y": 523.1503920067316
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics", "one-d-motion"]
   },
   {
     "id": "average-velocity-definition",
@@ -209,18 +211,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "velocity",
-      "one-d-motion"
-    ],
+    "tags": ["kw-velocity", "kw-displacement", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1514.7768468455563,
       "y": 463.36795324177285
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics", "one-d-motion"]
   },
   {
     "id": "average-acceleration-definition",
@@ -267,18 +267,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "acceleration",
-      "one-d-motion"
-    ],
+    "tags": ["kw-acceleration", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1430.99314004884,
       "y": 259.4185105052594
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics", "one-d-motion"]
   },
   {
     "id": "kinematics-velocity-time",
@@ -334,18 +332,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "motion",
-      "constant-acceleration"
-    ],
+    "tags": ["kw-motion", "kw-constant-acceleration", "kw-velocity", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -748.0008771953579,
       "y": 414.12427426317004
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics"]
   },
   {
     "id": "kinematics-position-time",
@@ -402,18 +398,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "position",
-      "constant-acceleration"
-    ],
+    "tags": ["kw-constant-acceleration", "kw-position", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1305.8650101134865,
       "y": 653.3286894584575
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics"]
   },
   {
     "id": "kinematics-velocity-position",
@@ -470,18 +464,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "timeless-equation",
-      "constant-acceleration"
-    ],
+    "tags": ["kw-timeless-equation", "kw-constant-acceleration", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1008.9197099490239,
       "y": 155.3908097221961
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics"]
   },
   {
     "id": "free-fall",
@@ -529,18 +521,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "gravity",
-      "free-fall"
-    ],
+    "tags": ["kw-free-fall", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -897.2357829361547,
       "y": 733.4907463355381
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics", "gravity"]
   },
   {
     "id": "vector-decomposition",
@@ -592,18 +582,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "vectors",
-      "components",
-      "two-d-motion"
-    ],
+    "tags": ["kw-vectors", "kw-components", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1276.9930001504715,
       "y": 1138.2689036374004
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["two-d-motion"]
   },
   {
     "id": "independence-of-perpendicular-motion",
@@ -659,18 +647,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "kinematics",
-      "two-d-motion",
-      "projectile-foundation"
-    ],
+    "tags": ["kw-projectile-foundation", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1182.1305594359753,
       "y": 887.0114538092295
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["kinematics", "two-d-motion"]
   },
   {
     "id": "projectile-motion",
@@ -758,9 +744,7 @@
       "caption": null
     },
     "tags": [
-      "application",
-      "projectile",
-      "two-d-motion"
+      "kw-application"
     ],
     "author": "austin",
     "review_state": "published",
@@ -768,7 +752,9 @@
     "position": {
       "x": -1149.5912197999478,
       "y": 662.3289537130711
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["projectile", "two-d-motion"]
   },
   {
     "id": "projectile-range-level",
@@ -820,18 +806,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "application",
-      "projectile",
-      "range"
-    ],
+    "tags": ["kw-application", "kw-range"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1008.5544653057872,
       "y": 805.7456692495577
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["projectile"]
   },
   {
     "id": "force-net-external",
@@ -863,9 +847,8 @@
       "caption": null
     },
     "tags": [
-      "dynamics",
-      "force",
-      "systems"
+      "kw-force",
+      "kw-systems"
     ],
     "author": "austin",
     "review_state": "published",
@@ -873,7 +856,9 @@
     "position": {
       "x": -726.6611995534377,
       "y": 1336.4675484806107
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "newtons-first-law",
@@ -919,18 +904,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "dynamics",
-      "newton",
-      "inertia"
-    ],
+    "tags": ["kw-newton", "kw-inertia", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -977.1494852663525,
       "y": 1417.7959965663918
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "newtons-second-law",
@@ -1000,18 +983,16 @@
       "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
       "caption": "Forces and Motion Basics"
     },
-    "tags": [
-      "dynamics",
-      "force",
-      "acceleration"
-    ],
+    "tags": ["kw-force", "kw-acceleration", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -483.1929540036133,
       "y": 883.9281129920699
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "newtons-third-law",
@@ -1057,18 +1038,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "dynamics",
-      "newton",
-      "interaction-pairs"
-    ],
+    "tags": ["kw-newton", "kw-interaction-pairs", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -627.1811998379126,
       "y": 1435.7673309705892
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "weight-gravitational-force",
@@ -1120,18 +1099,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "dynamics",
-      "gravity",
-      "weight"
-    ],
+    "tags": ["kw-weight", "kw-force", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -783.3211714122416,
       "y": 930.3557095069385
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics", "gravity"]
   },
   {
     "id": "normal-force-law",
@@ -1188,18 +1165,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "dynamics",
-      "contact-force",
-      "inclines"
-    ],
+    "tags": ["kw-contact-force", "kw-inclines", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1047.0115239630404,
       "y": 939.6983398528287
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "tension-flexible-connector",
@@ -1256,18 +1231,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "application",
-      "dynamics",
-      "tension"
-    ],
+    "tags": ["kw-application", "kw-tension", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -1127.4422046063912,
       "y": 1528.330708705106
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "weight-on-incline",
@@ -1319,18 +1292,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "dynamics",
-      "inclines",
-      "force-components"
-    ],
+    "tags": ["kw-inclines", "kw-force-components", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -905.4129968709085,
       "y": 1077.929340920809
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "free-body-diagram",
@@ -1387,9 +1358,8 @@
       "caption": null
     },
     "tags": [
-      "method",
-      "dynamics",
-      "problem-solving"
+      "kw-method",
+      "kw-problem-solving"
     ],
     "author": "austin",
     "review_state": "published",
@@ -1397,7 +1367,9 @@
     "position": {
       "x": -830.3282360229679,
       "y": 1186.0749545115398
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["dynamics"]
   },
   {
     "id": "work-energy-theorem",
@@ -1450,18 +1422,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "energy",
-      "work",
-      "kinetic-energy"
-    ],
+    "tags": ["kw-energy", "kw-work", "kw-kinetic-energy", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -499.7638390706593,
       "y": 257.3647763579315
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["energy"]
   },
   {
     "id": "gravitational-potential-energy",
@@ -1513,18 +1483,16 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "potential-energy",
-      "gravity",
-      "energy-conservation"
-    ],
+    "tags": ["kw-potential-energy", "kw-energy-conservation", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -712.2913052397099,
       "y": 104.63124679271644
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["energy", "gravity"]
   },
   {
     "id": "conservation-of-momentum",
@@ -1576,17 +1544,15 @@
       "url": null,
       "caption": null
     },
-    "tags": [
-      "momentum",
-      "collisions",
-      "systems"
-    ],
+    "tags": ["kw-systems", "kw-mechanics"],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25",
     "position": {
       "x": -215.34009538841093,
       "y": 873.7175509063738
-    }
+    },
+    "subject": "physics",
+    "sub_domains": ["momentum", "collisions"]
   }
 ]
