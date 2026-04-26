@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { render } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import GraphCanvas from '../GraphCanvas.jsx'
@@ -11,12 +12,16 @@ const reactFlowState = vi.hoisted(() => ({
 }))
 const reactFlowHandlers = vi.hoisted(() => ({
   onMoveEnd: null,
+  onNodeDragStop: null,
+  lastProps: null,
 }))
 
 vi.mock('reactflow', () => {
   return {
-    ReactFlow: ({ children, onMoveEnd }) => {
+    ReactFlow: ({ children, onMoveEnd, onNodeDragStop, ...props }) => {
       reactFlowHandlers.onMoveEnd = onMoveEnd
+      reactFlowHandlers.onNodeDragStop = onNodeDragStop
+      reactFlowHandlers.lastProps = props
       return <div data-testid="react-flow-root">{children}</div>
     },
     Background: () => null,
@@ -32,6 +37,7 @@ vi.mock('reactflow', () => {
       Dots: 'dots',
     },
     useReactFlow: () => reactFlowState,
+    useNodesState: (initialNodes) => [initialNodes, vi.fn(), vi.fn()],
   }
 })
 
@@ -40,6 +46,7 @@ function createProps(overrides = {}) {
     nodes: [
       {
         id: 'n1',
+        layer: 'concept',
         title: 'Node One',
         domain: 'mechanics',
         mass: 1,
@@ -47,6 +54,7 @@ function createProps(overrides = {}) {
       },
       {
         id: 'n2',
+        layer: 'concept',
         title: 'Node Two',
         domain: 'mechanics',
         mass: 1,
@@ -62,6 +70,11 @@ function createProps(overrides = {}) {
     distantNodeIds: new Set(),
     understoodNodeIds: new Set(),
     onNodeClick: vi.fn(),
+    onNodePositionCommit: vi.fn(),
+    onResetToCanonical: vi.fn(),
+    onResetSelected: vi.fn(),
+    onExportLayout: vi.fn(),
+    onImportLayout: vi.fn(),
     ...overrides,
   }
 }
@@ -74,6 +87,14 @@ function emitMoveEnd(event = {}) {
   }
 }
 
+function emitNodeDragStop(node) {
+  if (typeof reactFlowHandlers.onNodeDragStop === 'function') {
+    act(() => {
+      reactFlowHandlers.onNodeDragStop({}, node)
+    })
+  }
+}
+
 describe('GraphCanvas camera behavior', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -81,6 +102,8 @@ describe('GraphCanvas camera behavior', () => {
     reactFlowState.getViewport.mockReset()
     reactFlowState.setCenter.mockReset()
     reactFlowHandlers.onMoveEnd = null
+    reactFlowHandlers.onNodeDragStop = null
+    reactFlowHandlers.lastProps = null
     reactFlowState.getViewport.mockReturnValue({ zoom: 1.25 })
     reactFlowState.getNode.mockReturnValue({
       id: 'n1',
@@ -217,5 +240,98 @@ describe('GraphCanvas camera behavior', () => {
       vi.advanceTimersByTime(2100)
     })
     expect(reactFlowState.setCenter).toHaveBeenCalledTimes(1)
+  })
+
+  it('maps flow nodes and node types from entity layer', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          nodes: [
+            {
+              id: 'n-concept',
+              layer: 'concept',
+              title: 'Newton',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'n-variable',
+              layer: 'variable',
+              name: 'Mass',
+              canonical_symbol: 'm',
+              mass: 1,
+              position: { x: 10, y: 10 },
+            },
+          ],
+        })}
+      />,
+    )
+
+    const renderedNodes = reactFlowHandlers.lastProps?.nodes ?? []
+    const renderedNodeTypes = reactFlowHandlers.lastProps?.nodeTypes ?? {}
+    expect(renderedNodeTypes.concept).toBeTypeOf('function')
+    expect(renderedNodeTypes.variable).toBeTypeOf('function')
+
+    const conceptFlowNode = renderedNodes.find((node) => node.id === 'n-concept')
+    const variableFlowNode = renderedNodes.find((node) => node.id === 'n-variable')
+    expect(conceptFlowNode?.type).toBe('concept')
+    expect(variableFlowNode?.type).toBe('variable')
+    expect(variableFlowNode?.data?.title).toBe('Mass')
+    expect(variableFlowNode?.data?.canonicalSymbol).toBe('m')
+  })
+
+  it('sets nodesDraggable explicitly and disables drag selection', () => {
+    render(<GraphCanvas {...createProps()} />)
+
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
+    expect(reactFlowHandlers.lastProps?.selectNodesOnDrag).toBe(false)
+  })
+
+  it('commits dragged node positions on drag stop', () => {
+    const onNodePositionCommit = vi.fn()
+    render(<GraphCanvas {...createProps({ onNodePositionCommit })} />)
+
+    emitNodeDragStop({
+      id: 'n2',
+      position: { x: 640, y: -120 },
+    })
+
+    expect(onNodePositionCommit).toHaveBeenCalledTimes(1)
+    expect(onNodePositionCommit).toHaveBeenCalledWith('n2', { x: 640, y: -120 })
+  })
+
+  it('dragging a node does not trigger node click selection', () => {
+    const onNodeClick = vi.fn()
+    render(<GraphCanvas {...createProps({ onNodeClick, selectedNodeId: 'n1' })} />)
+
+    emitNodeDragStop({
+      id: 'n2',
+      position: { x: 320, y: 80 },
+    })
+
+    expect(onNodeClick).not.toHaveBeenCalled()
+  })
+
+  it('wires layout reset actions to controls', () => {
+    const onResetToCanonical = vi.fn()
+    const onResetSelected = vi.fn()
+    render(
+      <GraphCanvas
+        {...createProps({
+          selectedNodeId: 'n1',
+          onResetToCanonical,
+          onResetSelected,
+        })}
+      />,
+    )
+
+    const canonicalButtons = screen.getAllByRole('button', { name: 'Reset to canonical' })
+    const selectedButtons = screen.getAllByRole('button', { name: 'Reset selected' })
+    fireEvent.click(canonicalButtons[canonicalButtons.length - 1])
+    fireEvent.click(selectedButtons[selectedButtons.length - 1])
+
+    expect(onResetToCanonical).toHaveBeenCalledTimes(1)
+    expect(onResetSelected).toHaveBeenCalledTimes(1)
   })
 })

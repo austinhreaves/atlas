@@ -1,108 +1,18 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Background,
   BackgroundVariant,
   Controls,
-  Handle,
-  Position,
   ReactFlow,
+  useNodesState,
 } from 'reactflow'
 import FloatingEdge from './FloatingEdge.jsx'
 import CameraController from './graph/CameraController.jsx'
+import LayoutControls from './graph/LayoutControls.jsx'
+import ConceptNode from './nodes/ConceptNode.jsx'
+import VariableNode from './nodes/VariableNode.jsx'
 
-const domainCardClass = {
-  mechanics:
-    'border-cyan-500/45 bg-slate-950/85 text-slate-100 shadow-[0_0_28px_-6px_rgba(34,211,238,0.28)]',
-  electromagnetism:
-    'border-violet-500/45 bg-slate-950/85 text-slate-100 shadow-[0_0_28px_-6px_rgba(167,139,250,0.28)]',
-}
-
-const domainBadgeClass = {
-  mechanics: 'bg-cyan-500/15 text-cyan-200 ring-1 ring-cyan-400/35',
-  electromagnetism: 'bg-violet-500/15 text-violet-200 ring-1 ring-violet-400/35',
-}
-const floatingHandleClass =
-  '!h-0 !w-0 !border-0 !bg-transparent !opacity-0 !pointer-events-none'
-
-function AtlasNode({ data, selected }) {
-  const domain = data.domain
-  const card =
-    domainCardClass[domain] ??
-    'border-slate-600/50 bg-slate-950/85 text-slate-100 shadow-lg shadow-black/40'
-  const badge =
-    domainBadgeClass[domain] ?? 'bg-slate-700/40 text-slate-300 ring-1 ring-slate-500/40'
-  const mass = Math.max(1, Math.min(3, typeof data.mass === 'number' ? data.mass : 1))
-  const diameter = 80 + (mass - 1) * 20
-  const visualState = data.visualState ?? 'base'
-  const scale = visualState === 'focal' ? 1.1 : visualState === 'neighbor' ? 1.06 : 1
-  const selectionActive = visualState !== 'base'
-  const isUnderstood = data.isUnderstood === true
-  const opacity = selectionActive ? (visualState === 'distant' ? 0.3 : 1) : isUnderstood ? 0.7 : 1
-  const accentRing = visualState === 'focal'
-  const filter = !selectionActive && isUnderstood ? 'saturate(0.3)' : undefined
-
-  return (
-    <div
-      className={`relative rounded-full border px-3 py-2.5 backdrop-blur-sm transition-[box-shadow,transform,opacity,filter] duration-300 ease-out ${
-        selected || accentRing ? 'ring-2 ring-cyan-300/80 ring-offset-2 ring-offset-slate-950' : ''
-      } ${card}`}
-      style={{
-        width: `${diameter}px`,
-        height: `${diameter}px`,
-        opacity,
-        transform: `scale(${scale})`,
-        transformOrigin: 'center',
-        filter,
-      }}
-    >
-      {isUnderstood ? (
-        <span className="absolute -right-1 -top-1 inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/80 text-[10px] font-bold text-slate-950">
-          ✓
-        </span>
-      ) : null}
-      <Handle id="target-top" type="target" position={Position.Top} className={floatingHandleClass} />
-      <Handle
-        id="target-right"
-        type="target"
-        position={Position.Right}
-        className={floatingHandleClass}
-      />
-      <Handle
-        id="target-bottom"
-        type="target"
-        position={Position.Bottom}
-        className={floatingHandleClass}
-      />
-      <Handle id="target-left" type="target" position={Position.Left} className={floatingHandleClass} />
-      <Handle id="source-top" type="source" position={Position.Top} className={floatingHandleClass} />
-      <Handle
-        id="source-right"
-        type="source"
-        position={Position.Right}
-        className={floatingHandleClass}
-      />
-      <Handle
-        id="source-bottom"
-        type="source"
-        position={Position.Bottom}
-        className={floatingHandleClass}
-      />
-      <Handle id="source-left" type="source" position={Position.Left} className={floatingHandleClass} />
-      <div className="flex h-full flex-col items-center justify-center text-center">
-        <p className="line-clamp-2 text-[13px] font-semibold leading-snug tracking-tight text-slate-50">
-          {data.title}
-        </p>
-        <p
-          className={`mt-2 inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${badge}`}
-        >
-          {data.domain}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-const nodeTypes = { atlasNode: AtlasNode }
+const nodeTypes = { concept: ConceptNode, variable: VariableNode }
 const edgeTypes = { atlas: FloatingEdge }
 
 function toFlowNodes(
@@ -130,11 +40,12 @@ function toFlowNodes(
 
     return {
       id: node.id,
-      type: 'atlasNode',
+      type: node.layer === 'variable' ? 'variable' : 'concept',
       position: { x: nodeX, y: nodeY },
       data: {
-        title: node.title,
+        title: node.layer === 'variable' ? node.name : node.title,
         domain: node.domain,
+        canonicalSymbol: node.canonical_symbol,
         mass: node.mass,
         visualState,
         isUnderstood: understoodNodeIds.has(node.id),
@@ -169,7 +80,7 @@ function toFlowEdges(edges, selectedNodeId, neighborNodeIds, understoodNodeIds) 
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void> }} props */
 export default function GraphCanvas({
   nodes,
   edges,
@@ -181,13 +92,25 @@ export default function GraphCanvas({
   distantNodeIds,
   understoodNodeIds,
   onNodeClick,
+  onNodePositionCommit,
+  onResetToCanonical,
+  onResetSelected,
+  onExportLayout,
+  onImportLayout,
 }) {
   const domains = useMemo(
-    () => [...new Set(nodes.map((node) => node.domain))].sort(),
+    () =>
+      [...new Set(nodes.map((node) => node.domain).filter((domain) => typeof domain === 'string'))]
+        .sort(),
     [nodes],
   )
   const [visibleDomains, setVisibleDomains] = useState(() => new Set(domains))
   const [userMoveEndCount, setUserMoveEndCount] = useState(0)
+  const selectedNode = useMemo(
+    () => nodes.find((node) => node.id === selectedNodeId) ?? null,
+    [nodes, selectedNodeId],
+  )
+  const emphasisSelectedNodeId = selectedNode?.layer === 'concept' ? selectedNodeId : null
 
   const toggleDomain = useCallback((domain) => {
     setVisibleDomains((current) => {
@@ -202,32 +125,42 @@ export default function GraphCanvas({
   }, [])
 
   const flowNodes = useMemo(() => {
-    const filtered = nodes.filter((node) => visibleDomains.has(node.domain))
-    return toFlowNodes(
+    const filtered = nodes.filter(
+      (node) => typeof node.domain !== 'string' || visibleDomains.has(node.domain),
+    )
+    const mapped = toFlowNodes(
       filtered,
-      selectedNodeId,
+      emphasisSelectedNodeId,
       focalNodeIds,
       neighborNodeIds,
       distantNodeIds,
       understoodNodeIds,
     )
+    return mapped
   }, [
+    emphasisSelectedNodeId,
     distantNodeIds,
     focalNodeIds,
     neighborNodeIds,
     nodes,
+    selectedNode,
     selectedNodeId,
     understoodNodeIds,
     visibleDomains,
   ])
+  const [interactiveNodes, setInteractiveNodes, onNodesChange] = useNodesState(flowNodes)
+
+  useEffect(() => {
+    setInteractiveNodes(flowNodes)
+  }, [flowNodes, setInteractiveNodes])
 
   const flowEdges = useMemo(() => {
-    const visibleNodeIds = new Set(flowNodes.map((node) => node.id))
+    const visibleNodeIds = new Set(interactiveNodes.map((node) => node.id))
     const filtered = edges.filter(
       (edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
     )
-    return toFlowEdges(filtered, selectedNodeId, neighborNodeIds, understoodNodeIds)
-  }, [edges, flowNodes, neighborNodeIds, selectedNodeId, understoodNodeIds])
+    return toFlowEdges(filtered, emphasisSelectedNodeId, neighborNodeIds, understoodNodeIds)
+  }, [edges, emphasisSelectedNodeId, interactiveNodes, neighborNodeIds, understoodNodeIds])
 
   const handleNodeClick = useCallback(
     (_, rfNode) => {
@@ -246,6 +179,20 @@ export default function GraphCanvas({
     }
     setUserMoveEndCount((value) => value + 1)
   }, [])
+
+  const handleNodeDragStop = useCallback(
+    (_, rfNode) => {
+      if (
+        typeof onNodePositionCommit === 'function' &&
+        typeof rfNode?.id === 'string' &&
+        typeof rfNode?.position?.x === 'number' &&
+        typeof rfNode?.position?.y === 'number'
+      ) {
+        onNodePositionCommit(rfNode.id, rfNode.position)
+      }
+    },
+    [onNodePositionCommit],
+  )
 
   return (
     <div className="h-screen w-screen bg-surface">
@@ -275,20 +222,31 @@ export default function GraphCanvas({
           </div>
         </div>
       </div>
+      <LayoutControls
+        selectedNodeId={selectedNodeId}
+        onResetToCanonical={onResetToCanonical}
+        onResetSelected={onResetSelected}
+        onExportLayout={onExportLayout}
+        onImportLayout={onImportLayout}
+      />
       <ReactFlow
-        nodes={flowNodes}
+        nodes={interactiveNodes}
         edges={flowEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onNodesChange={onNodesChange}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.15}
         maxZoom={1.75}
+        nodesDraggable
+        selectNodesOnDrag={false}
         panOnScroll
         zoomOnScroll
         zoomOnPinch
         proOptions={{ hideAttribution: true }}
         onNodeClick={handleNodeClick}
+        onNodeDragStop={handleNodeDragStop}
         onMoveEnd={handleMoveEnd}
         className="atlas-react-flow h-full w-full"
       >

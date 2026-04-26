@@ -22,8 +22,9 @@ These missions stay coherent because the underlying artifact is the same: a high
 - *What problem can I solve with this, and at what difficulty?*
 - *Where does this same variable appear in other concepts?*
 - *What lab activity makes this concrete?*
+- *Can I build the map myself, from the bottom up, and have it agree with the canonical one?*
 
-The italicized questions are the principle-application thesis. They are why Atlas is more than a formula collection.
+The italicized questions are the principle-application thesis. The final question is the constructive corollary — addressed by construction mode (see `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md`). They are why Atlas is more than a formula collection.
 
 ---
 
@@ -42,6 +43,20 @@ Atlas is not a single graph. It is a stack of co-existing graphs over a shared l
 | Experiments | Phase 3b | Canonical empirical results: Cavendish, double-slit, Millikan, etc. |
 
 Layers are visually distinct (shape *and* color, not just color) and individually toggleable. Default view is concepts only. Cross-layer edges are first-class: a problem activates concepts; a concept appears in a lab; an experiment establishes a law.
+
+### Modes of Atlas
+
+Atlas formally has three mutually-exclusive modes of operation, each gated by URL parameter and signaled by a visible banner. Modes share the same underlying graph data but expose different interactions and produce different artifacts:
+
+| Mode | Gate | Purpose |
+|---|---|---|
+| Reference | default | Browse the canonical graph — exploration and lookup |
+| Author | `?edit=layout` | Edit canonical layout (positions); produces canonical-patch JSON for PR review |
+| Construction | `?mode=construct[&assignment=<id>]` | Build a personal or assignment concept map; produces `.atlas-map.json` student artifacts |
+
+Reference is the default for any visitor. Author mode is gated by URL parameter today and by accounts in Phase 4; it is the channel by which authors update the canonical graph's layout without bypassing review. Construction mode is the pedagogical primitive — students assemble their own maps from a curated node bank and exchange annotated submissions with peers and TAs.
+
+Modes are an architectural concern, not a UI flourish. They establish persistence boundaries (each mode writes to its own localStorage scope), invariants (canonical content is read-only outside author mode; canonical edges are hidden in construction mode), and a stable vocabulary for cross-spec reasoning. The full specifications live in `ATLAS_LAYOUT_AUTHORING_SPEC.md` and `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md`.
 
 ### Properties, not layers
 
@@ -124,7 +139,7 @@ Phase 3a does *not* author new content. It builds the engine.
 
 ### Phase 3b — Content Layer Activation & Curriculum Expansion (see ATLAS_PHASE3B_SPEC.md)
 
-The content phase. Populates the problem, lab, and experiment layers; expands concept count to curriculum scale; adds the unifying edge types (`isomorphic`, `noether-consequence`).
+The content phase. Populates the problem, lab, and experiment layers; expands concept count to curriculum scale; adds the unifying edge types (`isomorphic`, `noether-consequence`). Phase 3b also activates the cross-phase capability specs that turn Atlas from a reference into a learning instrument.
 
 Key deliverables:
 
@@ -139,6 +154,9 @@ Key deliverables:
 - Permalinks for deep-linking entities.
 - Mobile-responsive interaction model.
 - TA-collaborator authoring pipeline.
+- **Concept-node legibility upgrade** (per `ATLAS_NODE_AFFORDANCES_SPEC.md`): label-fitting contract, hover-peek card, in-node domain label removal. Lands before curriculum-scale expansion so new concepts ship into a layout that handles their titles correctly.
+- **Interactive layout authoring** (per `ATLAS_LAYOUT_AUTHORING_SPEC.md`): draggable nodes, per-user layout persistence, author-mode canonical-patch export. Foundation for hand-placed pedagogical layouts at curriculum scale; obviates algorithmic edge-crossing minimization for graphs of Atlas's expected size.
+- **Concept-map construction MVP** (per `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md`): construction mode with the recover-prerequisites-untyped variant, node bank, edge drawing, submission file format, and TA review/annotation loop. The pedagogical primitive that lets construction become a regular assignment in PHY 114 / PHY 132.
 
 ### Phase 4 — Platform Layer & Instructional Intelligence
 
@@ -165,6 +183,28 @@ Atlas evolves in deliberate layers, each enabling the next:
 4. **Phase 4** — Platform layer; assessment-driven state via Canvas; instructional intelligence.
 
 Each phase remains backward compatible where feasible. Migrations are explicit, versioned, and gated by validator coverage.
+
+---
+
+## Phase-agnostic addendums
+
+Some Atlas capabilities cut across phase boundaries — they refine an interaction or affordance that exists from Phase 2 forward and that subsequent phases extend rather than introduce. These capabilities live in dedicated specs whose requirements are self-contained and whose phase placement is annotated within. They are first-class architectural components, not appendices.
+
+| Spec | Capability | Phase placement |
+|---|---|---|
+| `ATLAS_REVEAL_NEIGHBORS_SPEC.md` | Neighbor discovery, ZPD rank-ordering, latent-content indicators (halo + count badge) | Phase 3b for full ranking; stub possible alongside earlier work |
+| `ATLAS_NODE_AFFORDANCES_SPEC.md` | Concept-node legibility (label-fitting, domain encoding) and hover-peek card | Move 1 immediate; Moves 2–3 before Phase 3b concept expansion |
+| `ATLAS_LAYOUT_AUTHORING_SPEC.md` | Interactive node dragging, per-user layout persistence, author-mode canonical-patch export | Phase 3b foundation, lands before construction MVP |
+| `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` | Construction mode — student-built concept maps with peer/TA annotation review | Phase 3b MVP (variant A); B/C/D as post-MVP |
+
+Addendums share a common discipline:
+
+- **Self-contained requirements.** Each addendum can be read and implemented without reference to other addendums beyond declared dependencies.
+- **Explicit dependencies.** Where one addendum builds on another (e.g., construction mode depends on layout authoring), the dependency is declared at the top of the dependent spec and is enforced by sequencing.
+- **Cross-spec invariant tests.** Where addendums interact (e.g., hover-peek must suppress during drag), the integration test belongs to whichever spec ships second.
+- **Vocabulary alignment.** Modes, persistence keys, file formats, and store names are coordinated across addendums to avoid collisions.
+
+The addendum pattern lets Atlas evolve specific capabilities without disturbing the phase roadmap and without sprawling those capabilities into the phase specs themselves.
 
 ---
 
@@ -209,9 +249,11 @@ Atlas content quality is the product. Authoring is therefore a first-class workf
 
 The following will not be implemented without explicit promotion via spec amendment:
 
-- A parallel quiz/assessment engine (use Canvas LTI in Phase 4).
+- A parallel quiz/assessment engine (use Canvas LTI in Phase 4). Construction mode (`ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md`) is *not* a quiz engine — it produces constructive artifacts that humans review and grade, not auto-scored answer keys. The distinction is enforced by the construction spec's "Atlas does not auto-assign grades" rule.
 - Difficulty as an ambient global visual property (badge-only on problems).
 - More than ~5 simultaneously visible node-layers (UI breaks down past this).
 - Symmetries as their own node-layer (handled via anchor concepts + edge type).
 - Geometries as a node-layer (handled via tags).
-- Server-side persistence before Phase 4.
+- Server-side persistence before Phase 4. Construction-mode submissions are client-side files; they do not require backend storage to function.
+- Real-time collaborative editing of any kind (canonical or construction). Single-device, multi-author file authoring is the supported pattern through Phase 4.
+- Algorithmic edge-crossing minimization. Hand-placement via `ATLAS_LAYOUT_AUTHORING_SPEC.md` is the answer for graphs of Atlas's expected scale; the question may be reopened past ~150 nodes.

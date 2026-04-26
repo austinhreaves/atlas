@@ -3,7 +3,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export default function ConceptVisualSceneSection({ selectedNode }) {
   const fullscreenTargetRef = useRef(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const isPhetVisual = selectedNode.visual.type === 'phet' && selectedNode.visual.url
+  const visual = selectedNode?.visual
+  const isPhetVisual = visual?.type === 'phet' && Boolean(visual?.url)
+  const title = selectedNode?.title ?? selectedNode?.name ?? 'Node'
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -52,8 +54,8 @@ export default function ConceptVisualSceneSection({ selectedNode }) {
             {isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
           </button>
           <iframe
-            title={`${selectedNode.title} visual scene`}
-            src={selectedNode.visual.url}
+            title={`${title} visual scene`}
+            src={visual.url}
             data-testid="phet-visual-iframe"
             className={isFullscreen ? 'h-full w-full' : 'h-[260px] w-full'}
             loading="lazy"
@@ -62,9 +64,9 @@ export default function ConceptVisualSceneSection({ selectedNode }) {
             allowFullScreen
             allow="fullscreen"
           />
-          {selectedNode.visual.caption ? (
+          {visual?.caption ? (
             <p className="border-t border-slate-700 px-3 py-2 text-xs text-slate-400">
-              {selectedNode.visual.caption}
+              {visual.caption}
             </p>
           ) : null}
         </div>

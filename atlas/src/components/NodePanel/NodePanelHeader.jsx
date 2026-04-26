@@ -10,7 +10,7 @@ function TypeBadge({ type }) {
 }
 
 export default function NodePanelHeader({ selectedNode, onClose, onUnderstandingChange }) {
-  const title = selectedNode?.title ?? ''
+  const title = selectedNode?.title ?? selectedNode?.name ?? ''
   const formulaInTitle =
     selectedNode?.formula && title.includes(selectedNode.formula) ? selectedNode.formula : null
   const titleParts = formulaInTitle ? title.split(formulaInTitle) : [title]
@@ -27,10 +27,12 @@ export default function NodePanelHeader({ selectedNode, onClose, onUnderstanding
                 {titleParts.slice(1).join(formulaInTitle)}
               </>
             ) : (
-              selectedNode.title
+              title
             )}
           </h2>
-          <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{selectedNode.domain}</p>
+          {typeof selectedNode?.domain === 'string' ? (
+            <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{selectedNode.domain}</p>
+          ) : null}
           <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-xs text-slate-300">
             <input
               type="checkbox"

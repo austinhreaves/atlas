@@ -415,41 +415,86 @@ Render entities differently by layer.
 
 ---
 
-### Session 4 — Layer toggle UI
+### Session 4 — Layer toggle UI + domain legend
+
+> **Pre-session state check.** Before starting, verify the following are
+> already in place from Sessions 1–3 and NA-M1:
+> - `src/data/layers.js` exports `LAYERS` with five entries (concept,
+>   variable, problem, lab, experiment).
+> - `src/components/nodes/ConceptNode.jsx` renders domain via border-style
+>   only — no domain text inside the node. The `domainCardClass` map already
+>   encodes `mechanics` as solid border, `electromagnetism` as dashed, others
+>   as dotted fallback.
+> - No `DomainLegend` component exists yet — it was deferred from NA-M1 and
+>   ships here alongside the layer toggle bar so the two can share top-left
+>   canvas real estate cleanly.
 
 ```
-Add layer-toggle controls to Atlas.
+Add layer-toggle controls and the domain legend to Atlas.
 
 1. Add layer visibility state to App.jsx:
    - visibleLayers: Set<string>, initialized from LAYERS registry's
      default_visible flags. (Phase 3a default: { "concept" }.)
+   - Pass visibleLayers and a setVisibleLayers callback down to
+     LayerToggleBar and GraphCanvas.
 
 2. Create src/components/LayerToggleBar.jsx:
    - Renders one toggle per registered layer in LAYERS.
    - For layers without an active schema_validator (problem, lab, experiment
      in 3a), render the toggle disabled with a small "Phase 3b" badge.
-   - Toggle includes the layer's shape glyph + label.
-   - Position: top-left of canvas, above the existing domain filter (or merged
-     with it — your call, but keep them visually distinct).
+   - Toggle includes the layer's shape glyph (circle for concept, diamond
+     for variable) + label.
+   - Position: top-left of canvas. LayerToggleBar and DomainLegend (below)
+     stack vertically in this corner; keep them visually distinct but
+     adjacent.
 
-3. Wire visibleLayers into GraphCanvas:
+3. Create src/components/DomainLegend.jsx:
+   - Derives the domain list from the currently visible concept entities
+     (not hardcoded), so the legend stays accurate as the corpus grows.
+   - One row per domain: color swatch + domain name + count of currently
+     visible concepts in that domain.
+   - The color swatch MUST match the fill/glow color used in ConceptNode's
+     domainCardClass for that domain (cyan-500 for mechanics, violet-500 for
+     electromagnetism, slate-500 for unknown/fallback).
+   - The border-style secondary channel is shown on the swatch as well
+     (solid / dashed / dotted border on the swatch itself), matching
+     ConceptNode's per-domain border.
+   - Collapsible (chevron toggle); defaults to expanded on first load.
+   - Collapse state persists to localStorage under "atlas_legend_v1".
+   - Position: top-left, directly below LayerToggleBar. Together they form
+     a single control cluster.
+
+4. Wire visibleLayers into GraphCanvas:
    - Filter entities to those whose layer is in visibleLayers.
-   - Filter edges to those whose endpoints are both in visible layers.
+   - Filter edges to those whose source and target are both in the visible
+     entity set.
 
-4. Persist visibleLayers to localStorage under "atlas_layers_v1" so reloads
-   preserve the user's chosen layers.
+5. Persist visibleLayers to localStorage under "atlas_layers_v1" so reloads
+   preserve the user's layer choices.
 
-5. Domain filter and layer filter compose: an entity renders iff its layer is
-   visible AND (its domain is visible OR it has no domain — variables).
-   Variables are always shown when the variable layer is on, regardless of
-   domain filter state.
+6. Domain filter and layer filter compose: an entity renders iff its layer
+   is in visibleLayers AND (its domain is in the active domain filter OR it
+   has no domain — variables have no domain). Variables are always shown
+   when the variable layer is on, regardless of domain filter state.
+   NOTE: If no domain filter UI exists yet, skip composition logic and leave
+   a TODO comment. Do not create a domain filter UI in this session.
 
-6. Tests:
-   - Toggle state round-trips through localStorage.
-   - With only concept layer visible, getVisibleEntities returns 10 entities
-     and the original Phase 2 edge set.
-   - With concept + variable visible, returns 10 + N_variables entities and
-     the prerequisite + uses-variable edge sets.
+7. Tests:
+   - visibleLayers round-trips through localStorage at "atlas_layers_v1".
+   - DomainLegend collapse state round-trips through "atlas_legend_v1".
+   - With only concept layer visible, the visible entity set contains the 10
+     concept nodes and zero variable nodes; edge set matches the Phase 2
+     prerequisite-only set.
+   - With concept + variable visible, the visible entity set contains 10 +
+     N_variables entities and includes uses-variable edges.
+   - DomainLegend derives domain list dynamically: a test with a synthetic
+     entity set (3 mechanics, 2 electromagnetism) renders 2 legend rows with
+     correct counts.
+   - T5 from ATLAS_NODE_AFFORDANCES_SPEC.md (lint test asserting ConceptNode
+     does not render data.domain as text) should already pass; confirm it
+     does and do not break it.
+
+All tests must pass before Session 5.
 ```
 
 ---
@@ -489,6 +534,8 @@ Add variable detail rendering to NodePanel.
    - Add "Historical Context" section if present (collapsed by default).
    - Variable rows in the variable table become clickable: clicking navigates
      selection to that variable entity (opens VariablePanel).
+   - Reserve a Nearby-section mount point for future off-layer discovery UI,
+     but keep it hidden in 3a (problem/lab/experiment content is 3b).
 
 4. Cross-panel navigation:
    - Clicking a variable row in ConceptPanel selects the variable entity.
@@ -524,6 +571,9 @@ Replace binary understanding state with graduated 4-state scale.
      Seen | Recognize | Apply | Derive. Plus an "Reset" affordance.
    - Selecting a state writes via setState and triggers GraphCanvas re-render.
    - Default state for an entity never touched: "unseen".
+   - Expose understanding state via shared selectors/utilities so future
+     concept-adjacent UI (for example, Nearby rank ordering in 3b) can consume
+     the same state source without duplicating logic.
 
 3. Update node rendering visuals per the spec table:
    - unseen: base.
@@ -607,7 +657,7 @@ isomorphism edges, search, permalinks, mobile).
 - **Session 1 + 2 are the load-bearing wall.** The schema and migration must be airtight before any UI work begins. If migration of existing nodes uncovers schema gaps (e.g., a concept that resists `applicability_conditions`), raise it — do not silently relax validation.
 - The variable entity authoring in Session 2 is content work, not infrastructure. Quality matters; a misclassified `vector_or_scalar` or a wrong dimension propagates everywhere.
 - `applicability_conditions` is the most pedagogically important new field. It is the principle-application thesis made structural. Do not skip it for a node by claiming "it's obvious."
-- `position` from Phase 2 is preserved as an optional pin. The layout cache key must include the layer-set (since variable nodes change the topology); recompute when the entity-id-set changes.
+- `position` from Phase 2 is preserved as an optional pin. The layout cache key must include the full entity-id-set across all layers (layer-set may be included as a convenience), and must recompute whenever that id-set changes.
 - Floating-edge math for non-circular shapes is a known tweak. If the diamond approximation looks bad at v0.3a, escalate to a full polygon-edge intersection routine — but not before 3b unless it's egregious.
 - Reverse-derived `appears_in` is computed at runtime, never authored. Same pattern as Phase 2's `Enables`.
 - All styling Tailwind. No new dependencies.

@@ -2,9 +2,20 @@ import { BaseEdge, MarkerType, Position, getBezierPath, useStore } from 'reactfl
 
 const EDGE_STROKE = '#94a3b8'
 const BRIGHT_EDGE_STROKE = '#cbd5e1'
+const VARIABLE_EDGE_STROKE = '#64748b'
 
 export function getEdgeVisuals(edgeType, weight) {
   const clampedWeight = Math.max(0, Math.min(1, typeof weight === 'number' ? weight : 0))
+
+  if (edgeType === 'uses-variable') {
+    return {
+      strokeDasharray: '2 5',
+      strokeWidth: 1.2,
+      opacity: 0.35,
+      markerEnd: undefined,
+      stroke: VARIABLE_EDGE_STROKE,
+    }
+  }
 
   if (edgeType === 'foundational') {
     return {
@@ -12,6 +23,7 @@ export function getEdgeVisuals(edgeType, weight) {
       strokeWidth: 1.5 + 2.5 * clampedWeight,
       opacity: 0.5 + 0.5 * clampedWeight,
       markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_STROKE },
+      stroke: EDGE_STROKE,
     }
   }
 
@@ -21,6 +33,7 @@ export function getEdgeVisuals(edgeType, weight) {
       strokeWidth: 1.0 + 1.5 * clampedWeight,
       opacity: 0.4 + 0.4 * clampedWeight,
       markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_STROKE },
+      stroke: EDGE_STROKE,
     }
   }
 
@@ -31,6 +44,7 @@ export function getEdgeVisuals(edgeType, weight) {
       opacity: 0.7 + 0.3 * clampedWeight,
       markerEnd: undefined,
       targetGlyph: '≡',
+      stroke: EDGE_STROKE,
     }
   }
 
@@ -39,6 +53,7 @@ export function getEdgeVisuals(edgeType, weight) {
     strokeWidth: 1.0 + 1.0 * clampedWeight,
     opacity: 0.3 + 0.3 * clampedWeight,
     markerEnd: undefined,
+    stroke: EDGE_STROKE,
   }
 }
 
@@ -114,14 +129,24 @@ export default function FloatingEdge({ id, source, target, data }) {
   const isFrontier = data?.isFrontier === true
   const isFocal = emphasis === 'focal'
   const isDistant = emphasis === 'distant'
+  const isVariableEdge = data?.type === 'uses-variable'
   const shouldPulse = isFrontier && !isFocal
-  const frontierStrokeWidth = isFrontier ? visuals.strokeWidth + 0.5 : visuals.strokeWidth
+  const frontierStrokeWidth =
+    isFrontier && !isVariableEdge ? visuals.strokeWidth + 0.5 : visuals.strokeWidth
   const frontierOpacity = isFrontier
     ? Math.max(0, Math.min(1, visuals.opacity + 0.2))
     : visuals.opacity
-  const strokeWidth = isFocal ? frontierStrokeWidth + 1 : frontierStrokeWidth
-  const opacity = isFocal ? 1 : isDistant ? 0.15 : frontierOpacity
-  const stroke = isFocal ? BRIGHT_EDGE_STROKE : EDGE_STROKE
+  const strokeWidth = isFocal && !isVariableEdge ? frontierStrokeWidth + 1 : frontierStrokeWidth
+  const opacity = isVariableEdge
+    ? isDistant
+      ? 0.15
+      : frontierOpacity
+    : isFocal
+      ? 1
+      : isDistant
+        ? 0.15
+        : frontierOpacity
+  const stroke = isFocal && !isVariableEdge ? BRIGHT_EDGE_STROKE : visuals.stroke ?? EDGE_STROKE
   const markerEnd =
     visuals.markerEnd && isFocal
       ? { ...visuals.markerEnd, color: BRIGHT_EDGE_STROKE }

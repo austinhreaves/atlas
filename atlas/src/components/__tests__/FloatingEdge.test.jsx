@@ -8,4 +8,12 @@ describe('getEdgeVisuals', () => {
     expect(visuals.markerEnd).toBeUndefined()
     expect(visuals.targetGlyph).toBe('≡')
   })
+
+  it('renders uses-variable edges as subdued dotted links without arrowheads', () => {
+    const visuals = getEdgeVisuals('uses-variable', 0.5)
+    expect(visuals.strokeDasharray).toBe('2 5')
+    expect(visuals.markerEnd).toBeUndefined()
+    expect(visuals.opacity).toBe(0.35)
+    expect(visuals.strokeWidth).toBe(1.2)
+  })
 })

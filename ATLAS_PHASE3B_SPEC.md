@@ -14,6 +14,10 @@ Phase 3b is dominated by content authoring and pedagogical decisions. The engine
 - Activate lab layer: schema, validator, rendering, panel, content (PHY 114 + PHY 132 alignments).
 - Activate experiment layer: schema, validator, rendering, panel, content.
 - Cross-layer edge types: `applies` (problem → concept), `instantiates` (lab → concept), `establishes` (experiment → concept).
+- Concept-selected discovery surface:
+  - Nearby panel section listing connected off-layer entities.
+  - ZPD rank ordering by unmet prerequisites.
+  - Concept-node latent-content indicators (halo + hover/selection count badge).
 - Same-layer concept edges (new types):
   - `isomorphic` — non-directional structural identity (SHM ↔ LC ↔ pendulum).
   - `noether-consequence` — symmetry concept → conservation law.
@@ -374,6 +378,15 @@ Activate the problem layer.
    - validateProblemNode covers all required fields and difficulty bounds.
    - "applies" edges generated correctly from concept_path.
    - Problem panel renders all sections.
+   - Build/load-time adjacency map generated:
+     { conceptId: { problemIds: [], labIds: [], experimentIds: [] } }.
+
+8. Nearby (stub) in ConceptPanel:
+   - Add a problems-only Nearby section powered by applies adjacency.
+   - Sort alphabetically only (explicit stub, not ZPD-ranked yet).
+   - Hide section when there are no connected authored problems.
+   - Clicking a row selects the problem entity; pan only if the problem layer
+     is globally visible, otherwise open panel without camera move.
 ```
 
 ---
@@ -405,6 +418,43 @@ Activate the lab and experiment layers.
 
 7. Tests for all of the above. Schema validation, edge generation, panel
    rendering, layer toggle composition.
+```
+
+---
+
+### Session 2.5 — Nearby ranking + concept latent-depth indicators
+
+```
+Complete reveal-neighbors behavior once all off-layers are connected.
+
+1. Nearby section in ConceptPanel:
+   - Group connected entities by layer (Problems, Labs, Experiments).
+   - Replace stub ordering with ZPD ranking:
+     unmet_prereqs(item) = count of concept IDs in concept_path whose
+     understanding state is < "recognize", excluding the selected concept.
+   - For items without concept_path, treat unmet_prereqs as 0.
+   - Tie-break alphabetically by title.
+   - Show top 5 items per group by default with "Show N more."
+   - Re-sort live when understanding state changes.
+
+2. ConceptNode latent-content indicators:
+   - Halo renders when concept has at least one connected authored off-layer
+     entity.
+   - Hover/selection badge shows total connected count, and expands to a
+     per-layer glyph breakdown.
+   - Count scope includes only connected authored entities; layer registry
+     presence alone does not contribute.
+
+3. Data + cache behavior:
+   - Compute adjacency/count maps once at load from full entity + edge sets;
+     do not recompute on selection or understanding changes.
+   - Preserve layout stability: no layout recomputation from Nearby interactions.
+
+4. Tests:
+   - ZPD rank formula and tie-breaks.
+   - Top-5 + Show-N-more behavior.
+   - Halo/badge visibility thresholds and authored-only count scope.
+   - Row-click behavior with target layer hidden (panel select only, no pan).
 ```
 
 ---
@@ -491,14 +541,21 @@ Author problem content and ship the path view.
    difficulty.
 
 3. Implement principle-application path view in GraphCanvas:
+   - This section is the canonical source for principle-application path
+     behavior (reveal-neighbors spec defers here for implementation details).
    - When selectedEntity.layer === "problem", apply path-overlay rendering
      mode.
    - Dim all entities to opacity 0.2 except concepts in concept_path.
    - Number the path concepts 1, 2, 3, ... with badge overlays.
    - Animate a path drawing from concept 1 → 2 → 3 → ... using SVG
      stroke-dasharray + stroke-dashoffset CSS animation, 1.5s total.
+   - Apply a distinct principle-application highlight stroke to each concept
+     in path (not domain color), and temporarily bold edges between consecutive
+     concepts while the problem is selected.
    - In ProblemPanel, concept_path steps are numbered to match.
    - Clicking a numbered concept selects it but preserves path overlay.
+   - Overlay/highlights clear on deselect or when selection switches to a
+     non-problem entity.
 
 4. Add a "Replay path" button on ProblemPanel that re-runs the animation.
 

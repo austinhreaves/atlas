@@ -1,0 +1,78 @@
+import { Handle, Position } from 'reactflow'
+import KatexText from '../KatexText.jsx'
+
+const floatingHandleClass =
+  '!h-0 !w-0 !border-0 !bg-transparent !opacity-0 !pointer-events-none'
+
+const VARIABLE_BASE_SIZE = 70
+
+export default function VariableNode({ data, selected }) {
+  const visualState = data.visualState ?? 'base'
+  const scale = visualState === 'focal' ? 1.08 : visualState === 'neighbor' ? 1.04 : 1
+  const selectionActive = visualState !== 'base'
+  const isUnderstood = data.isUnderstood === true
+  const opacity = selectionActive ? (visualState === 'distant' ? 0.3 : 1) : isUnderstood ? 0.7 : 1
+  const filter = !selectionActive && isUnderstood ? 'saturate(0.3)' : undefined
+
+  return (
+    <div
+      className={`relative transition-[transform,opacity,filter] duration-300 ease-out ${
+        selected || visualState === 'focal' ? 'drop-shadow-[0_0_10px_rgba(148,163,184,0.75)]' : ''
+      }`}
+      style={{
+        width: `${VARIABLE_BASE_SIZE}px`,
+        height: `${VARIABLE_BASE_SIZE}px`,
+        opacity,
+        transform: `scale(${scale})`,
+        transformOrigin: 'center',
+        filter,
+      }}
+    >
+      <Handle id="target-top" type="target" position={Position.Top} className={floatingHandleClass} />
+      <Handle
+        id="target-right"
+        type="target"
+        position={Position.Right}
+        className={floatingHandleClass}
+      />
+      <Handle
+        id="target-bottom"
+        type="target"
+        position={Position.Bottom}
+        className={floatingHandleClass}
+      />
+      <Handle id="target-left" type="target" position={Position.Left} className={floatingHandleClass} />
+      <Handle id="source-top" type="source" position={Position.Top} className={floatingHandleClass} />
+      <Handle
+        id="source-right"
+        type="source"
+        position={Position.Right}
+        className={floatingHandleClass}
+      />
+      <Handle
+        id="source-bottom"
+        type="source"
+        position={Position.Bottom}
+        className={floatingHandleClass}
+      />
+      <Handle id="source-left" type="source" position={Position.Left} className={floatingHandleClass} />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="h-full w-full rotate-45 rounded-md border border-indigo-300/40 bg-slate-900/90 shadow-[0_0_24px_-8px_rgba(99,102,241,0.42)]" />
+      </div>
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+        <KatexText
+          math={data.canonicalSymbol ?? data.title ?? '?'}
+          className="text-[14px] font-semibold text-slate-50"
+        />
+        <p className="mt-1 max-w-[64px] rotate-0 text-[9px] font-semibold uppercase tracking-wide text-slate-300">
+          {data.title}
+        </p>
+      </div>
+      {isUnderstood ? (
+        <span className="absolute -right-1 -top-1 inline-flex h-4 w-4 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/80 text-[9px] font-bold text-slate-950">
+          ✓
+        </span>
+      ) : null}
+    </div>
+  )
+}

@@ -1,14 +1,28 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import NodePanel from './components/NodePanel.jsx'
-import nodesData from './data/concepts.json'
 import { getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { computeLayout, computeMass } from './lib/layout'
+import { resolveRenderPosition } from './lib/resolveRenderPosition'
 import { getUnderstood } from './lib/understanding'
+import {
+  buildLayoutExportPayload,
+  clearUserLayoutStore,
+  computeCorpusHash,
+  createUserLayoutStore,
+  downloadLayoutPayload,
+  getUserLayoutStore,
+  parseLayoutImportPayload,
+  removeUserLayoutPosition,
+  saveUserLayoutStore,
+  setUserLayoutPosition,
+  validateLayoutImportPayload,
+} from './lib/userLayout'
 
 const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
 const DEFAULT_PANEL_WIDTH_FALLBACK = 440
+const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
 
 function getInitialPanelWidth() {
   if (typeof window === 'undefined') {
@@ -60,25 +74,57 @@ export default function App() {
   const [selectedNodeId, setSelectedNodeId] = useState(null)
   const [understandingVersion, setUnderstandingVersion] = useState(0)
   const [panelWidth, setPanelWidth] = useState(() => getInitialPanelWidth())
-  const isPanelOpen = Boolean(selectedNodeId)
-  const edges = useMemo(() => {
-    const allEntities = getAllEntities()
-    return buildEdges(allEntities)
-  }, [])
-  const nodeById = useMemo(
-    () => new Map(nodesData.map((node) => [node.id, node])),
-    [],
+  const [userLayoutStore, setUserLayoutStore] = useState(() => getUserLayoutStore())
+  const [atlasCorpusHash, setAtlasCorpusHash] = useState(
+    () => getUserLayoutStore().metadata.atlas_corpus_hash,
   )
+  const isPanelOpen = Boolean(selectedNodeId)
+  const allEntities = useMemo(() => getAllEntities(), [])
+  const conceptEntities = useMemo(
+    () => allEntities.filter((entity) => entity.layer === 'concept'),
+    [allEntities],
+  )
+  const edges = useMemo(() => {
+    return buildEdges(allEntities)
+  }, [allEntities])
+  const nodeById = useMemo(() => new Map(allEntities.map((node) => [node.id, node])), [allEntities])
   const understoodNodeIds = useMemo(() => getUnderstood(), [understandingVersion])
 
+  useEffect(() => {
+    let isActive = true
+    computeCorpusHash(allEntities.map((entity) => entity.id))
+      .then((hash) => {
+        if (!isActive) {
+          return
+        }
+        setAtlasCorpusHash(hash)
+      })
+      .catch(() => {
+        if (!isActive) {
+          return
+        }
+        setAtlasCorpusHash((current) => current ?? null)
+      })
+    return () => {
+      isActive = false
+    }
+  }, [allEntities])
+
+
   const positionedNodes = useMemo(() => {
-    const positions = getLayoutPositions(nodesData, edges)
-    return nodesData.map((node) => ({
+    const computedPositions = getLayoutPositions(allEntities, edges)
+    return allEntities.map((node) => ({
       ...node,
       mass: computeMass(node, edges),
-      position: positions[node.id] ?? { x: 0, y: 0 },
+      position: resolveRenderPosition({
+        entityId: node.id,
+        userPositions: userLayoutStore.positions,
+        canonicalPosition: node.position,
+        computedPositions,
+        warnOnMissingComputed: import.meta.env.DEV,
+      }),
     }))
-  }, [edges])
+  }, [allEntities, edges, userLayoutStore.positions])
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNodeId(node?.id ?? null)
@@ -95,6 +141,102 @@ export default function App() {
   const handlePanelWidthChange = useCallback((nextWidth) => {
     setPanelWidth(nextWidth)
   }, [])
+
+  const persistNextUserLayoutStore = useCallback((nextStore) => {
+    saveUserLayoutStore(nextStore)
+    setUserLayoutStore(nextStore)
+  }, [])
+
+  const handleNodePositionCommit = useCallback(
+    (nodeId, position) => {
+      const nextStore = setUserLayoutPosition(
+        userLayoutStore,
+        nodeId,
+        position,
+        atlasCorpusHash ?? userLayoutStore.metadata.atlas_corpus_hash,
+      )
+      persistNextUserLayoutStore(nextStore)
+    },
+    [atlasCorpusHash, persistNextUserLayoutStore, userLayoutStore],
+  )
+
+  const handleResetToCanonical = useCallback(() => {
+    const confirmed = window.confirm(
+      'Reset your layout to canonical positions? This clears all saved node positions.',
+    )
+    if (!confirmed) {
+      return
+    }
+
+    clearUserLayoutStore()
+    const nextStore = createUserLayoutStore({
+      atlasCorpusHash: atlasCorpusHash ?? userLayoutStore.metadata.atlas_corpus_hash,
+    })
+    persistNextUserLayoutStore(nextStore)
+  }, [atlasCorpusHash, persistNextUserLayoutStore, userLayoutStore.metadata.atlas_corpus_hash])
+
+  const handleResetSelected = useCallback(() => {
+    if (!selectedNodeId) {
+      return
+    }
+
+    const nextStore = removeUserLayoutPosition(
+      userLayoutStore,
+      selectedNodeId,
+      atlasCorpusHash ?? userLayoutStore.metadata.atlas_corpus_hash,
+    )
+    persistNextUserLayoutStore(nextStore)
+  }, [
+    atlasCorpusHash,
+    persistNextUserLayoutStore,
+    selectedNodeId,
+    userLayoutStore,
+  ])
+
+  const handleExportLayout = useCallback(() => {
+    const payload = buildLayoutExportPayload({
+      positions: userLayoutStore.positions,
+      atlasCorpusHash: atlasCorpusHash ?? userLayoutStore.metadata.atlas_corpus_hash,
+      atlasCorpusVersion: ATLAS_CORPUS_VERSION,
+      userNote: userLayoutStore.metadata.user_note,
+    })
+    downloadLayoutPayload(payload)
+  }, [atlasCorpusHash, userLayoutStore])
+
+  const handleImportLayout = useCallback(
+    async (file) => {
+      if (!file) {
+        return
+      }
+
+      const text = await file.text()
+      const parsed = parseLayoutImportPayload(text)
+      const validation = validateLayoutImportPayload(parsed)
+      if (!validation.valid) {
+        window.alert(validation.reason ?? 'Invalid layout file.')
+        return
+      }
+
+      const activeHash = atlasCorpusHash ?? userLayoutStore.metadata.atlas_corpus_hash
+      const incomingHash = validation.atlasCorpusHash
+      if (activeHash && incomingHash && activeHash !== incomingHash) {
+        const proceed = window.confirm(
+          'This layout was exported from a different corpus hash. Import anyway?',
+        )
+        if (!proceed) {
+          return
+        }
+      }
+
+      const nextStore = createUserLayoutStore({
+        positions: validation.positions,
+        atlasCorpusHash: incomingHash ?? activeHash,
+        userNote: validation.userNote,
+      })
+      persistNextUserLayoutStore(nextStore)
+    },
+    [atlasCorpusHash, persistNextUserLayoutStore, userLayoutStore.metadata.atlas_corpus_hash],
+  )
 
   const focalNodeIds = useMemo(
     () => (selectedNodeId ? new Set([selectedNodeId]) : new Set()),
@@ -114,7 +256,7 @@ export default function App() {
       }
     }
     return ids
-  }, [edges, selectedNodeId])
+  }, [edges, nodeById, selectedNodeId])
 
   const distantNodeIds = useMemo(() => {
     const ids = new Set()
@@ -133,7 +275,7 @@ export default function App() {
 
   const enablesByNodeId = useMemo(() => {
     const map = new Map()
-    for (const node of nodesData) {
+    for (const node of conceptEntities) {
       for (const prerequisite of node.prerequisites ?? []) {
         if (!map.has(prerequisite.id)) {
           map.set(prerequisite.id, [])
@@ -151,7 +293,7 @@ export default function App() {
       dependents.sort((a, b) => b.weight - a.weight || a.title.localeCompare(b.title))
     }
     return map
-  }, [])
+  }, [conceptEntities])
 
   const prerequisiteLinks = useMemo(() => {
     if (!selectedNode) {
@@ -163,7 +305,7 @@ export default function App() {
         const prerequisiteNode = nodeById.get(prerequisite.id)
         return {
           id: prerequisite.id,
-          title: prerequisiteNode?.title ?? prerequisite.id,
+          title: prerequisiteNode?.title ?? prerequisiteNode?.name ?? prerequisite.id,
           type: prerequisite.type,
           weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
         }
@@ -191,6 +333,11 @@ export default function App() {
         distantNodeIds={distantNodeIds}
         understoodNodeIds={understoodNodeIds}
         onNodeClick={handleNodeClick}
+        onNodePositionCommit={handleNodePositionCommit}
+        onResetToCanonical={handleResetToCanonical}
+        onResetSelected={handleResetSelected}
+        onExportLayout={handleExportLayout}
+        onImportLayout={handleImportLayout}
       />
       <NodePanel
         selectedNode={selectedNode}

@@ -18,6 +18,19 @@ function getNodeCenter(node) {
 }
 
 const IDLE_RECENTER_MS = 4500
+const MIN_PANEL_WIDTH = 360
+
+function getPanelWidthBounds() {
+  const viewportWidth = typeof window === 'undefined' ? 1024 : window.innerWidth
+  const maxWidth = Math.max(1, Math.floor(viewportWidth * 0.55))
+  const minWidth = Math.min(MIN_PANEL_WIDTH, maxWidth)
+  return { minWidth, maxWidth }
+}
+
+function clampPanelWidth(width) {
+  const { minWidth, maxWidth } = getPanelWidthBounds()
+  return Math.min(maxWidth, Math.max(minWidth, width))
+}
 
 /** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, userMoveEndCount?: number }} props */
 export default function CameraController({
@@ -41,7 +54,9 @@ export default function CameraController({
 
     const viewport = reactFlow.getViewport()
     const zoom = viewport?.zoom ?? 1
+    const effectivePanelWidth = clampPanelWidth(panelWidth)
     const offsetGraphX = isPanelOpen ? panelWidth / (2 * zoom) : 0
+    const offsetGraphXClamped = isPanelOpen ? effectivePanelWidth / (2 * zoom) : 0
     const targetX = center.x + offsetGraphX
 
     reactFlow.setCenter(targetX, center.y, { zoom, duration })
@@ -56,7 +71,6 @@ export default function CameraController({
     if (!selectedNodeId) {
       return
     }
-
     centerOnNode(selectedNodeId, { duration: 420 })
   }, [isPanelOpen, panelWidth, selectedNodeId])
 
