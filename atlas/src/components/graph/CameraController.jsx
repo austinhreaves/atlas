@@ -18,12 +18,12 @@ function getNodeCenter(node) {
 }
 
 const IDLE_RECENTER_MS = 4500
-const MIN_PANEL_WIDTH = 360
+const DESKTOP_MIN_PANEL_WIDTH = 360
 
 function getPanelWidthBounds() {
   const viewportWidth = typeof window === 'undefined' ? 1024 : window.innerWidth
   const maxWidth = Math.max(1, Math.floor(viewportWidth * 0.55))
-  const minWidth = Math.min(MIN_PANEL_WIDTH, maxWidth)
+  const minWidth = Math.min(DESKTOP_MIN_PANEL_WIDTH, maxWidth)
   return { minWidth, maxWidth }
 }
 
@@ -32,12 +32,13 @@ function clampPanelWidth(width) {
   return Math.min(maxWidth, Math.max(minWidth, width))
 }
 
-/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, userMoveEndCount?: number }} props */
+/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, userMoveEndCount?: number, isMobile?: boolean }} props */
 export default function CameraController({
   selectedNodeId,
   panelWidth = 440,
   isPanelOpen = false,
   userMoveEndCount = 0,
+  isMobile = false,
 }) {
   const reactFlow = useReactFlow()
   const hasMountedRef = useRef(false)
@@ -55,8 +56,7 @@ export default function CameraController({
     const viewport = reactFlow.getViewport()
     const zoom = viewport?.zoom ?? 1
     const effectivePanelWidth = clampPanelWidth(panelWidth)
-    const offsetGraphX = isPanelOpen ? panelWidth / (2 * zoom) : 0
-    const offsetGraphXClamped = isPanelOpen ? effectivePanelWidth / (2 * zoom) : 0
+    const offsetGraphX = isPanelOpen && !isMobile ? effectivePanelWidth / (2 * zoom) : 0
     const targetX = center.x + offsetGraphX
 
     reactFlow.setCenter(targetX, center.y, { zoom, duration })
@@ -72,7 +72,7 @@ export default function CameraController({
       return
     }
     centerOnNode(selectedNodeId, { duration: 420 })
-  }, [isPanelOpen, panelWidth, selectedNodeId])
+  }, [isMobile, isPanelOpen, panelWidth, selectedNodeId])
 
   useEffect(() => {
     const previousSelectedNodeId = previousSelectedNodeIdRef.current
@@ -103,7 +103,7 @@ export default function CameraController({
       centerOnNode(selectedNodeId, { duration: 420 })
       idleTimerRef.current = null
     }, IDLE_RECENTER_MS)
-  }, [selectedNodeId, userMoveEndCount, isPanelOpen, panelWidth])
+  }, [selectedNodeId, userMoveEndCount, isMobile, isPanelOpen, panelWidth])
 
   useEffect(() => {
     return () => {

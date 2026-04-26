@@ -1,12 +1,13 @@
 import { useCallback, useRef } from 'react'
 
-/** @param {{ selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void> }} props */
+/** @param {{ selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, inline?: boolean }} props */
 export default function LayoutControls({
   selectedNodeId,
   onResetToCanonical,
   onResetSelected,
   onExportLayout,
   onImportLayout,
+  inline = false,
 }) {
   const fileInputRef = useRef(null)
 
@@ -27,7 +28,7 @@ export default function LayoutControls({
   )
 
   return (
-    <div className="pointer-events-none absolute right-4 top-4 z-20">
+    <div className={inline ? '' : 'pointer-events-none absolute right-4 top-4 z-20'}>
       <div className="pointer-events-auto rounded-xl border border-slate-700/70 bg-slate-900/90 p-2 shadow-xl shadow-black/40 backdrop-blur-sm">
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
           Layout

@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import DomainFilterPanel from './components/DomainFilterPanel.jsx'
 import DomainLegend from './components/DomainLegend.jsx'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import LayerToggleBar from './components/LayerToggleBar.jsx'
+import MobileControlsOverlay from './components/MobileControlsOverlay.jsx'
 import NodePanel from './components/NodePanel.jsx'
 import { getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { LAYERS } from './data/layers'
+import useIsMobile, { MOBILE_BREAKPOINT_PX } from './hooks/useIsMobile'
 import { computeLayout, computeMass } from './lib/layout'
 import { resolveRenderPosition } from './lib/resolveRenderPosition'
 import { getUnderstood } from './lib/understanding'
@@ -27,6 +30,7 @@ const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
 const LAYER_VISIBILITY_KEY = 'atlas_layers_v1'
 const LEGEND_VISIBILITY_KEY = 'atlas_legend_v1'
 const DEFAULT_PANEL_WIDTH_FALLBACK = 440
+const DESKTOP_MIN_PANEL_WIDTH = 360
 const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
 
 const layerEntries = Object.entries(LAYERS)
@@ -73,7 +77,10 @@ function getInitialPanelWidth() {
   if (typeof window === 'undefined') {
     return DEFAULT_PANEL_WIDTH_FALLBACK
   }
-  return Math.max(1, Math.floor(window.innerWidth * 0.55))
+  if (window.innerWidth < MOBILE_BREAKPOINT_PX) {
+    return DEFAULT_PANEL_WIDTH_FALLBACK
+  }
+  return Math.max(DESKTOP_MIN_PANEL_WIDTH, Math.floor(window.innerWidth * 0.55))
 }
 
 function getNodeIdSet(nodes) {
@@ -116,6 +123,7 @@ function getLayoutPositions(nodes, edges) {
 }
 
 export default function App() {
+  const isMobile = useIsMobile()
   const [selectedNodeId, setSelectedNodeId] = useState(null)
   const [understandingVersion, setUnderstandingVersion] = useState(0)
   const [panelWidth, setPanelWidth] = useState(() => getInitialPanelWidth())
@@ -125,6 +133,7 @@ export default function App() {
   )
   const [visibleLayers, setVisibleLayers] = useState(() => readInitialVisibleLayers())
   const [legendCollapsed, setLegendCollapsed] = useState(() => readInitialLegendCollapsed())
+  const [mobileControlsOpen, setMobileControlsOpen] = useState(false)
   const isPanelOpen = Boolean(selectedNodeId)
   const allEntities = useMemo(() => getAllEntities(), [])
   const conceptEntities = useMemo(
@@ -177,6 +186,18 @@ export default function App() {
       // Ignore write failures in constrained environments.
     }
   }, [legendCollapsed])
+
+  useEffect(() => {
+    if (!isMobile && mobileControlsOpen) {
+      setMobileControlsOpen(false)
+    }
+  }, [isMobile, mobileControlsOpen])
+
+  useEffect(() => {
+    if (selectedNodeId && mobileControlsOpen) {
+      setMobileControlsOpen(false)
+    }
+  }, [mobileControlsOpen, selectedNodeId])
 
   useEffect(() => {
     let isActive = true
@@ -255,6 +276,10 @@ export default function App() {
 
   const handlePanelWidthChange = useCallback((nextWidth) => {
     setPanelWidth(nextWidth)
+  }, [])
+
+  const toggleMobileControls = useCallback(() => {
+    setMobileControlsOpen((value) => !value)
   }, [])
 
   const persistNextUserLayoutStore = useCallback((nextStore) => {
@@ -456,42 +481,44 @@ export default function App() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden">
-      <div className="pointer-events-none absolute left-4 top-4 z-20 flex w-[360px] flex-col gap-2">
-        <LayerToggleBar
+      {!isMobile ? (
+        <div className="pointer-events-none absolute left-4 top-4 z-20 flex w-[360px] flex-col gap-2">
+          <LayerToggleBar
+            layerEntries={layerEntries}
+            visibleLayers={visibleLayers}
+            onToggleLayer={toggleLayer}
+          />
+          <DomainFilterPanel
+            allDomains={allDomains}
+            visibleDomains={visibleDomains}
+            onToggleDomain={toggleDomain}
+          />
+          <DomainLegend
+            rows={visibleConceptRows}
+            collapsed={legendCollapsed}
+            onToggleCollapsed={() => setLegendCollapsed((value) => !value)}
+          />
+        </div>
+      ) : (
+        <MobileControlsOverlay
+          isOpen={mobileControlsOpen}
+          onToggleOpen={toggleMobileControls}
           layerEntries={layerEntries}
           visibleLayers={visibleLayers}
           onToggleLayer={toggleLayer}
+          allDomains={allDomains}
+          visibleDomains={visibleDomains}
+          onToggleDomain={toggleDomain}
+          visibleConceptRows={visibleConceptRows}
+          legendCollapsed={legendCollapsed}
+          onToggleLegendCollapsed={() => setLegendCollapsed((value) => !value)}
+          selectedNodeId={selectedNodeId}
+          onResetToCanonical={handleResetToCanonical}
+          onResetSelected={handleResetSelected}
+          onExportLayout={handleExportLayout}
+          onImportLayout={handleImportLayout}
         />
-        <section className="pointer-events-auto rounded-xl border border-slate-700/70 bg-slate-900/90 p-2 shadow-xl shadow-black/40 backdrop-blur-sm">
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-            Domains
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {allDomains.map((domain) => {
-              const active = visibleDomains.has(domain)
-              return (
-                <button
-                  key={domain}
-                  type="button"
-                  onClick={() => toggleDomain(domain)}
-                  className={`rounded-md border px-2.5 py-1 text-xs font-semibold capitalize tracking-wide transition ${
-                    active
-                      ? 'border-cyan-400/50 bg-cyan-500/15 text-cyan-200'
-                      : 'border-slate-600 bg-slate-800/80 text-slate-300 hover:bg-slate-700/90'
-                  }`}
-                >
-                  {domain}
-                </button>
-              )
-            })}
-          </div>
-        </section>
-        <DomainLegend
-          rows={visibleConceptRows}
-          collapsed={legendCollapsed}
-          onToggleCollapsed={() => setLegendCollapsed((value) => !value)}
-        />
-      </div>
+      )}
       <GraphCanvas
         nodes={positionedNodes}
         edges={edges}
@@ -510,10 +537,12 @@ export default function App() {
         onResetSelected={handleResetSelected}
         onExportLayout={handleExportLayout}
         onImportLayout={handleImportLayout}
+        isMobile={isMobile}
       />
       <NodePanel
         selectedNode={selectedNode}
         panelWidth={panelWidth}
+        isMobile={isMobile}
         onPanelWidthChange={handlePanelWidthChange}
         prerequisiteLinks={prerequisiteLinks}
         enablesLinks={enablesLinks}

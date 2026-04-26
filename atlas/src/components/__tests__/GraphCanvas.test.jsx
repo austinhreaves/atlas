@@ -77,6 +77,7 @@ function createProps(overrides = {}) {
     onResetSelected: vi.fn(),
     onExportLayout: vi.fn(),
     onImportLayout: vi.fn(),
+    isMobile: false,
     ...overrides,
   }
 }
@@ -298,6 +299,15 @@ describe('GraphCanvas camera behavior', () => {
 
     expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
     expect(reactFlowHandlers.lastProps?.selectNodesOnDrag).toBe(false)
+  })
+
+  it('uses mobile touch-safe interaction defaults on small screens', () => {
+    render(<GraphCanvas {...createProps({ isMobile: true })} />)
+
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(false)
+    expect(reactFlowHandlers.lastProps?.panOnScroll).toBe(false)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(14)
+    expect(reactFlowHandlers.lastProps?.className).toContain('touch-none')
   })
 
   it('marks uses-variable edges as focal when their concept is selected', () => {

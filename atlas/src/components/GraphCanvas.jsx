@@ -80,7 +80,7 @@ function toFlowEdges(edges, selectedNodeId, neighborNodeIds, understoodNodeIds) 
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void> }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, isMobile?: boolean }} props */
 export default function GraphCanvas({
   nodes,
   edges,
@@ -99,6 +99,7 @@ export default function GraphCanvas({
   onResetSelected,
   onExportLayout,
   onImportLayout,
+  isMobile = false,
 }) {
   const [userMoveEndCount, setUserMoveEndCount] = useState(0)
   const activeLayers = useMemo(
@@ -238,14 +239,16 @@ export default function GraphCanvas({
   )
 
   return (
-    <div className="h-screen w-screen bg-surface">
-      <LayoutControls
-        selectedNodeId={selectedNodeId}
-        onResetToCanonical={onResetToCanonical}
-        onResetSelected={onResetSelected}
-        onExportLayout={onExportLayout}
-        onImportLayout={onImportLayout}
-      />
+    <div className={`h-screen w-screen bg-surface ${isMobile ? 'touch-none' : ''}`}>
+      {!isMobile ? (
+        <LayoutControls
+          selectedNodeId={selectedNodeId}
+          onResetToCanonical={onResetToCanonical}
+          onResetSelected={onResetSelected}
+          onExportLayout={onExportLayout}
+          onImportLayout={onImportLayout}
+        />
+      ) : null}
       <ReactFlow
         nodes={interactiveNodes}
         edges={flowEdges}
@@ -256,22 +259,24 @@ export default function GraphCanvas({
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.15}
         maxZoom={1.75}
-        nodesDraggable
+        nodesDraggable={!isMobile}
+        nodeDragThreshold={isMobile ? 14 : 1}
         selectNodesOnDrag={false}
-        panOnScroll
+        panOnScroll={!isMobile}
         zoomOnScroll
         zoomOnPinch
         proOptions={{ hideAttribution: true }}
         onNodeClick={handleNodeClick}
         onNodeDragStop={handleNodeDragStop}
         onMoveEnd={handleMoveEnd}
-        className="atlas-react-flow h-full w-full"
+        className={`atlas-react-flow h-full w-full ${isMobile ? 'touch-none' : ''}`}
       >
         <CameraController
           selectedNodeId={selectedNodeId}
           isPanelOpen={isPanelOpen}
           panelWidth={panelWidth}
           userMoveEndCount={userMoveEndCount}
+          isMobile={isMobile}
         />
         <Background
           variant={BackgroundVariant.Dots}

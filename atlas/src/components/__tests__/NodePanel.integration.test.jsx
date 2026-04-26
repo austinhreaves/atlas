@@ -200,6 +200,30 @@ describe('NodePanel formula rendering - integration', () => {
     expect(panel.getByTestId('node-panel-resize-handle')).not.toBeNull()
   })
 
+  it('renders bottom-sheet mode and hides resize affordance on mobile', () => {
+    setViewportWidth(375)
+    const node = nodes[0]
+    const panel = render(<NodePanel selectedNode={node} isMobile onClose={() => {}} />)
+
+    expect(panel.queryByTestId('node-panel-resize-handle')).toBeNull()
+    const sheet = panel.container.querySelector('aside')
+    expect(sheet).not.toBeNull()
+    expect(sheet.className).toContain('inset-x-0')
+    expect(sheet.className).toContain('translate-y-0')
+  })
+
+  it('bypasses desktop min-width clamp logic in mobile mode', () => {
+    setViewportWidth(375)
+    const node = nodes[0]
+    const panel = render(
+      <NodePanel selectedNode={node} panelWidth={920} isMobile onClose={() => {}} />,
+    )
+
+    const sheet = panel.container.querySelector('aside')
+    expect(sheet).not.toBeNull()
+    expect(sheet.style.width).toBe('')
+  })
+
   it('dragging resize handle updates width with right-anchored directionality', () => {
     setViewportWidth(1200)
     const node = nodes[0]

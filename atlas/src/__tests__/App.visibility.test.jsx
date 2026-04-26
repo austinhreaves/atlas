@@ -89,7 +89,17 @@ vi.mock('../lib/userLayout', () => ({
 }))
 
 describe('App visibility controls', () => {
+  function setViewportWidth(width) {
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: width,
+    })
+    window.dispatchEvent(new Event('resize'))
+  }
+
   beforeEach(() => {
+    setViewportWidth(1280)
     window.localStorage.clear()
     appState.graphProps = null
   })
@@ -139,5 +149,25 @@ describe('App visibility controls', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'electromagnetism' })[0])
     expect(screen.queryAllByText('electromagnetism').length).toBe(1)
     expect(screen.queryAllByText('mechanics').length).toBeGreaterThan(0)
+  })
+
+  it('uses a mobile filters overlay and hides desktop control stacks', async () => {
+    setViewportWidth(375)
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Filters' })).not.toBeNull()
+    })
+    expect(screen.queryByRole('button', { name: 'Toggle variable layer' })).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Toggle variable layer' }))
+    fireEvent.click(screen.getByRole('button', { name: /Domain Legend/i }))
+
+    await waitFor(() => {
+      const storedLayers = JSON.parse(window.localStorage.getItem('atlas_layers_v1') ?? '[]')
+      expect(storedLayers).toContain('variable')
+      expect(window.localStorage.getItem('atlas_legend_v1')).toBe('collapsed')
+    })
   })
 })
