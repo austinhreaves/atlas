@@ -13,14 +13,40 @@ const reactFlowState = vi.hoisted(() => ({
 const reactFlowHandlers = vi.hoisted(() => ({
   onMoveEnd: null,
   onNodeDragStop: null,
+  onNodeDragStart: null,
+  onNodeMouseDown: null,
+  onNodeMouseUp: null,
+  onNodeMouseLeave: null,
+  onPaneClick: null,
+  onPaneContextMenu: null,
+  onNodeClick: null,
   lastProps: null,
 }))
 
 vi.mock('reactflow', () => {
   return {
-    ReactFlow: ({ children, onMoveEnd, onNodeDragStop, ...props }) => {
+    ReactFlow: ({
+      children,
+      onMoveEnd,
+      onNodeDragStart,
+      onNodeDragStop,
+      onNodeMouseDown,
+      onNodeMouseUp,
+      onNodeMouseLeave,
+      onPaneClick,
+      onPaneContextMenu,
+      onNodeClick,
+      ...props
+    }) => {
       reactFlowHandlers.onMoveEnd = onMoveEnd
+      reactFlowHandlers.onNodeDragStart = onNodeDragStart
       reactFlowHandlers.onNodeDragStop = onNodeDragStop
+      reactFlowHandlers.onNodeMouseDown = onNodeMouseDown
+      reactFlowHandlers.onNodeMouseUp = onNodeMouseUp
+      reactFlowHandlers.onNodeMouseLeave = onNodeMouseLeave
+      reactFlowHandlers.onPaneClick = onPaneClick
+      reactFlowHandlers.onPaneContextMenu = onPaneContextMenu
+      reactFlowHandlers.onNodeClick = onNodeClick
       reactFlowHandlers.lastProps = props
       return <div data-testid="react-flow-root">{children}</div>
     },
@@ -98,6 +124,46 @@ function emitNodeDragStop(node) {
   }
 }
 
+function emitNodeDragStart(node) {
+  if (typeof reactFlowHandlers.onNodeDragStart === 'function') {
+    act(() => {
+      reactFlowHandlers.onNodeDragStart({}, node)
+    })
+  }
+}
+
+function emitNodeMouseDown(node, event = { pointerType: 'touch', type: 'touchstart' }) {
+  if (typeof reactFlowHandlers.onNodeMouseDown === 'function') {
+    act(() => {
+      reactFlowHandlers.onNodeMouseDown(event, node)
+    })
+  }
+}
+
+function emitNodeMouseUp(node, event = { pointerType: 'touch', type: 'touchend' }) {
+  if (typeof reactFlowHandlers.onNodeMouseUp === 'function') {
+    act(() => {
+      reactFlowHandlers.onNodeMouseUp(event, node)
+    })
+  }
+}
+
+function emitNodeClick(node) {
+  if (typeof reactFlowHandlers.onNodeClick === 'function') {
+    act(() => {
+      reactFlowHandlers.onNodeClick({}, { id: node.id, data: { node } })
+    })
+  }
+}
+
+function emitPaneContextMenu(event = { pointerType: 'touch', type: 'contextmenu' }) {
+  if (typeof reactFlowHandlers.onPaneContextMenu === 'function') {
+    act(() => {
+      reactFlowHandlers.onPaneContextMenu(event)
+    })
+  }
+}
+
 describe('GraphCanvas camera behavior', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -105,7 +171,14 @@ describe('GraphCanvas camera behavior', () => {
     reactFlowState.getViewport.mockReset()
     reactFlowState.setCenter.mockReset()
     reactFlowHandlers.onMoveEnd = null
+    reactFlowHandlers.onNodeDragStart = null
     reactFlowHandlers.onNodeDragStop = null
+    reactFlowHandlers.onNodeMouseDown = null
+    reactFlowHandlers.onNodeMouseUp = null
+    reactFlowHandlers.onNodeMouseLeave = null
+    reactFlowHandlers.onPaneClick = null
+    reactFlowHandlers.onPaneContextMenu = null
+    reactFlowHandlers.onNodeClick = null
     reactFlowHandlers.lastProps = null
     reactFlowState.getViewport.mockReturnValue({ zoom: 1.25 })
     reactFlowState.getNode.mockReturnValue({
@@ -306,8 +379,111 @@ describe('GraphCanvas camera behavior', () => {
 
     expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(false)
     expect(reactFlowHandlers.lastProps?.panOnScroll).toBe(false)
-    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(14)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(9999)
     expect(reactFlowHandlers.lastProps?.className).toContain('touch-none')
+  })
+
+  it('mobile short tap selects node without arming drag mode', () => {
+    const onNodeClick = vi.fn()
+    const node = { id: 'n1' }
+    render(<GraphCanvas {...createProps({ isMobile: true, onNodeClick })} />)
+
+    emitNodeMouseDown(node)
+    act(() => {
+      vi.advanceTimersByTime(200)
+    })
+    emitNodeMouseUp(node)
+    emitNodeClick(node)
+
+    expect(onNodeClick).toHaveBeenCalledTimes(1)
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(false)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(9999)
+  })
+
+  it('mobile long press arms drag mode and release before threshold cancels arming', () => {
+    const node = { id: 'n1' }
+    render(<GraphCanvas {...createProps({ isMobile: true })} />)
+
+    emitNodeMouseDown(node)
+    act(() => {
+      vi.advanceTimersByTime(250)
+    })
+    emitNodeMouseUp(node)
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(9999)
+
+    emitNodeMouseDown(node)
+    act(() => {
+      vi.advanceTimersByTime(450)
+    })
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(1)
+  })
+
+  it('mobile drag stop commits and suppresses immediate post-drag click', () => {
+    const onNodePositionCommit = vi.fn()
+    const onNodeClick = vi.fn()
+    const node = { id: 'n2' }
+    render(<GraphCanvas {...createProps({ isMobile: true, onNodePositionCommit, onNodeClick })} />)
+
+    emitNodeMouseDown(node)
+    act(() => {
+      vi.advanceTimersByTime(450)
+    })
+    emitNodeDragStart(node)
+    emitNodeDragStop({
+      id: 'n2',
+      position: { x: 640, y: -120 },
+    })
+
+    emitNodeClick(node)
+    expect(onNodePositionCommit).toHaveBeenCalledWith('n2', { x: 640, y: -120 })
+    expect(onNodeClick).not.toHaveBeenCalled()
+
+    act(() => {
+      vi.advanceTimersByTime(260)
+    })
+    emitNodeClick(node)
+    expect(onNodeClick).toHaveBeenCalledTimes(1)
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(false)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(9999)
+  })
+
+  it('clears pending mobile long-press timer when switching to desktop mode', () => {
+    const node = { id: 'n1' }
+    const { rerender } = render(<GraphCanvas {...createProps({ isMobile: true })} />)
+
+    emitNodeMouseDown(node)
+    act(() => {
+      vi.advanceTimersByTime(200)
+    })
+
+    rerender(<GraphCanvas {...createProps({ isMobile: false })} />)
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(1)
+  })
+
+  it('does not disarm mobile drag when pane context menu fires', () => {
+    const node = { id: 'n1' }
+    render(<GraphCanvas {...createProps({ isMobile: true })} />)
+
+    emitNodeMouseDown(node)
+    act(() => {
+      vi.advanceTimersByTime(450)
+    })
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(1)
+
+    emitPaneContextMenu()
+
+    expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
+    expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(1)
   })
 
   it('marks uses-variable edges as focal when their concept is selected', () => {

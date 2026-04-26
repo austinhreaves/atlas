@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Background,
   BackgroundVariant,
@@ -14,6 +14,9 @@ import VariableNode from './nodes/VariableNode.jsx'
 
 const nodeTypes = { concept: ConceptNode, variable: VariableNode }
 const edgeTypes = { atlas: FloatingEdge }
+const MOBILE_LONG_PRESS_MS = 400
+const MOBILE_IDLE_DRAG_THRESHOLD = 9999
+const CLICK_SUPPRESSION_AFTER_DRAG_MS = 250
 
 function toFlowNodes(
   nodes,
@@ -102,6 +105,11 @@ export default function GraphCanvas({
   isMobile = false,
 }) {
   const [userMoveEndCount, setUserMoveEndCount] = useState(0)
+  const [mobileDragArmedNodeId, setMobileDragArmedNodeId] = useState(null)
+  const [mobileTouchTrackingActive, setMobileTouchTrackingActive] = useState(false)
+  const longPressTimerRef = useRef(null)
+  const pressedNodeIdRef = useRef(null)
+  const suppressClickUntilRef = useRef(0)
   const activeLayers = useMemo(
     () =>
       visibleLayers instanceof Set
@@ -208,6 +216,9 @@ export default function GraphCanvas({
 
   const handleNodeClick = useCallback(
     (_, rfNode) => {
+      if (Date.now() < suppressClickUntilRef.current) {
+        return
+      }
       const atlasNode = rfNode?.data?.node
       if (atlasNode && typeof onNodeClick === 'function') {
         onNodeClick(atlasNode)
@@ -215,6 +226,68 @@ export default function GraphCanvas({
     },
     [onNodeClick],
   )
+
+  const clearLongPressTimer = useCallback(() => {
+    if (longPressTimerRef.current) {
+      window.clearTimeout(longPressTimerRef.current)
+      longPressTimerRef.current = null
+    }
+  }, [])
+
+  const isTouchLikeEvent = useCallback((event) => {
+    const pointerType = event?.pointerType ?? event?.nativeEvent?.pointerType
+    if (pointerType) {
+      return pointerType === 'touch' || pointerType === 'pen'
+    }
+    const eventType = event?.type ?? event?.nativeEvent?.type
+    return typeof eventType === 'string' && eventType.startsWith('touch')
+  }, [])
+
+  const disarmMobileDrag = useCallback(() => {
+    clearLongPressTimer()
+    pressedNodeIdRef.current = null
+    setMobileTouchTrackingActive(false)
+    setMobileDragArmedNodeId(null)
+  }, [clearLongPressTimer])
+
+  const handleNodeMouseDown = useCallback(
+    (event, rfNode) => {
+      if (!isMobile || !isTouchLikeEvent(event) || typeof rfNode?.id !== 'string') {
+        return
+      }
+      clearLongPressTimer()
+      pressedNodeIdRef.current = rfNode.id
+      setMobileTouchTrackingActive(true)
+      setMobileDragArmedNodeId(null)
+      longPressTimerRef.current = window.setTimeout(() => {
+        if (pressedNodeIdRef.current === rfNode.id) {
+          setMobileDragArmedNodeId(rfNode.id)
+        }
+      }, MOBILE_LONG_PRESS_MS)
+    },
+    [clearLongPressTimer, isMobile, isTouchLikeEvent],
+  )
+
+  const handleNodeMouseUp = useCallback(
+    (event) => {
+      if (!isMobile || !isTouchLikeEvent(event)) {
+        return
+      }
+      if (!mobileDragArmedNodeId) {
+        clearLongPressTimer()
+        pressedNodeIdRef.current = null
+        setMobileTouchTrackingActive(false)
+      }
+    },
+    [clearLongPressTimer, isMobile, isTouchLikeEvent, mobileDragArmedNodeId],
+  )
+
+  const handlePanePointerUp = useCallback(() => {
+    if (!isMobile) {
+      return
+    }
+    disarmMobileDrag()
+  }, [disarmMobileDrag, isMobile])
 
   const handleMoveEnd = useCallback((event) => {
     // React Flow emits null/undefined event for programmatic viewport moves.
@@ -234,9 +307,42 @@ export default function GraphCanvas({
       ) {
         onNodePositionCommit(rfNode.id, rfNode.position)
       }
+      if (isMobile) {
+        suppressClickUntilRef.current = Date.now() + CLICK_SUPPRESSION_AFTER_DRAG_MS
+        disarmMobileDrag()
+      }
     },
-    [onNodePositionCommit],
+    [disarmMobileDrag, isMobile, onNodePositionCommit],
   )
+
+  const handleNodeDragStart = useCallback(() => {
+    if (!isMobile) {
+      return
+    }
+    clearLongPressTimer()
+  }, [clearLongPressTimer, isMobile])
+
+  useEffect(() => {
+    if (!isMobile) {
+      clearLongPressTimer()
+      pressedNodeIdRef.current = null
+      setMobileDragArmedNodeId(null)
+      setMobileTouchTrackingActive(false)
+    }
+  }, [clearLongPressTimer, isMobile])
+
+  useEffect(() => {
+    return () => {
+      clearLongPressTimer()
+    }
+  }, [clearLongPressTimer])
+
+  const mobileDragEnabled = !isMobile || mobileTouchTrackingActive || Boolean(mobileDragArmedNodeId)
+  const nodeDragThreshold = isMobile
+    ? mobileDragArmedNodeId
+      ? 1
+      : MOBILE_IDLE_DRAG_THRESHOLD
+    : 1
 
   return (
     <div className={`h-screen w-screen bg-surface ${isMobile ? 'touch-none' : ''}`}>
@@ -259,14 +365,19 @@ export default function GraphCanvas({
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.15}
         maxZoom={1.75}
-        nodesDraggable={!isMobile}
-        nodeDragThreshold={isMobile ? 14 : 1}
+        nodesDraggable={mobileDragEnabled}
+        nodeDragThreshold={nodeDragThreshold}
         selectNodesOnDrag={false}
         panOnScroll={!isMobile}
         zoomOnScroll
         zoomOnPinch
         proOptions={{ hideAttribution: true }}
         onNodeClick={handleNodeClick}
+        onNodeMouseDown={handleNodeMouseDown}
+        onNodeMouseUp={handleNodeMouseUp}
+        onNodeMouseLeave={handleNodeMouseUp}
+        onPaneClick={handlePanePointerUp}
+        onNodeDragStart={handleNodeDragStart}
         onNodeDragStop={handleNodeDragStop}
         onMoveEnd={handleMoveEnd}
         className={`atlas-react-flow h-full w-full ${isMobile ? 'touch-none' : ''}`}
