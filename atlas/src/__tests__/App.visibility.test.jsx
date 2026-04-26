@@ -23,6 +23,7 @@ vi.mock('../data', () => ({
     {
       id: 'concept-mechanics',
       layer: 'concept',
+      review_state: 'published',
       title: 'Mechanics Concept',
       domain: 'mechanics',
       prerequisites: [],
@@ -31,6 +32,7 @@ vi.mock('../data', () => ({
     {
       id: 'concept-electromagnetism',
       layer: 'concept',
+      review_state: 'published',
       title: 'EM Concept',
       domain: 'electromagnetism',
       prerequisites: [],
@@ -39,13 +41,32 @@ vi.mock('../data', () => ({
     {
       id: 'variable-mass',
       layer: 'variable',
+      review_state: 'published',
       name: 'Mass',
       canonical_symbol: 'm',
       position: { x: 40, y: 40 },
     },
+    {
+      id: 'concept-draft',
+      layer: 'concept',
+      review_state: 'draft',
+      title: 'Draft Concept',
+      domain: 'mechanics',
+      prerequisites: [],
+      position: { x: 60, y: 60 },
+    },
+    {
+      id: 'variable-reviewed',
+      layer: 'variable',
+      review_state: 'reviewed',
+      name: 'Reviewed Variable',
+      canonical_symbol: 'x',
+      position: { x: 80, y: 80 },
+    },
   ],
   computeAppearsIn: () => ({
     'variable-mass': ['concept-mechanics'],
+    'variable-reviewed': ['concept-draft'],
   }),
 }))
 
@@ -59,6 +80,8 @@ vi.mock('../lib/layout', () => ({
     'concept-mechanics': { x: 0, y: 0 },
     'concept-electromagnetism': { x: 20, y: 20 },
     'variable-mass': { x: 40, y: 40 },
+    'concept-draft': { x: 60, y: 60 },
+    'variable-reviewed': { x: 80, y: 80 },
   }),
   computeMass: () => 1,
 }))
@@ -105,6 +128,7 @@ describe('App visibility controls', () => {
   beforeEach(() => {
     setViewportWidth(1280)
     window.localStorage.clear()
+    window.history.replaceState({}, '', '/')
     appState.graphProps = null
   })
 
@@ -173,5 +197,35 @@ describe('App visibility controls', () => {
       expect(storedLayers).toContain('variable')
       expect(window.localStorage.getItem('atlas_legend_v1')).toBe('collapsed')
     })
+  })
+
+  it('filters out draft and reviewed entities by default', async () => {
+    render(<App />)
+
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+    })
+
+    const renderedNodeIds = appState.graphProps.nodes.map((node) => node.id)
+    expect(renderedNodeIds).toContain('concept-mechanics')
+    expect(renderedNodeIds).toContain('concept-electromagnetism')
+    expect(renderedNodeIds).toContain('variable-mass')
+    expect(renderedNodeIds).not.toContain('concept-draft')
+    expect(renderedNodeIds).not.toContain('variable-reviewed')
+    expect(screen.queryByText('Showing draft content')).toBeNull()
+  })
+
+  it('includes draft and reviewed entities when include=draft is present', async () => {
+    window.history.replaceState({}, '', '/?include=draft')
+    render(<App />)
+
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+    })
+
+    const renderedNodeIds = appState.graphProps.nodes.map((node) => node.id)
+    expect(renderedNodeIds).toContain('concept-draft')
+    expect(renderedNodeIds).toContain('variable-reviewed')
+    expect(screen.getByText('Showing draft content')).not.toBeNull()
   })
 })

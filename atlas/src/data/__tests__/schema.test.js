@@ -92,6 +92,19 @@ describe('validateConceptNode', () => {
       'geometries[0] must be one of: cylindrical, spherical, planar, axial, none, other',
     )
   })
+
+  it('rejects invalid metadata for concept nodes', () => {
+    const errors = validateConceptNode(
+      createValidConcept({
+        author: '',
+        review_state: 'in-review',
+        last_reviewed: '2026/04/25',
+      }),
+    )
+    expect(errors).toContain('author must be a non-empty string.')
+    expect(errors).toContain('review_state must be one of: draft, reviewed, published')
+    expect(errors).toContain('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
+  })
 })
 
 describe('validateVariableNode', () => {
@@ -111,6 +124,19 @@ describe('validateVariableNode', () => {
       }),
     )
     expect(errors).toContain('common_aliases[0].symbol must be a non-empty string.')
+  })
+
+  it('rejects invalid metadata for variable entities', () => {
+    const errors = validateVariableNode(
+      createValidVariable({
+        author: ' ',
+        review_state: 'qa',
+        last_reviewed: '04-25-2026',
+      }),
+    )
+    expect(errors).toContain('author must be a non-empty string.')
+    expect(errors).toContain('review_state must be one of: draft, reviewed, published')
+    expect(errors).toContain('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
   })
 })
 

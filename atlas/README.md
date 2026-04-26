@@ -1,51 +1,116 @@
 # Atlas
 
-Atlas is an interactive dark-theme knowledge graph for foundational physics concepts, visualizing mechanics and electromagnetism nodes with connected relationships, equation-focused detail panels, and embedded visual scenes to support concept exploration in a single React Flow canvas.
+Atlas is an interactive physics knowledge map built with React Flow and KaTeX.  
+Phase 3A evolves Atlas from a concept-only graph into a multi-layer entity graph where concepts and variables are first-class nodes with cross-layer edges.
 
-## Phase 3A (Session 1)
+## Tech Stack
 
-Phase 3A Session 1 introduces schema v3 infrastructure for a multi-layer graph engine.
+- React + Vite
+- Tailwind CSS
+- React Flow
+- KaTeX
+- d3-force
+- Vitest
 
-- Schema v3 validator surface:
-  - `validateConceptNode()` for concept-layer entities
-  - `validateVariableNode()` for variable-layer entities
-  - `validateEntity()` dispatches by `entity.layer`
-- Concept schema additions (validator-enforced):
-  - required: `layer`, `principle`, `author`, `review_state`
-  - optional: `applicability_conditions`, `limiting_cases`, `misconceptions`, `historical_context`, `geometries`, `last_reviewed`
-  - `law` and `principle` concepts must provide at least one `applicability_conditions` entry
-- Variable schema (new entity type):
-  - required: `id`, `layer`, `canonical_symbol`, `name`, `unit`, `dimension`, `description`, `vector_or_scalar`, `author`, `review_state`
-  - optional: `sign_convention`, `common_aliases`, `tags`, `last_reviewed`
-- Layer registry:
-  - `src/data/layers.js` defines `concept`, `variable`, `problem`, `lab`, `experiment`
-  - only `concept` and `variable` are validator-wired in Session 1
-- Edge derivation:
-  - `buildEdges(entities)` now accepts the full entity array
-  - concept prerequisites remain directed typed edges
-  - concept variable references auto-generate `uses-variable` edges
-  - edge ids use `${source}__${type}__${target}`
+No backend is used in Phase 3A. Persistence is localStorage-only.
 
-## Phase 3A (Session 2)
+## Data Model
 
-Session 2 migrates authored data to the new multi-layer model.
+### Layer Architecture
 
-- Data files:
-  - concepts now live in `src/data/concepts.json` (replacing `nodes.json`)
-  - variable entities live in `src/data/variables.json`
-- Runtime data helpers (`src/data/index.js`):
-  - `getAllEntities()`
-  - `getEntitiesByLayer(layerName)`
-  - `computeAppearsIn(variables, concepts)` reverse index
-- Integrity guarantees (enforced by tests):
-  - every concept and variable passes `validateEntity`
-  - every concept variable reference resolves to an existing variable entity
-  - every variable appears in at least one concept (no orphans in 3A)
-  - every `law`/`principle` concept includes `applicability_conditions`
-  - `buildEdges(getAllEntities())` yields prerequisite + `uses-variable` edges without strict-mode errors
+Layer definitions live in `src/data/layers.js`.
 
-## KaTeX Rendering Safety
+- Active in Phase 3A:
+  - `concept`
+  - `variable`
+- Registered for later phases (not populated in 3A):
+  - `problem`
+  - `lab`
+  - `experiment`
 
-- Node formulas are rendered through `src/components/KatexText.jsx`.
-- This is safe for the current app because formulas come from trusted `concepts.json` content.
-- If formulas ever become user-generated input, route them through the Phase 4 hardening path documented in `KatexText.jsx`.
+Each entity in Atlas includes a `layer` field and is validated by the schema validator assigned to that layer.
+
+### Entity Files
+
+- Concepts: `src/data/concepts.json`
+- Variables: `src/data/variables.json`
+
+Runtime helpers in `src/data/index.js`:
+
+- `getAllEntities()`
+- `getEntitiesByLayer(layerName)`
+- `computeAppearsIn(variables, concepts)` (reverse-derived map from variable ID to concept IDs)
+
+`appears_in` is not authored directly in variable JSON. It is computed from concept variable references.
+
+### Authoring Metadata Lifecycle
+
+All entities include authoring metadata:
+
+- `author` (required, non-empty string)
+- `review_state` (required): `draft | reviewed | published`
+- `last_reviewed` (optional): ISO date `YYYY-MM-DD` or omitted/null
+
+Default runtime rendering shows only `published` entities.
+
+Use `?include=draft` in the URL to include `draft` and `reviewed` content for contributor review.  
+When enabled, Atlas shows the banner text: `Showing draft content`.
+
+## Understanding Scale
+
+Atlas tracks understanding with an enum (not a boolean):
+
+- `unseen`
+- `seen`
+- `recognize`
+- `apply`
+- `derive`
+
+State is stored under localStorage key `atlas_understanding_v2` as an object map:
+
+```json
+{
+  "entity-id": "apply"
+}
+```
+
+Migration from legacy `atlas_understood_v1` is handled in `src/lib/understanding.js`.
+
+## Edge Model
+
+Edges are derived in `src/data/edges.js`:
+
+- Concept prerequisite edges (`foundational`, `supporting`, `lateral`, `definitional`)
+- Cross-layer `uses-variable` edges generated from concept `variables[]` references
+
+Edge IDs use:
+
+```text
+${source}__${type}__${target}
+```
+
+## Authoring Conventions
+
+- Add or edit content in JSON source files under `src/data/`.
+- Keep variable IDs stable and kebab-case.
+- For concept `type` of `law` or `principle`, include at least one `applicability_conditions` entry.
+- Keep `review_state` accurate through the lifecycle:
+  - new/incomplete work: `draft`
+  - validated by reviewer/TA: `reviewed`
+  - ready for student-facing default graph: `published`
+
+## Development
+
+From `atlas/`:
+
+```bash
+npm install
+npm run dev
+```
+
+Useful checks:
+
+```bash
+npm run test
+npm run lint
+```

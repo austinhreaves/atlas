@@ -32,6 +32,7 @@ const LEGEND_VISIBILITY_KEY = 'atlas_legend_v1'
 const DEFAULT_PANEL_WIDTH_FALLBACK = 440
 const DESKTOP_MIN_PANEL_WIDTH = 360
 const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
+const DRAFT_BANNER_TEXT = 'Showing draft content'
 
 const layerEntries = Object.entries(LAYERS)
 const allLayerIds = layerEntries.map(([layerId]) => layerId)
@@ -90,6 +91,18 @@ function getNodeIdSet(nodes) {
     .join('|')
 }
 
+function shouldIncludeDraftContent() {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  const params = new URLSearchParams(window.location.search)
+  return params.get('include') === 'draft'
+}
+
+function getReviewState(entity) {
+  return typeof entity?.review_state === 'string' ? entity.review_state : 'published'
+}
+
 function getLayoutPositions(nodes, edges) {
   const nodeIdSet = getNodeIdSet(nodes)
   if (typeof window === 'undefined') {
@@ -135,7 +148,19 @@ export default function App() {
   const [legendCollapsed, setLegendCollapsed] = useState(() => readInitialLegendCollapsed())
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false)
   const isPanelOpen = Boolean(selectedNodeId)
-  const allEntities = useMemo(() => getAllEntities(), [])
+  const includeDraftContent = useMemo(() => shouldIncludeDraftContent(), [])
+  const rawEntities = useMemo(() => getAllEntities(), [])
+  const allEntities = useMemo(
+    () =>
+      rawEntities.filter((entity) => {
+        const state = getReviewState(entity)
+        if (state === 'published') {
+          return true
+        }
+        return includeDraftContent && (state === 'draft' || state === 'reviewed')
+      }),
+    [includeDraftContent, rawEntities],
+  )
   const conceptEntities = useMemo(
     () => allEntities.filter((entity) => entity.layer === 'concept'),
     [allEntities],
@@ -500,6 +525,11 @@ export default function App() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden">
+      {includeDraftContent ? (
+        <div className="pointer-events-none absolute left-1/2 top-4 z-30 -translate-x-1/2 rounded-md border border-amber-500/50 bg-amber-500/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-amber-100">
+          {DRAFT_BANNER_TEXT}
+        </div>
+      ) : null}
       {!isMobile ? (
         <div className="pointer-events-none absolute left-4 top-4 z-20 flex w-[360px] flex-col gap-2">
           <LayerToggleBar
