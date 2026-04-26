@@ -5,7 +5,7 @@ import { concepts } from '../index'
 
 describe('concept domain file split integrity', () => {
   it('preserves total concept count after per-domain split', () => {
-    expect(concepts).toHaveLength(10)
+    expect(concepts.length).toBe(electromagnetismConcepts.length + mechanicsConcepts.length)
   })
 
   it('keeps each concept in the file matching its domain', () => {

@@ -1,5 +1,494 @@
 [
   {
+    "id": "measured-quantity",
+    "layer": "variable",
+    "canonical_symbol": "A",
+    "name": "Measured quantity",
+    "unit": "varies",
+    "dimension": "varies",
+    "description": "Placeholder for any measured physical quantity when discussing generic uncertainty propagation or reporting.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "measurement",
+      "foundations"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "absolute-uncertainty",
+    "layer": "variable",
+    "canonical_symbol": "\\delta A",
+    "name": "Absolute uncertainty",
+    "unit": "same as A",
+    "dimension": "same as A",
+    "description": "Estimated absolute spread around a measured value, expressed in the same unit as the measurement.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "measurement",
+      "uncertainty"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "percent-uncertainty",
+    "layer": "variable",
+    "canonical_symbol": "\\%\\mathrm{unc}",
+    "name": "Percent uncertainty",
+    "unit": "%",
+    "dimension": "1",
+    "description": "Dimensionless uncertainty metric computed by dividing absolute uncertainty by the measured value and scaling by 100.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "derived",
+    "tags": [
+      "measurement",
+      "uncertainty"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "order-of-magnitude",
+    "layer": "variable",
+    "canonical_symbol": "n",
+    "name": "Order-of-magnitude exponent",
+    "unit": "none",
+    "dimension": "1",
+    "description": "Nearest power-of-ten exponent used to express the scale of a quantity for fast plausibility checks.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "derived",
+    "tags": [
+      "measurement",
+      "approximation"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "initial-position",
+    "layer": "variable",
+    "canonical_symbol": "x_0",
+    "name": "Initial position",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Reference position assigned to the starting instant of a kinematics interval.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "final-position",
+    "layer": "variable",
+    "canonical_symbol": "x_f",
+    "name": "Final position",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Position assigned to the ending instant of a modeled interval.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "displacement",
+    "layer": "variable",
+    "canonical_symbol": "\\Delta x",
+    "name": "Displacement",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Net signed position change between initial and final states, independent of the path traveled.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "elapsed-time",
+    "layer": "variable",
+    "canonical_symbol": "\\Delta t",
+    "name": "Elapsed time",
+    "unit": "s",
+    "dimension": "T",
+    "description": "Time interval duration used in average-rate and constant-acceleration relations.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "average-velocity",
+    "layer": "variable",
+    "canonical_symbol": "\\bar{v}",
+    "name": "Average velocity",
+    "unit": "m/s",
+    "dimension": "L T^-1",
+    "description": "Net displacement divided by elapsed time; differs from average speed when motion reverses direction.",
+    "vector_or_scalar": "vector",
+    "variable_type": "derived",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "velocity-change",
+    "layer": "variable",
+    "canonical_symbol": "\\Delta \\vec{v}",
+    "name": "Velocity change",
+    "unit": "m/s",
+    "dimension": "L T^-1",
+    "description": "Difference between final and initial velocity vectors over an interval.",
+    "vector_or_scalar": "vector",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "average-acceleration",
+    "layer": "variable",
+    "canonical_symbol": "\\bar{a}",
+    "name": "Average acceleration",
+    "unit": "m/s^2",
+    "dimension": "L T^-2",
+    "description": "Change in velocity vector per elapsed time interval, capturing both speed and direction changes.",
+    "vector_or_scalar": "vector",
+    "variable_type": "derived",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "position",
+    "layer": "variable",
+    "canonical_symbol": "x",
+    "name": "Position",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Coordinate location along the chosen axis used to describe one-dimensional motion.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "position-x",
+    "layer": "variable",
+    "canonical_symbol": "x",
+    "name": "Horizontal position",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Horizontal coordinate component used in two-dimensional kinematics decomposition.",
+    "sign_convention": "Positive in the chosen +x direction.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "position-y",
+    "layer": "variable",
+    "canonical_symbol": "y",
+    "name": "Vertical position",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Vertical coordinate component used in two-dimensional kinematics decomposition.",
+    "sign_convention": "Positive in the chosen +y direction.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "velocity-x",
+    "layer": "variable",
+    "canonical_symbol": "v_x",
+    "name": "Horizontal velocity",
+    "unit": "m/s",
+    "dimension": "L T^-1",
+    "description": "Velocity component parallel to the horizontal axis in decomposed 2D motion.",
+    "sign_convention": "Positive in the chosen +x direction.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "velocity-y",
+    "layer": "variable",
+    "canonical_symbol": "v_y",
+    "name": "Vertical velocity",
+    "unit": "m/s",
+    "dimension": "L T^-1",
+    "description": "Velocity component parallel to the vertical axis in decomposed 2D motion.",
+    "sign_convention": "Positive in the chosen +y direction.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "initial-velocity-x",
+    "layer": "variable",
+    "canonical_symbol": "v_{0x}",
+    "name": "Initial horizontal velocity",
+    "unit": "m/s",
+    "dimension": "L T^-1",
+    "description": "Initial horizontal component obtained by resolving launch speed with launch angle convention.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "projectile"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "initial-velocity-y",
+    "layer": "variable",
+    "canonical_symbol": "v_{0y}",
+    "name": "Initial vertical velocity",
+    "unit": "m/s",
+    "dimension": "L T^-1",
+    "description": "Initial vertical component obtained by resolving launch speed with launch angle convention.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "projectile"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "acceleration-x",
+    "layer": "variable",
+    "canonical_symbol": "a_x",
+    "name": "Horizontal acceleration",
+    "unit": "m/s^2",
+    "dimension": "L T^-2",
+    "description": "Horizontal acceleration component used in axis-by-axis dynamics and kinematics analysis.",
+    "sign_convention": "Positive in the chosen +x direction.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "acceleration-y",
+    "layer": "variable",
+    "canonical_symbol": "a_y",
+    "name": "Vertical acceleration",
+    "unit": "m/s^2",
+    "dimension": "L T^-2",
+    "description": "Vertical acceleration component used in free-fall and projectile-motion equations.",
+    "sign_convention": "Positive in the chosen +y direction.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "launch-angle",
+    "layer": "variable",
+    "canonical_symbol": "\\theta_0",
+    "name": "Launch angle",
+    "unit": "rad",
+    "dimension": "1",
+    "description": "Initial launch direction angle used to resolve speed into horizontal and vertical components.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "sign_convention": "Measured counterclockwise from +x by convention.",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "projectile"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "range",
+    "layer": "variable",
+    "canonical_symbol": "R",
+    "name": "Projectile range",
+    "unit": "m",
+    "dimension": "L",
+    "description": "Horizontal displacement between launch and landing points under the stated projectile assumptions.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "derived",
+    "tags": [
+      "mechanics",
+      "kinematics",
+      "projectile"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "force-weight",
+    "layer": "variable",
+    "canonical_symbol": "\\vec{w}",
+    "name": "Weight force",
+    "unit": "N",
+    "dimension": "M L T^-2",
+    "description": "Force due to gravity acting on a mass in a local gravitational field.",
+    "vector_or_scalar": "vector",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "dynamics",
+      "gravity"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "normal-force",
+    "layer": "variable",
+    "canonical_symbol": "N",
+    "name": "Normal force",
+    "unit": "N",
+    "dimension": "M L T^-2",
+    "description": "Surface reaction force acting perpendicular to the contact interface.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "dynamics",
+      "contact-force"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "tension-force",
+    "layer": "variable",
+    "canonical_symbol": "T",
+    "name": "Tension force",
+    "unit": "N",
+    "dimension": "M L T^-2",
+    "description": "Axial pulling force transmitted through a rope, cable, or string under tension.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "tags": [
+      "mechanics",
+      "dynamics",
+      "contact-force"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "incline-angle",
+    "layer": "variable",
+    "canonical_symbol": "\\theta",
+    "name": "Incline angle",
+    "unit": "rad",
+    "dimension": "1",
+    "description": "Surface tilt angle measured from horizontal, used for force-component decomposition on inclines.",
+    "vector_or_scalar": "scalar",
+    "variable_type": "quantity",
+    "sign_convention": "Measured from +x horizontal toward the incline surface.",
+    "tags": [
+      "mechanics",
+      "geometry"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
     "id": "force-net",
     "layer": "variable",
     "canonical_symbol": "\\vec{F}_{\\text{net}}",
@@ -9,10 +498,17 @@
     "description": "Vector sum of all external and internal forces acting on the chosen object or system. It is the effective force that sets translational acceleration through Newton's second law.",
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
-    "tags": ["mechanics", "dynamics"],
+    "tags": [
+      "mechanics",
+      "dynamics"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -391.62901505509797,
+      "y": -157.34999017603658
+    }
   },
   {
     "id": "acceleration",
@@ -25,10 +521,17 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "sign_convention": "Positive along the chosen coordinate axis.",
-    "tags": ["mechanics", "kinematics"],
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -447.41878602897134,
+      "y": -407.89069270430855
+    }
   },
   {
     "id": "mass",
@@ -40,10 +543,16 @@
     "description": "Measure of inertia that sets resistance to acceleration under applied force. In introductory mechanics it is treated as an intrinsic, approximately constant scalar property.",
     "vector_or_scalar": "scalar",
     "variable_type": "fundamental",
-    "tags": ["mechanics"],
+    "tags": [
+      "mechanics"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -453.27825048574306,
+      "y": -258.5311277898544
+    }
   },
   {
     "id": "work-net",
@@ -55,10 +564,17 @@
     "description": "Algebraic sum of work contributions from all forces over a displacement. It equals the system's kinetic-energy change under the work-energy theorem.",
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
-    "tags": ["mechanics", "energy"],
+    "tags": [
+      "mechanics",
+      "energy"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 42.51283237616984,
+      "y": 45.94465981026558
+    }
   },
   {
     "id": "kinetic-energy-change",
@@ -70,10 +586,17 @@
     "description": "Difference between final and initial kinetic energy for the same system over an interval. Positive values indicate net kinetic-energy gain, negative values indicate loss.",
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
-    "tags": ["mechanics", "energy"],
+    "tags": [
+      "mechanics",
+      "energy"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -17.839342872688007,
+      "y": 125.86953694543092
+    }
   },
   {
     "id": "momentum",
@@ -85,7 +608,10 @@
     "description": "Vector quantity equal to mass times velocity for a body. It captures how difficult the body's motion is to change in interactions and collisions.",
     "vector_or_scalar": "vector",
     "variable_type": "derived",
-    "tags": ["mechanics", "collisions"],
+    "tags": [
+      "mechanics",
+      "collisions"
+    ],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25"
@@ -100,10 +626,17 @@
     "description": "Vector sum of momenta of all components in a defined system.",
     "vector_or_scalar": "vector",
     "variable_type": "derived",
-    "tags": ["mechanics", "systems"],
+    "tags": [
+      "mechanics",
+      "systems"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 667.853135582892,
+      "y": -53.464658637683414
+    }
   },
   {
     "id": "time",
@@ -115,10 +648,17 @@
     "description": "Elapsed duration used to parameterize change in dynamical quantities. It defines the interval across which rates and accumulations are evaluated.",
     "vector_or_scalar": "scalar",
     "variable_type": "fundamental",
-    "tags": ["mechanics", "electromagnetism"],
+    "tags": [
+      "mechanics",
+      "electromagnetism"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -133.1144216876885,
+      "y": 126.51990557110736
+    }
   },
   {
     "id": "initial-velocity",
@@ -130,10 +670,17 @@
     "description": "Velocity value at the initial instant of the modeled interval. It serves as the baseline state for kinematic update equations.",
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
-    "tags": ["mechanics", "kinematics"],
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -425.11788554841695,
+      "y": 38.42571084655719
+    }
   },
   {
     "id": "velocity",
@@ -145,10 +692,17 @@
     "description": "Vector rate of change of position with respect to time. Its sign and direction encode how position evolves in the coordinate system.",
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
-    "tags": ["mechanics", "kinematics"],
+    "tags": [
+      "mechanics",
+      "kinematics"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 69.20059183041937,
+      "y": -48.88374120631316
+    }
   },
   {
     "id": "gravitational-acceleration",
@@ -160,10 +714,17 @@
     "description": "Local magnitude of gravitational field acceleration near a massive body. Near Earth's surface it is commonly approximated as constant in introductory problems.",
     "vector_or_scalar": "scalar",
     "variable_type": "constant",
-    "tags": ["mechanics", "gravity"],
+    "tags": [
+      "mechanics",
+      "gravity"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 433.9669456415079,
+      "y": -47.49476755945452
+    }
   },
   {
     "id": "height",
@@ -176,10 +737,17 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "sign_convention": "Positive upward from the reference level unless otherwise stated.",
-    "tags": ["mechanics", "energy"],
+    "tags": [
+      "mechanics",
+      "energy"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -253.36700966442444,
+      "y": -143.69368523603706
+    }
   },
   {
     "id": "potential-energy",
@@ -191,10 +759,17 @@
     "description": "Energy associated with system configuration, such as position in a conservative field. Differences in this quantity track the capacity to do work via configuration changes.",
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
-    "tags": ["mechanics", "energy"],
+    "tags": [
+      "mechanics",
+      "energy"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 451.9560378393949,
+      "y": 235.28242160569056
+    }
   },
   {
     "id": "charge",
@@ -207,12 +782,21 @@
     "vector_or_scalar": "scalar",
     "variable_type": "fundamental",
     "common_aliases": [
-      { "symbol": "q_1, q_2", "context": "Pair of interacting charges in Coulomb's law." }
+      {
+        "symbol": "q_1, q_2",
+        "context": "Pair of interacting charges in Coulomb's law."
+      }
     ],
-    "tags": ["electromagnetism"],
+    "tags": [
+      "electromagnetism"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 370.1947614642373,
+      "y": -235.1562122554966
+    }
   },
   {
     "id": "separation-distance",
@@ -224,10 +808,17 @@
     "description": "Scalar separation between two source points or effective centers. In inverse-square laws it controls interaction strength through geometric dilution.",
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
-    "tags": ["electromagnetism", "geometry"],
+    "tags": [
+      "electromagnetism",
+      "geometry"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 358.7888499817299,
+      "y": -766.6527831909136
+    }
   },
   {
     "id": "coulomb-constant",
@@ -239,7 +830,10 @@
     "description": "Proportionality constant in Coulomb's law for vacuum electrostatics. It sets the absolute force scale linking charge product and inverse-square separation.",
     "vector_or_scalar": "scalar",
     "variable_type": "constant",
-    "tags": ["electromagnetism", "constants"],
+    "tags": [
+      "electromagnetism",
+      "constants"
+    ],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25"
@@ -254,7 +848,10 @@
     "description": "Vector force exerted on a charge by an electric field and other charges. Its direction follows field direction for positive charge and reverses for negative charge.",
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
-    "tags": ["electromagnetism", "force"],
+    "tags": [
+      "electromagnetism",
+      "force"
+    ],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25"
@@ -269,10 +866,17 @@
     "description": "Vector field defined as force per unit positive test charge at each point in space. It encodes both interaction direction and local interaction strength.",
     "vector_or_scalar": "vector",
     "variable_type": "derived",
-    "tags": ["electromagnetism", "fields"],
+    "tags": [
+      "electromagnetism",
+      "fields"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 799.7064661727102,
+      "y": 584.8079408050039
+    }
   },
   {
     "id": "voltage",
@@ -285,10 +889,17 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "sign_convention": "Defined as potential at point A minus potential at point B.",
-    "tags": ["electromagnetism", "circuits"],
+    "tags": [
+      "electromagnetism",
+      "circuits"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 542.5408862533186,
+      "y": 642.1304357192894
+    }
   },
   {
     "id": "current",
@@ -301,10 +912,17 @@
     "vector_or_scalar": "scalar",
     "variable_type": "fundamental",
     "sign_convention": "Conventional current is positive in the direction of positive charge flow.",
-    "tags": ["electromagnetism", "circuits"],
+    "tags": [
+      "electromagnetism",
+      "circuits"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 539.2125759228081,
+      "y": 70.38945720006964
+    }
   },
   {
     "id": "resistance",
@@ -316,10 +934,17 @@
     "description": "Material or component property relating voltage drop to current in approximately linear (ohmic) operation. It quantifies opposition to charge flow under those conditions.",
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
-    "tags": ["electromagnetism", "circuits"],
+    "tags": [
+      "electromagnetism",
+      "circuits"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 1032.0009082299039,
+      "y": 314.383037596047
+    }
   },
   {
     "id": "magnetic-flux",
@@ -331,7 +956,10 @@
     "description": "Flux quantity equal to magnetic-field surface integral through an oriented area. It measures how much magnetic field passes through the chosen loop or surface.",
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
-    "tags": ["electromagnetism", "magnetism"],
+    "tags": [
+      "electromagnetism",
+      "magnetism"
+    ],
     "author": "austin",
     "review_state": "published",
     "last_reviewed": "2026-04-25"
@@ -346,10 +974,17 @@
     "description": "Induced potential difference generated when magnetic flux through a loop changes over time. It is the driving quantity for induced current in closed circuits.",
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
-    "tags": ["electromagnetism", "induction"],
+    "tags": [
+      "electromagnetism",
+      "induction"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 238.9966661749737,
+      "y": 203.26702163440538
+    }
   },
   {
     "id": "enclosed-charge",
@@ -361,10 +996,17 @@
     "description": "Algebraic total charge enclosed by a chosen closed surface. It is the source term that determines net electric flux in Gauss's law.",
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
-    "tags": ["electromagnetism", "electrostatics"],
+    "tags": [
+      "electromagnetism",
+      "electrostatics"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 157.05987585176004,
+      "y": 91.59351120827779
+    }
   },
   {
     "id": "vacuum-permittivity",
@@ -376,10 +1018,17 @@
     "description": "Fundamental constant that sets the relationship between electric field, charge, and flux in vacuum. It determines the proportionality in electrostatic field equations.",
     "vector_or_scalar": "scalar",
     "variable_type": "constant",
-    "tags": ["electromagnetism", "constants"],
+    "tags": [
+      "electromagnetism",
+      "constants"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": 759.0571530493896,
+      "y": -382.3598099966858
+    }
   },
   {
     "id": "area-vector",
@@ -391,9 +1040,16 @@
     "description": "Infinitesimal oriented area element used in surface and flux integrals. Its direction is normal to the local surface patch and sets sign in dot products.",
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
-    "tags": ["electromagnetism", "geometry"],
+    "tags": [
+      "electromagnetism",
+      "geometry"
+    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -88.69094726088841,
+      "y": 183.85110059248947
+    }
   }
 ]

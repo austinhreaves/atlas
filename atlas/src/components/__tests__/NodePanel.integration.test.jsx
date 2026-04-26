@@ -237,7 +237,7 @@ describe('NodePanel formula rendering - integration', () => {
   })
 
   it('omits optional Phase 3a section shells when data is absent', () => {
-    const node = nodes.find((candidate) => candidate.id === 'work-energy-theorem')
+    const node = nodes.find((candidate) => candidate.id === 'kinematics-position-time')
     expect(node).toBeDefined()
 
     const { container } = render(<NodePanel selectedNode={node} onClose={() => {}} />)

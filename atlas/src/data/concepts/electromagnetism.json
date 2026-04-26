@@ -80,7 +80,10 @@
       "inverse-square",
       "charge"
     ],
-    "position": null,
+    "position": {
+      "x": 1291.4752247998294,
+      "y": -558.4001102621294
+    },
     "idealizations": [
       {
         "name": "Material medium",
@@ -152,7 +155,10 @@
       "electrostatics",
       "force"
     ],
-    "position": null,
+    "position": {
+      "x": 1297.2489916392278,
+      "y": -310.3618099441385
+    },
     "idealizations": [
       {
         "name": "Polarization effects",
@@ -249,7 +255,10 @@
       "current",
       "resistance"
     ],
-    "position": null,
+    "position": {
+      "x": 1569.2898247463684,
+      "y": -315.228723273842
+    },
     "idealizations": [
       {
         "name": "Temperature",
@@ -331,7 +340,10 @@
       "magnetism",
       "emf"
     ],
-    "position": null,
+    "position": {
+      "x": 1318.3503843554804,
+      "y": -42.58590236713444
+    },
     "idealizations": [
       {
         "name": "Circuit resistance",
@@ -431,7 +443,10 @@
       "flux",
       "field-symmetry"
     ],
-    "position": null,
+    "position": {
+      "x": 1100.4755272771538,
+      "y": -328.39341948750655
+    },
     "idealizations": [
       {
         "name": "Symmetry imperfections",

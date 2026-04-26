@@ -1,5 +1,938 @@
 [
   {
+    "id": "measurement-uncertainty",
+    "layer": "concept",
+    "title": "Measurement Uncertainty",
+    "type": "principle",
+    "domain": "mechanics",
+    "formula": "\\%\\mathrm{unc} = \\frac{\\delta A}{A}\\times 100\\%",
+    "causal_structure": "asymmetric",
+    "principle": "Reported uncertainty quantifies how much confidence we should place in a measured value.",
+    "applicability_conditions": [
+      "Measured quantity is nonzero so percent uncertainty is defined",
+      "Uncertainty estimate represents the instrument and procedure used"
+    ],
+    "variables": [
+      {
+        "id": "absolute-uncertainty",
+        "symbol": "\\delta A",
+        "role": "driver"
+      },
+      {
+        "id": "measured-quantity",
+        "symbol": "A",
+        "role": "parameter"
+      },
+      {
+        "id": "percent-uncertainty",
+        "symbol": "\\%\\mathrm{unc}",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "\\delta A = 0",
+        "result": "Percent uncertainty is zero only in an idealized exact-measurement limit."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "A small percent uncertainty guarantees a correct model.",
+        "correction": "Small uncertainty indicates measurement precision, not that the chosen physical model is valid."
+      }
+    ],
+    "description": "This node teaches students how to report measurement quality so physics conclusions reflect both values and confidence bounds.",
+    "prerequisites": [],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "measurement",
+      "uncertainty",
+      "foundations"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1714.4726394536938,
+      "y": 353.5360146466599
+    }
+  },
+  {
+    "id": "order-of-magnitude-estimation",
+    "layer": "concept",
+    "title": "Order-of-Magnitude Estimation",
+    "type": "principle",
+    "domain": "mechanics",
+    "formula": "N \\approx 10^n",
+    "causal_structure": "asymmetric",
+    "principle": "Approximation by powers of ten provides fast sanity checks before and after detailed calculations.",
+    "applicability_conditions": [
+      "Target quantity is known only approximately",
+      "Estimate is used for scale reasoning rather than high-precision prediction"
+    ],
+    "variables": [
+      {
+        "id": "measured-quantity",
+        "symbol": "N",
+        "role": "driver"
+      },
+      {
+        "id": "order-of-magnitude",
+        "symbol": "n",
+        "role": "response"
+      }
+    ],
+    "description": "This node supports fast plausibility checks, helping students reject impossible results before detailed algebra.",
+    "prerequisites": [],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "approximation",
+      "estimation",
+      "foundations"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1685.9560240138755,
+      "y": 191.0861939652259
+    }
+  },
+  {
+    "id": "displacement-1d",
+    "layer": "concept",
+    "title": "Displacement in One Dimension",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "\\Delta x = x_f - x_0",
+    "causal_structure": "asymmetric",
+    "principle": "Displacement is the signed change in position between initial and final states.",
+    "variables": [
+      {
+        "id": "final-position",
+        "symbol": "x_f",
+        "role": "driver"
+      },
+      {
+        "id": "initial-position",
+        "symbol": "x_0",
+        "role": "parameter"
+      },
+      {
+        "id": "displacement",
+        "symbol": "\\Delta x",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "x_f = x_0",
+        "result": "Displacement is zero even if nonzero distance was traveled."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Displacement always equals distance traveled.",
+        "correction": "Displacement depends only on initial and final positions, while distance depends on path."
+      }
+    ],
+    "description": "This node separates net change in position from path length, which prevents common sign and interpretation errors.",
+    "prerequisites": [],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "displacement",
+      "1d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1706.087009933154,
+      "y": 523.1503920067316
+    }
+  },
+  {
+    "id": "average-velocity-definition",
+    "layer": "concept",
+    "title": "Average Velocity",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "\\bar{v} = \\frac{\\Delta x}{\\Delta t}",
+    "causal_structure": "asymmetric",
+    "principle": "Average velocity is displacement per elapsed time interval.",
+    "variables": [
+      {
+        "id": "displacement",
+        "symbol": "\\Delta x",
+        "role": "driver"
+      },
+      {
+        "id": "elapsed-time",
+        "symbol": "\\Delta t",
+        "role": "parameter"
+      },
+      {
+        "id": "average-velocity",
+        "symbol": "\\bar{v}",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "\\Delta x = 0",
+        "result": "Average velocity is zero even when the object moved during the interval."
+      }
+    ],
+    "description": "This node emphasizes that average velocity tracks net directional motion, not total path traveled per time.",
+    "prerequisites": [
+      {
+        "id": "displacement-1d",
+        "type": "definitional",
+        "weight": 1
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "velocity",
+      "1d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1514.7768468455563,
+      "y": 463.36795324177285
+    }
+  },
+  {
+    "id": "average-acceleration-definition",
+    "layer": "concept",
+    "title": "Average Acceleration",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "\\bar{a} = \\frac{\\Delta \\vec{v}}{\\Delta t}",
+    "causal_structure": "asymmetric",
+    "principle": "Average acceleration is the rate of velocity change over an interval.",
+    "variables": [
+      {
+        "id": "velocity-change",
+        "symbol": "\\Delta \\vec{v}",
+        "role": "driver"
+      },
+      {
+        "id": "elapsed-time",
+        "symbol": "\\Delta t",
+        "role": "parameter"
+      },
+      {
+        "id": "average-acceleration",
+        "symbol": "\\bar{a}",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Zero velocity implies zero acceleration.",
+        "correction": "An object can have zero instantaneous velocity and nonzero acceleration, such as at a projectile apex."
+      }
+    ],
+    "description": "This node frames acceleration as change in velocity state, preparing students for force-causality reasoning.",
+    "prerequisites": [
+      {
+        "id": "average-velocity-definition",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "acceleration",
+      "1d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1430.99314004884,
+      "y": 259.4185105052594
+    }
+  },
+  {
+    "id": "kinematics-velocity-time",
+    "layer": "concept",
+    "title": "Kinematics (v = v0 + at)",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "\\vec{v} = \\vec{v}_0 + \\vec{a}t",
+    "causal_structure": "asymmetric",
+    "principle": "Under constant acceleration, velocity changes linearly with elapsed time.",
+    "variables": [
+      {
+        "id": "acceleration",
+        "symbol": "\\vec{a}",
+        "role": "driver"
+      },
+      {
+        "id": "time",
+        "symbol": "t",
+        "role": "driver"
+      },
+      {
+        "id": "initial-velocity",
+        "symbol": "\\vec{v}_0",
+        "role": "parameter"
+      },
+      {
+        "id": "velocity",
+        "symbol": "\\vec{v}",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "a = 0",
+        "result": "Velocity remains equal to its initial value."
+      },
+      {
+        "case": "t = 0",
+        "result": "Final and initial velocity are identical."
+      }
+    ],
+    "description": "This node gives the core constant-acceleration update law used to move from initial state to later velocity.",
+    "prerequisites": [
+      {
+        "id": "average-acceleration-definition",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "motion",
+      "constant-acceleration"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -748.0008771953579,
+      "y": 414.12427426317004
+    }
+  },
+  {
+    "id": "kinematics-position-time",
+    "layer": "concept",
+    "title": "Kinematics (x = x0 + v0t + 1/2 at^2)",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "x = x_0 + v_0 t + \\frac{1}{2}at^2",
+    "causal_structure": "asymmetric",
+    "principle": "Under constant acceleration, position evolves with both linear and quadratic time dependence.",
+    "variables": [
+      {
+        "id": "initial-position",
+        "symbol": "x_0",
+        "role": "parameter"
+      },
+      {
+        "id": "initial-velocity",
+        "symbol": "v_0",
+        "role": "driver"
+      },
+      {
+        "id": "acceleration",
+        "symbol": "a",
+        "role": "driver"
+      },
+      {
+        "id": "elapsed-time",
+        "symbol": "t",
+        "role": "driver"
+      },
+      {
+        "id": "position",
+        "symbol": "x",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "a = 0",
+        "result": "The relation reduces to uniform-motion kinematics."
+      }
+    ],
+    "description": "This node clarifies how initial position, initial velocity, and acceleration jointly determine where an object is later.",
+    "prerequisites": [
+      {
+        "id": "kinematics-velocity-time",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "position",
+      "constant-acceleration"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1305.8650101134865,
+      "y": 653.3286894584575
+    }
+  },
+  {
+    "id": "kinematics-velocity-position",
+    "layer": "concept",
+    "title": "Kinematics (v^2 = v0^2 + 2aΔx)",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "v^2 = v_0^2 + 2a\\Delta x",
+    "causal_structure": "asymmetric",
+    "principle": "Under constant acceleration, velocity change is linked to displacement without explicit time.",
+    "variables": [
+      {
+        "id": "initial-velocity",
+        "symbol": "v_0",
+        "role": "parameter"
+      },
+      {
+        "id": "acceleration",
+        "symbol": "a",
+        "role": "driver"
+      },
+      {
+        "id": "displacement",
+        "symbol": "\\Delta x",
+        "role": "driver"
+      },
+      {
+        "id": "velocity",
+        "symbol": "v",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Doubling speed doubles stopping distance under constant deceleration.",
+        "correction": "With fixed deceleration magnitude, stopping distance scales with the square of initial speed."
+      }
+    ],
+    "description": "This node is the no-time kinematics tool for solving displacement-velocity questions when time is unknown.",
+    "prerequisites": [
+      {
+        "id": "kinematics-velocity-time",
+        "type": "supporting",
+        "weight": 0.6
+      },
+      {
+        "id": "kinematics-position-time",
+        "type": "supporting",
+        "weight": 0.6
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "timeless-equation",
+      "constant-acceleration"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1008.9197099490239,
+      "y": 155.3908097221961
+    }
+  },
+  {
+    "id": "free-fall",
+    "layer": "concept",
+    "title": "Free Fall Near Earth's Surface",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "a_y = -g",
+    "causal_structure": "asymmetric",
+    "principle": "In the no-drag idealization, gravity sets a constant downward acceleration independent of mass.",
+    "variables": [
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter"
+      },
+      {
+        "id": "acceleration-y",
+        "symbol": "a_y",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "Air resistance \\rightarrow 0",
+        "result": "The constant-acceleration free-fall model becomes a good approximation."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Heavier objects fall faster in vacuum.",
+        "correction": "In the ideal no-drag model, all masses share the same gravitational acceleration."
+      }
+    ],
+    "description": "This node defines the standard vertical-motion model near Earth, including its idealization boundaries.",
+    "prerequisites": [
+      {
+        "id": "kinematics-velocity-time",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "gravity",
+      "free-fall"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -897.2357829361547,
+      "y": 733.4907463355381
+    }
+  },
+  {
+    "id": "vector-decomposition",
+    "layer": "concept",
+    "title": "Vector Decomposition into Components",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "v_{0x} = v_0\\cos\\theta_0,\\quad v_{0y} = v_0\\sin\\theta_0",
+    "causal_structure": "asymmetric",
+    "principle": "A launch vector is resolved into orthogonal components by geometry and angle convention.",
+    "variables": [
+      {
+        "id": "initial-velocity",
+        "symbol": "v_0",
+        "role": "driver"
+      },
+      {
+        "id": "launch-angle",
+        "symbol": "\\theta_0",
+        "role": "driver"
+      },
+      {
+        "id": "initial-velocity-x",
+        "symbol": "v_{0x}",
+        "role": "response"
+      },
+      {
+        "id": "initial-velocity-y",
+        "symbol": "v_{0y}",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Sine always gives the vertical component regardless of angle convention.",
+        "correction": "Which trig function appears depends on how the angle is defined relative to the chosen axis."
+      }
+    ],
+    "description": "This node teaches the projection step that turns vector launch conditions into solvable axis components.",
+    "prerequisites": [
+      {
+        "id": "average-velocity-definition",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "vectors",
+      "components",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1276.9930001504715,
+      "y": 1138.2689036374004
+    }
+  },
+  {
+    "id": "independence-of-perpendicular-motion",
+    "layer": "concept",
+    "title": "Independence of Perpendicular Motion",
+    "type": "principle",
+    "domain": "mechanics",
+    "formula": "x(t)\\ \\text{and}\\ y(t)\\ \\text{share only}\\ t",
+    "causal_structure": "asymmetric",
+    "principle": "Perpendicular components of motion are solved independently and coupled only through time.",
+    "applicability_conditions": [
+      "Reference frame is inertial",
+      "Forces do not couple axes through velocity-dependent drag in the model"
+    ],
+    "variables": [
+      {
+        "id": "elapsed-time",
+        "symbol": "t",
+        "role": "driver"
+      },
+      {
+        "id": "acceleration-x",
+        "symbol": "a_x",
+        "role": "parameter"
+      },
+      {
+        "id": "acceleration-y",
+        "symbol": "a_y",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Horizontal motion changes vertical fall time in no-drag projectile problems.",
+        "correction": "In the idealized model, horizontal and vertical equations are independent except for shared time."
+      }
+    ],
+    "description": "This node is the conceptual hinge from 1D to 2D analysis: separate axis equations linked only by time.",
+    "prerequisites": [
+      {
+        "id": "vector-decomposition",
+        "type": "foundational",
+        "weight": 0.85
+      },
+      {
+        "id": "kinematics-position-time",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "2d-motion",
+      "projectile-foundation"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1182.1305594359753,
+      "y": 887.0114538092295
+    }
+  },
+  {
+    "id": "projectile-motion",
+    "layer": "concept",
+    "title": "Projectile Motion",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "x = v_{0x}t,\\quad y = v_{0y}t - \\frac{1}{2}gt^2",
+    "causal_structure": "asymmetric",
+    "principle": "Projectile trajectories combine uniform horizontal motion with gravitationally accelerated vertical motion.",
+    "variables": [
+      {
+        "id": "initial-velocity-x",
+        "symbol": "v_{0x}",
+        "role": "driver"
+      },
+      {
+        "id": "initial-velocity-y",
+        "symbol": "v_{0y}",
+        "role": "driver"
+      },
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter"
+      },
+      {
+        "id": "elapsed-time",
+        "symbol": "t",
+        "role": "driver"
+      },
+      {
+        "id": "position-x",
+        "symbol": "x",
+        "role": "response"
+      },
+      {
+        "id": "position-y",
+        "symbol": "y",
+        "role": "response"
+      },
+      {
+        "id": "velocity-x",
+        "symbol": "v_x",
+        "role": "response"
+      },
+      {
+        "id": "velocity-y",
+        "symbol": "v_y",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "\\theta_0 = 90^\\circ",
+        "result": "The motion reduces to vertical free fall with no horizontal displacement."
+      },
+      {
+        "case": "\\theta_0 = 0^\\circ",
+        "result": "The launch is horizontal and vertical motion is pure drop under gravity."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Horizontal velocity must decrease continuously during projectile flight.",
+        "correction": "In the no-drag idealization, horizontal velocity is constant."
+      }
+    ],
+    "description": "This application node operationalizes 2D decomposition for trajectory prediction under constant gravity.",
+    "prerequisites": [
+      {
+        "id": "independence-of-perpendicular-motion",
+        "type": "foundational",
+        "weight": 0.95
+      },
+      {
+        "id": "free-fall",
+        "type": "foundational",
+        "weight": 0.9
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "application",
+      "projectile",
+      "2d-motion"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1149.5912197999478,
+      "y": 662.3289537130711
+    }
+  },
+  {
+    "id": "projectile-range-level",
+    "layer": "concept",
+    "title": "Projectile Range on Level Ground",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "R = \\frac{v_0^2\\sin(2\\theta_0)}{g}",
+    "causal_structure": "asymmetric",
+    "principle": "When launch and landing heights match, range is set by launch speed, launch angle, and gravity.",
+    "variables": [
+      {
+        "id": "initial-velocity",
+        "symbol": "v_0",
+        "role": "driver"
+      },
+      {
+        "id": "launch-angle",
+        "symbol": "\\theta_0",
+        "role": "driver"
+      },
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter"
+      },
+      {
+        "id": "range",
+        "symbol": "R",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "\\theta_0 = 45^\\circ",
+        "result": "Range is maximized for fixed launch speed in the level-ground idealization."
+      }
+    ],
+    "description": "This application node gives a fast range predictor for a narrow regime: equal launch/landing heights and negligible drag.",
+    "prerequisites": [
+      {
+        "id": "projectile-motion",
+        "type": "foundational",
+        "weight": 0.95
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "application",
+      "projectile",
+      "range"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1008.5544653057872,
+      "y": 805.7456692495577
+    }
+  },
+  {
+    "id": "force-net-external",
+    "layer": "concept",
+    "title": "Net External Force",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "\\vec{F}_{\\text{net}} = \\sum_i \\vec{F}_{\\text{ext},i}",
+    "causal_structure": "asymmetric",
+    "principle": "Only external forces contribute to the net force that drives system acceleration.",
+    "variables": [
+      {
+        "id": "force-net",
+        "symbol": "\\vec{F}_{\\text{net}}",
+        "role": "response"
+      }
+    ],
+    "description": "This node establishes the accounting rule for dynamics: sum only external forces on the chosen system.",
+    "prerequisites": [
+      {
+        "id": "vector-decomposition",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "dynamics",
+      "force",
+      "systems"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -726.6611995534377,
+      "y": 1336.4675484806107
+    }
+  },
+  {
+    "id": "newtons-first-law",
+    "layer": "concept",
+    "title": "Newton's First Law",
+    "type": "law",
+    "domain": "mechanics",
+    "formula": "\\vec{F}_{\\text{net}} = 0 \\Rightarrow \\vec{v}=\\text{constant}",
+    "causal_structure": "asymmetric",
+    "principle": "Without net external force, motion state remains unchanged in inertial frames.",
+    "applicability_conditions": [
+      "Reference frame is inertial",
+      "System is modeled with negligible net external force"
+    ],
+    "variables": [
+      {
+        "id": "force-net",
+        "symbol": "\\vec{F}_{\\text{net}}",
+        "role": "driver"
+      },
+      {
+        "id": "velocity",
+        "symbol": "\\vec{v}",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "A sustained force is required to keep an object moving at constant velocity.",
+        "correction": "Force is required to change velocity, not to maintain constant velocity."
+      }
+    ],
+    "description": "This node formalizes inertia and frame assumptions that make Newtonian dynamics meaningful.",
+    "prerequisites": [
+      {
+        "id": "force-net-external",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "dynamics",
+      "newton",
+      "inertia"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -977.1494852663525,
+      "y": 1417.7959965663918
+    }
+  },
+  {
     "id": "newtons-second-law",
     "layer": "concept",
     "title": "Newton's Second Law",
@@ -7,7 +940,7 @@
     "domain": "mechanics",
     "formula": "\\vec{a} = \\frac{\\vec{F}_{\\text{net}}}{m}",
     "causal_structure": "asymmetric",
-    "principle": "Net force changes motion by producing acceleration inversely proportional to mass.",
+    "principle": "Net external force produces acceleration, mediated by inertia.",
     "applicability_conditions": [
       "Reference frame is approximately inertial",
       "Speeds are well below relativistic regimes",
@@ -16,26 +949,8 @@
     "limiting_cases": [
       {
         "case": "m \\rightarrow \\infty",
-        "result": "Acceleration tends toward zero for fixed finite net force."
-      },
-      {
-        "case": "\\vec{F}_{\\text{net}} = 0",
-        "result": "Acceleration is zero and velocity remains constant."
+        "result": "For finite net force, acceleration approaches zero."
       }
-    ],
-    "misconceptions": [
-      {
-        "wrong_model": "A force is required to keep an object moving at constant velocity.",
-        "correction": "Force is required to change velocity, not to maintain constant velocity."
-      },
-      {
-        "wrong_model": "Heavier objects always accelerate more under the same net force.",
-        "correction": "For the same net force, larger mass means smaller acceleration."
-      }
-    ],
-    "historical_context": "Published in 1687 in Newton's Principia as a core law of classical mechanics.",
-    "geometries": [
-      "none"
     ],
     "variables": [
       {
@@ -46,29 +961,40 @@
         "unit": "N"
       },
       {
-        "id": "acceleration",
-        "symbol": "\\vec{a}",
-        "role": "response",
-        "name": "Acceleration",
-        "unit": "m/s^2"
-      },
-      {
         "id": "mass",
         "symbol": "m",
         "role": "parameter",
         "name": "Mass",
         "unit": "kg"
+      },
+      {
+        "id": "acceleration",
+        "symbol": "\\vec{a}",
+        "role": "response",
+        "name": "Acceleration",
+        "unit": "m/s^2"
       }
     ],
-    "description": "The acceleration of an object is proportional to the net force and inversely proportional to its mass.",
+    "misconceptions": [
+      {
+        "wrong_model": "A larger velocity implies a larger net force even at constant velocity.",
+        "correction": "Net force tracks acceleration, so constant velocity requires zero net force."
+      }
+    ],
+    "historical_context": "Published by Isaac Newton in 1687 as a core law of classical mechanics.",
+    "description": "Second-law dynamics connects force models to observed acceleration.",
     "prerequisites": [
       {
         "id": "kinematics-velocity-time",
         "type": "foundational",
         "weight": 0.85
+      },
+      {
+        "id": "force-net-external",
+        "type": "foundational",
+        "weight": 0.9
       }
     ],
-    "mass": null,
     "visual": {
       "type": "phet",
       "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
@@ -79,22 +1005,399 @@
       "force",
       "acceleration"
     ],
-    "position": null,
-    "idealizations": [
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -483.1929540036133,
+      "y": 883.9281129920699
+    }
+  },
+  {
+    "id": "newtons-third-law",
+    "layer": "concept",
+    "title": "Newton's Third Law",
+    "type": "law",
+    "domain": "mechanics",
+    "formula": "\\vec{F}_{A\\ \\mathrm{on}\\ B} = -\\vec{F}_{B\\ \\mathrm{on}\\ A}",
+    "causal_structure": "asymmetric",
+    "principle": "Interacting bodies exert equal-magnitude, opposite-direction forces on each other simultaneously.",
+    "applicability_conditions": [
+      "Forces are identified on interacting body pairs",
+      "Classical interaction model applies"
+    ],
+    "variables": [
       {
-        "name": "Friction",
-        "scope": "idealized",
-        "note": "Intro derivations usually assume idealized low-friction motion."
+        "id": "force-net",
+        "symbol": "\\vec{F}",
+        "role": "parameter"
       },
       {
-        "name": "Air resistance",
-        "scope": "idealized",
-        "note": "Drag is neglected to keep acceleration approximately constant."
+        "id": "acceleration",
+        "symbol": "\\vec{a}",
+        "role": "response"
       }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Action-reaction forces cancel on the same object.",
+        "correction": "Third-law forces act on different objects, so they are not summed on one free-body diagram."
+      }
+    ],
+    "description": "This node prevents a core analysis mistake by distinguishing interaction pairs from net force on a single body.",
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "dynamics",
+      "newton",
+      "interaction-pairs"
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -627.1811998379126,
+      "y": 1435.7673309705892
+    }
+  },
+  {
+    "id": "weight-gravitational-force",
+    "layer": "concept",
+    "title": "Weight as Gravitational Force",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "\\vec{w} = m\\vec{g}",
+    "causal_structure": "asymmetric",
+    "principle": "Weight is the gravitational force on mass in a local gravitational field.",
+    "variables": [
+      {
+        "id": "mass",
+        "symbol": "m",
+        "role": "parameter"
+      },
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "\\vec{g}",
+        "role": "parameter"
+      },
+      {
+        "id": "force-weight",
+        "symbol": "\\vec{w}",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "g \\rightarrow 0",
+        "result": "Weight approaches zero while mass remains unchanged."
+      }
+    ],
+    "description": "This node separates mass from weight and links local field strength to gravitational force magnitude.",
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "foundational",
+        "weight": 0.85
+      },
+      {
+        "id": "free-fall",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "dynamics",
+      "gravity",
+      "weight"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -783.3211714122416,
+      "y": 930.3557095069385
+    }
+  },
+  {
+    "id": "normal-force-law",
+    "layer": "concept",
+    "title": "Normal Force on an Incline",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "N = mg\\cos\\theta",
+    "causal_structure": "asymmetric",
+    "principle": "Contact surfaces exert perpendicular reaction forces set by perpendicular force balance.",
+    "variables": [
+      {
+        "id": "mass",
+        "symbol": "m",
+        "role": "parameter"
+      },
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter"
+      },
+      {
+        "id": "incline-angle",
+        "symbol": "\\theta",
+        "role": "driver"
+      },
+      {
+        "id": "normal-force",
+        "symbol": "N",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "\\theta = 0",
+        "result": "On level ground with no extra vertical forces, normal force matches weight magnitude."
+      }
+    ],
+    "description": "This node teaches contact-force response logic: normal force is geometry- and constraint-dependent, not a fixed value.",
+    "prerequisites": [
+      {
+        "id": "weight-gravitational-force",
+        "type": "foundational",
+        "weight": 0.85
+      },
+      {
+        "id": "vector-decomposition",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "dynamics",
+      "contact-force",
+      "inclines"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1047.0115239630404,
+      "y": 939.6983398528287
+    }
+  },
+  {
+    "id": "tension-flexible-connector",
+    "layer": "concept",
+    "title": "Tension in an Ideal Connector",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "T = \\frac{mg}{2\\sin\\theta}",
+    "causal_structure": "asymmetric",
+    "principle": "Tension transmits pulling forces along a connector and grows as support angle approaches horizontal.",
+    "variables": [
+      {
+        "id": "mass",
+        "symbol": "m",
+        "role": "driver"
+      },
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter"
+      },
+      {
+        "id": "incline-angle",
+        "symbol": "\\theta",
+        "role": "driver"
+      },
+      {
+        "id": "tension-force",
+        "symbol": "T",
+        "role": "response"
+      }
+    ],
+    "limiting_cases": [
+      {
+        "case": "\\theta \\rightarrow 0",
+        "result": "Required tension grows very large, reflecting the near-horizontal support limit."
+      }
+    ],
+    "description": "This application node highlights a counterintuitive geometry effect important for rope and cable safety reasoning.",
+    "prerequisites": [
+      {
+        "id": "newtons-third-law",
+        "type": "foundational",
+        "weight": 0.75
+      },
+      {
+        "id": "vector-decomposition",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "application",
+      "dynamics",
+      "tension"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -1127.4422046063912,
+      "y": 1528.330708705106
+    }
+  },
+  {
+    "id": "weight-on-incline",
+    "layer": "concept",
+    "title": "Weight Components on an Incline",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "w_{\\parallel} = w\\sin\\theta,\\quad w_{\\perp} = w\\cos\\theta",
+    "causal_structure": "asymmetric",
+    "principle": "Gravity is decomposed into along-surface and perpendicular components relative to incline geometry.",
+    "variables": [
+      {
+        "id": "force-weight",
+        "symbol": "w",
+        "role": "driver"
+      },
+      {
+        "id": "incline-angle",
+        "symbol": "\\theta",
+        "role": "driver"
+      },
+      {
+        "id": "normal-force",
+        "symbol": "N",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "The component parallel to the incline is mg\\cos\\theta when angle is measured from horizontal.",
+        "correction": "With that convention, the parallel component is mg\\sin\\theta and the perpendicular component is mg\\cos\\theta."
+      }
+    ],
+    "description": "This node provides the geometry translation needed to set up incline dynamics cleanly in chosen axes.",
+    "prerequisites": [
+      {
+        "id": "vector-decomposition",
+        "type": "foundational",
+        "weight": 0.9
+      },
+      {
+        "id": "weight-gravitational-force",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "dynamics",
+      "inclines",
+      "force-components"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -905.4129968709085,
+      "y": 1077.929340920809
+    }
+  },
+  {
+    "id": "free-body-diagram",
+    "layer": "concept",
+    "title": "Free-Body Diagram Method",
+    "type": "principle",
+    "domain": "mechanics",
+    "formula": "\\sum \\vec{F}_{\\text{ext}} = m\\vec{a}",
+    "causal_structure": "asymmetric",
+    "principle": "Isolate one system, draw all external forces, and project Newton's second law onto chosen axes.",
+    "applicability_conditions": [
+      "System boundary is explicitly defined",
+      "Only forces acting on the chosen system are drawn"
+    ],
+    "variables": [
+      {
+        "id": "force-net",
+        "symbol": "\\sum \\vec{F}_{\\text{ext}}",
+        "role": "driver"
+      },
+      {
+        "id": "mass",
+        "symbol": "m",
+        "role": "parameter"
+      },
+      {
+        "id": "acceleration",
+        "symbol": "\\vec{a}",
+        "role": "response"
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "A free-body diagram should include forces the object exerts on other objects.",
+        "correction": "A free-body diagram includes only forces acting on the chosen system."
+      }
+    ],
+    "description": "This node captures the standard mechanics workflow from physical scenario to axis-resolved equations.",
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "foundational",
+        "weight": 0.95
+      },
+      {
+        "id": "vector-decomposition",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "method",
+      "dynamics",
+      "problem-solving"
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -830.3282360229679,
+      "y": 1186.0749545115398
+    }
   },
   {
     "id": "work-energy-theorem",
@@ -104,33 +1407,32 @@
     "domain": "mechanics",
     "formula": "\\Delta K = W_{\\text{net}}",
     "causal_structure": "asymmetric",
-    "principle": "Net work on a system equals the change in its kinetic energy.",
+    "principle": "Net work on a system equals the change in kinetic energy.",
     "limiting_cases": [
       {
         "case": "W_{\\text{net}} = 0",
         "result": "Kinetic energy remains unchanged."
       }
     ],
-    "geometries": [
-      "none"
-    ],
     "variables": [
       {
         "id": "work-net",
         "symbol": "W_{\\text{net}}",
-        "role": "driver",
-        "name": "Net work",
-        "unit": "J"
+        "role": "driver"
       },
       {
         "id": "kinetic-energy-change",
         "symbol": "\\Delta K",
-        "role": "response",
-        "name": "Change in kinetic energy",
-        "unit": "J"
+        "role": "response"
       }
     ],
-    "description": "Net work on a body changes its kinetic energy, linking force-based motion to energy language.",
+    "misconceptions": [
+      {
+        "wrong_model": "Zero net work means all forces are zero.",
+        "correction": "Forces can be nonzero while doing zero net work over the displacement interval."
+      }
+    ],
+    "description": "This node provides an energy-based solution path that complements force-acceleration analysis.",
     "prerequisites": [
       {
         "id": "newtons-second-law",
@@ -143,7 +1445,6 @@
         "weight": 0.6
       }
     ],
-    "mass": null,
     "visual": {
       "type": "widget",
       "url": null,
@@ -154,22 +1455,76 @@
       "work",
       "kinetic-energy"
     ],
-    "position": null,
-    "idealizations": [
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -499.7638390706593,
+      "y": 257.3647763579315
+    }
+  },
+  {
+    "id": "gravitational-potential-energy",
+    "layer": "concept",
+    "title": "Gravitational Potential Energy",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "U = mgh",
+    "causal_structure": "asymmetric",
+    "principle": "Gravitational potential energy tracks configuration energy from vertical position in a field.",
+    "variables": [
       {
-        "name": "Friction",
-        "scope": "idealized",
-        "note": "Dissipative losses are often ignored in first-pass applications."
+        "id": "mass",
+        "symbol": "m",
+        "role": "parameter"
       },
       {
-        "name": "Air resistance",
-        "scope": "idealized",
-        "note": "Drag work is omitted in idealized work-energy examples."
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter"
+      },
+      {
+        "id": "height",
+        "symbol": "h",
+        "role": "driver"
+      },
+      {
+        "id": "potential-energy",
+        "symbol": "U",
+        "role": "response"
       }
+    ],
+    "limiting_cases": [
+      {
+        "case": "h = 0",
+        "result": "Potential energy equals the chosen reference level value."
+      }
+    ],
+    "description": "This node defines gravitational configuration energy relative to a chosen reference level for energy methods.",
+    "prerequisites": [
+      {
+        "id": "work-energy-theorem",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "potential-energy",
+      "gravity",
+      "energy-conservation"
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -712.2913052397099,
+      "y": 104.63124679271644
+    }
   },
   {
     "id": "conservation-of-momentum",
@@ -182,48 +1537,33 @@
     "principle": "In an isolated system, total momentum remains constant through interactions.",
     "applicability_conditions": [
       "Net external impulse on the system is negligible",
-      "System boundary is chosen to include interacting bodies"
+      "System boundary includes all strongly interacting bodies"
     ],
     "limiting_cases": [
       {
         "case": "Perfectly isolated system",
-        "result": "Momentum conservation is exact."
-      },
-      {
-        "case": "Large external impulse",
-        "result": "System momentum changes by the impulse amount."
+        "result": "Total momentum remains exactly constant."
       }
-    ],
-    "misconceptions": [
-      {
-        "wrong_model": "Momentum is conserved separately for each colliding object.",
-        "correction": "Conservation applies to the total system momentum, not each object independently."
-      },
-      {
-        "wrong_model": "Momentum conservation requires kinetic energy conservation.",
-        "correction": "Kinetic energy can change in inelastic events while momentum is still conserved."
-      }
-    ],
-    "geometries": [
-      "none"
     ],
     "variables": [
       {
         "id": "momentum",
         "symbol": "\\vec{p}",
-        "role": "conserved",
-        "name": "Momentum",
-        "unit": "kg\\cdot m/s"
+        "role": "conserved"
       },
       {
         "id": "system-momentum",
         "symbol": "\\sum \\vec{p}",
-        "role": "conserved",
-        "name": "System momentum sum",
-        "unit": "kg\\cdot m/s"
+        "role": "conserved"
       }
     ],
-    "description": "For an isolated system, total momentum stays constant during interactions like collisions and explosions.",
+    "misconceptions": [
+      {
+        "wrong_model": "Momentum conservation means each object's momentum is unchanged.",
+        "correction": "Only total system momentum is conserved; individual momenta can change substantially."
+      }
+    ],
+    "description": "This node gives a robust system-level constraint for collisions and interactions, including inelastic cases.",
     "prerequisites": [
       {
         "id": "newtons-second-law",
@@ -231,7 +1571,6 @@
         "weight": 0.55
       }
     ],
-    "mass": null,
     "visual": {
       "type": "video",
       "url": null,
@@ -242,177 +1581,12 @@
       "collisions",
       "systems"
     ],
-    "position": null,
-    "idealizations": [
-      {
-        "name": "External impulses",
-        "scope": "idealized",
-        "note": "The principle is introduced assuming negligible external force over collision time."
-      }
-    ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
-  },
-  {
-    "id": "kinematics-velocity-time",
-    "layer": "concept",
-    "title": "Kinematics (v = v0 + at)",
-    "type": "equation",
-    "domain": "mechanics",
-    "formula": "\\vec{v} = \\vec{v}_0 + \\vec{a}t",
-    "causal_structure": "asymmetric",
-    "principle": "Under constant acceleration, velocity changes linearly with elapsed time.",
-    "limiting_cases": [
-      {
-        "case": "a = 0",
-        "result": "Final velocity equals initial velocity."
-      },
-      {
-        "case": "t = 0",
-        "result": "Final velocity equals initial velocity."
-      }
-    ],
-    "geometries": [
-      "none"
-    ],
-    "variables": [
-      {
-        "id": "acceleration",
-        "symbol": "\\vec{a}",
-        "role": "driver",
-        "name": "Acceleration",
-        "unit": "m/s^2"
-      },
-      {
-        "id": "time",
-        "symbol": "t",
-        "role": "driver",
-        "name": "Time",
-        "unit": "s"
-      },
-      {
-        "id": "initial-velocity",
-        "symbol": "\\vec{v}_0",
-        "role": "parameter",
-        "name": "Initial velocity",
-        "unit": "m/s"
-      },
-      {
-        "id": "velocity",
-        "symbol": "\\vec{v}",
-        "role": "response",
-        "name": "Final velocity",
-        "unit": "m/s"
-      }
-    ],
-    "description": "This constant-acceleration relation predicts velocity changes over time without directly using forces.",
-    "prerequisites": [],
-    "mass": null,
-    "visual": {
-      "type": "none",
-      "url": null,
-      "caption": null
-    },
-    "tags": [
-      "kinematics",
-      "motion",
-      "constant-acceleration"
-    ],
-    "position": null,
-    "idealizations": [
-      {
-        "name": "Air resistance",
-        "scope": "idealized",
-        "note": "Constant-acceleration forms assume negligible drag."
-      },
-      {
-        "name": "Friction",
-        "scope": "idealized",
-        "note": "Surface interactions are typically neglected in introductory kinematics."
-      }
-    ],
-    "author": "austin",
-    "review_state": "published",
-    "last_reviewed": "2026-04-25"
-  },
-  {
-    "id": "gravitational-potential-energy",
-    "layer": "concept",
-    "title": "Gravitational Potential Energy",
-    "type": "definition",
-    "domain": "mechanics",
-    "formula": "U = mgh",
-    "causal_structure": "asymmetric",
-    "principle": "Gravitational potential energy measures stored energy due to vertical position in a gravitational field.",
-    "limiting_cases": [
-      {
-        "case": "h = 0",
-        "result": "Potential energy is zero relative to the chosen reference."
-      }
-    ],
-    "geometries": [
-      "none"
-    ],
-    "variables": [
-      {
-        "id": "mass",
-        "symbol": "m",
-        "role": "parameter",
-        "name": "Mass",
-        "unit": "kg"
-      },
-      {
-        "id": "gravitational-acceleration",
-        "symbol": "g",
-        "role": "parameter",
-        "name": "Gravitational field strength",
-        "unit": "m/s^2"
-      },
-      {
-        "id": "height",
-        "symbol": "h",
-        "role": "driver",
-        "name": "Height",
-        "unit": "m"
-      },
-      {
-        "id": "potential-energy",
-        "symbol": "U",
-        "role": "response",
-        "name": "Potential energy",
-        "unit": "J"
-      }
-    ],
-    "description": "An object elevated in a gravitational field stores energy that can convert into kinetic energy.",
-    "prerequisites": [
-      {
-        "id": "work-energy-theorem",
-        "type": "foundational",
-        "weight": 0.85
-      }
-    ],
-    "mass": null,
-    "visual": {
-      "type": "none",
-      "url": null,
-      "caption": null
-    },
-    "tags": [
-      "potential-energy",
-      "gravity",
-      "energy-conservation"
-    ],
-    "position": null,
-    "idealizations": [
-      {
-        "name": "Local gravity variation",
-        "scope": "idealized",
-        "note": "Intro treatments assume constant g near Earth's surface."
-      }
-    ],
-    "author": "austin",
-    "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "position": {
+      "x": -215.34009538841093,
+      "y": 873.7175509063738
+    }
   }
 ]
