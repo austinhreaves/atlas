@@ -1,4 +1,4 @@
-import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DesktopControlsPanel from './components/DesktopControlsPanel.jsx'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import MobileControlsOverlay from './components/MobileControlsOverlay.jsx'
@@ -6,6 +6,7 @@ import NodePanel from './components/NodePanel.jsx'
 import { computeAppearsIn, getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { LAYERS } from './data/layers'
+import { getTagDescription, getTagLabel, getTagRegistry, getVisibleTagRegistry } from './data/tags'
 import useIsMobile, { MOBILE_BREAKPOINT_PX } from './hooks/useIsMobile'
 import { computeLayout } from './lib/layout'
 import { resolveRenderPosition } from './lib/resolveRenderPosition'
@@ -26,11 +27,16 @@ import {
 
 const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
 const LAYER_VISIBILITY_KEY = 'atlas_layers_v1'
+const TAG_VISIBILITY_KEY = 'atlas_active_tags_v1'
 const LEGEND_VISIBILITY_KEY = 'atlas_legend_v1'
 const AUTO_RECENTER_KEY = 'atlas_auto_recenter_v1'
 const PANEL_WIDTH_KEY = 'atlas_panel_width_v1'
+const VIEW_PANEL_WIDTH_KEY = 'atlas_view_panel_width_v1'
+const VIEW_PANEL_OPEN_KEY = 'atlas_view_panel_open_v1'
 const DEFAULT_PANEL_WIDTH_FALLBACK = 440
 const DESKTOP_MIN_PANEL_WIDTH = 360
+const DEFAULT_VIEW_PANEL_WIDTH_FALLBACK = 360
+const DESKTOP_MIN_VIEW_PANEL_WIDTH = 300
 const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
 const DRAFT_BANNER_TEXT = 'Showing draft content'
 const DEFAULT_MASS = 1
@@ -60,6 +66,33 @@ function readInitialVisibleLayers() {
     }
     const validLayers = parsed.filter((layerId) => allLayerIds.includes(layerId))
     return validLayers.length > 0 ? new Set(validLayers) : fallback
+  } catch {
+    return fallback
+  }
+}
+
+function readInitialActiveTags(defaultVisibleTagIds) {
+  if (typeof window === 'undefined') {
+    return new Set(defaultVisibleTagIds)
+  }
+
+  const fallback = new Set(defaultVisibleTagIds)
+  try {
+    const raw = window.localStorage.getItem(TAG_VISIBILITY_KEY)
+    if (!raw) {
+      return fallback
+    }
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) {
+      return fallback
+    }
+    const validTags = parsed.filter(
+      (tagId) => typeof tagId === 'string' && defaultVisibleTagIds.includes(tagId),
+    )
+    if (validTags.length === 0) {
+      return fallback
+    }
+    return new Set(validTags)
   } catch {
     return fallback
   }
@@ -135,6 +168,59 @@ function readInitialPanelWidth() {
   }
 }
 
+function getInitialViewPanelWidth() {
+  if (typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT_PX) {
+    return DEFAULT_VIEW_PANEL_WIDTH_FALLBACK
+  }
+  const maxWidth =
+    typeof window === 'undefined'
+      ? DEFAULT_VIEW_PANEL_WIDTH_FALLBACK
+      : Math.max(1, Math.floor(window.innerWidth * 0.55))
+  const minWidth = Math.min(DESKTOP_MIN_VIEW_PANEL_WIDTH, maxWidth)
+  return Math.min(maxWidth, Math.max(minWidth, DEFAULT_VIEW_PANEL_WIDTH_FALLBACK))
+}
+
+function clampViewPanelWidth(width) {
+  if (typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT_PX) {
+    return DEFAULT_VIEW_PANEL_WIDTH_FALLBACK
+  }
+  const baseWidth =
+    typeof width === 'number' && Number.isFinite(width) ? width : getInitialViewPanelWidth()
+  const maxWidth =
+    typeof window === 'undefined'
+      ? DEFAULT_VIEW_PANEL_WIDTH_FALLBACK
+      : Math.max(1, Math.floor(window.innerWidth * 0.55))
+  const minWidth = Math.min(DESKTOP_MIN_VIEW_PANEL_WIDTH, maxWidth)
+  return Math.min(maxWidth, Math.max(minWidth, Math.round(baseWidth)))
+}
+
+function readInitialViewPanelWidth() {
+  if (typeof window === 'undefined') {
+    return getInitialViewPanelWidth()
+  }
+  try {
+    const stored = window.localStorage.getItem(VIEW_PANEL_WIDTH_KEY)
+    if (!stored) {
+      return getInitialViewPanelWidth()
+    }
+    const parsed = Number(stored)
+    return clampViewPanelWidth(parsed)
+  } catch {
+    return getInitialViewPanelWidth()
+  }
+}
+
+function readInitialViewPanelOpen() {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  try {
+    return window.localStorage.getItem(VIEW_PANEL_OPEN_KEY) === 'open'
+  } catch {
+    return false
+  }
+}
+
 function isEditableElement(target) {
   if (!(target instanceof HTMLElement)) {
     return false
@@ -198,6 +284,33 @@ function shouldIncludeDraftContent() {
   return params.get('include') === 'draft'
 }
 
+function readNodeIdFromSearch(searchString) {
+  const params = new URLSearchParams(typeof searchString === 'string' ? searchString : '')
+  const nodeId = params.get('node')
+  return typeof nodeId === 'string' && nodeId.length > 0 ? nodeId : null
+}
+
+function getCurrentNodeIdFromLocation() {
+  if (typeof window === 'undefined') {
+    return null
+  }
+  return readNodeIdFromSearch(window.location.search)
+}
+
+function buildHrefWithNode(nodeId) {
+  if (typeof window === 'undefined') {
+    return '/'
+  }
+  const url = new URL(window.location.href)
+  if (typeof nodeId === 'string' && nodeId.length > 0) {
+    url.searchParams.set('node', nodeId)
+  } else {
+    url.searchParams.delete('node')
+  }
+  const search = url.searchParams.toString()
+  return `${url.pathname}${search ? `?${search}` : ''}${url.hash}`
+}
+
 function getReviewState(entity) {
   return typeof entity?.review_state === 'string' ? entity.review_state : 'published'
 }
@@ -240,6 +353,8 @@ export default function App() {
   const [hoveredEntity, setHoveredEntity] = useState(null)
   const [understandingVersion, setUnderstandingVersion] = useState(0)
   const [panelWidth, setPanelWidth] = useState(() => readInitialPanelWidth())
+  const [viewPanelWidth, setViewPanelWidth] = useState(() => readInitialViewPanelWidth())
+  const [isViewPanelOpen, setIsViewPanelOpen] = useState(() => readInitialViewPanelOpen())
   const [userLayoutStore, setUserLayoutStore] = useState(() => getUserLayoutStore())
   const [atlasCorpusHash, setAtlasCorpusHash] = useState(
     () => getUserLayoutStore().metadata.atlas_corpus_hash,
@@ -249,10 +364,26 @@ export default function App() {
   const [autoRecenterEnabled, setAutoRecenterEnabled] = useState(() =>
     readInitialAutoRecenterEnabled(),
   )
+  const hasHydratedNodeSelectionFromUrlRef = useRef(false)
+  const hasWrittenNodeUrlRef = useRef(false)
+  const skipNextNodeUrlSyncRef = useRef(false)
+  const knownNodeIdsRef = useRef(new Set())
   const [viewportActions, setViewportActions] = useState({ fitGraph: null, centerSelected: null })
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false)
   const isPanelOpen = Boolean(selectedNodeId)
   const includeDraftContent = useMemo(() => shouldIncludeDraftContent(), [])
+  const allRegistryTags = useMemo(() => getTagRegistry(), [])
+  const visibleTagEntries = useMemo(
+    () => getVisibleTagRegistry(includeDraftContent),
+    [includeDraftContent],
+  )
+  const publishedTagIds = useMemo(
+    () => allRegistryTags.filter((tag) => tag.review_state === 'published').map((tag) => tag.id),
+    [allRegistryTags],
+  )
+  const visibleTagIds = useMemo(() => visibleTagEntries.map((tag) => tag.id), [visibleTagEntries])
+  const visibleTagIdSet = useMemo(() => new Set(visibleTagIds), [visibleTagIds])
+  const [activeTags, setActiveTags] = useState(() => readInitialActiveTags(publishedTagIds))
   const rawEntities = useMemo(() => getAllEntities(), [])
   const allEntities = useMemo(
     () =>
@@ -265,34 +396,93 @@ export default function App() {
       }),
     [includeDraftContent, rawEntities],
   )
+  const knownNodeIds = useMemo(
+    () =>
+      new Set(
+        allEntities
+          .map((entity) => entity?.id)
+          .filter((entityId) => typeof entityId === 'string' && entityId.length > 0),
+      ),
+    [allEntities],
+  )
   const conceptEntities = useMemo(
     () => allEntities.filter((entity) => entity.layer === 'concept'),
     [allEntities],
   )
+  const activeVisibleTagIdSet = useMemo(
+    () => new Set([...activeTags].filter((tagId) => visibleTagIdSet.has(tagId))),
+    [activeTags, visibleTagIdSet],
+  )
+  const tagFilterIsBypassed =
+    visibleTagIds.length === 0 || activeVisibleTagIdSet.size === visibleTagIdSet.size
+  const filteredConceptEntities = useMemo(() => {
+    if (tagFilterIsBypassed) {
+      return conceptEntities
+    }
+    return conceptEntities.filter((entity) => {
+      if (!Array.isArray(entity.tags) || entity.tags.length === 0) {
+        return false
+      }
+      return entity.tags.some((tagId) => activeVisibleTagIdSet.has(tagId))
+    })
+  }, [activeVisibleTagIdSet, conceptEntities, tagFilterIsBypassed])
+  const allEntitiesForGraph = useMemo(() => {
+    const visibleConceptIds = new Set(filteredConceptEntities.map((entity) => entity.id))
+    return allEntities.filter(
+      (entity) => entity.layer !== 'concept' || visibleConceptIds.has(entity.id),
+    )
+  }, [allEntities, filteredConceptEntities])
+  const searchableNodes = useMemo(
+    () =>
+      allEntitiesForGraph
+        .filter((entity) => entity.layer === 'concept' || entity.layer === 'variable')
+        .map((entity) => ({
+          id: entity.id,
+          title: typeof entity.title === 'string' ? entity.title : entity.name,
+          layer: entity.layer,
+          domain: entity.domain,
+          canonical_symbol: entity.canonical_symbol,
+        })),
+    [allEntitiesForGraph],
+  )
   const variableEntities = useMemo(
-    () => allEntities.filter((entity) => entity.layer === 'variable'),
-    [allEntities],
+    () => allEntitiesForGraph.filter((entity) => entity.layer === 'variable'),
+    [allEntitiesForGraph],
   )
   const edges = useMemo(() => {
-    return buildEdges(allEntities)
-  }, [allEntities])
-  const massByNodeId = useMemo(() => computeMassByNodeId(allEntities, edges), [allEntities, edges])
-  const nodeById = useMemo(() => new Map(allEntities.map((node) => [node.id, node])), [allEntities])
+    return buildEdges(allEntitiesForGraph)
+  }, [allEntitiesForGraph])
+  const massByNodeId = useMemo(
+    () => computeMassByNodeId(allEntitiesForGraph, edges),
+    [allEntitiesForGraph, edges],
+  )
+  const nodeById = useMemo(
+    () => new Map(allEntitiesForGraph.map((node) => [node.id, node])),
+    [allEntitiesForGraph],
+  )
   const conceptById = useMemo(
-    () => new Map(conceptEntities.map((concept) => [concept.id, concept])),
-    [conceptEntities],
+    () => new Map(filteredConceptEntities.map((concept) => [concept.id, concept])),
+    [filteredConceptEntities],
   )
   const appearsInByVariableId = useMemo(
-    () => computeAppearsIn(variableEntities, conceptEntities),
-    [conceptEntities, variableEntities],
+    () => computeAppearsIn(variableEntities, filteredConceptEntities),
+    [filteredConceptEntities, variableEntities],
   )
   const understandingStatesById = useMemo(() => getAllStates(), [understandingVersion])
   const allDomains = useMemo(
     () =>
-      [...new Set(allEntities.map((entity) => entity.domain).filter((domain) => typeof domain === 'string'))]
+      [
+        ...new Set(
+          allEntities
+            .map((entity) => entity.domain)
+            .filter((domain) => typeof domain === 'string'),
+        ),
+      ]
         .sort(),
     [allEntities],
   )
+  const allDomainKeys = useMemo(() => new Set(allDomains), [allDomains])
+  const allLayerKeys = useMemo(() => new Set(allLayerIds), [])
   const [visibleDomains, setVisibleDomains] = useState(() => new Set(allDomains))
 
   useEffect(() => {
@@ -308,6 +498,16 @@ export default function App() {
   }, [allDomains])
 
   useEffect(() => {
+    setActiveTags((current) => {
+      const next = new Set([...current].filter((tagId) => visibleTagIdSet.has(tagId)))
+      if (next.size === current.size) {
+        return current
+      }
+      return next
+    })
+  }, [visibleTagIdSet])
+
+  useEffect(() => {
     if (typeof window === 'undefined') {
       return
     }
@@ -317,6 +517,17 @@ export default function App() {
       // Ignore write failures in constrained environments.
     }
   }, [visibleLayers])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(TAG_VISIBILITY_KEY, JSON.stringify(Array.from(activeTags)))
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [activeTags])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -350,6 +561,95 @@ export default function App() {
       // Ignore write failures in constrained environments.
     }
   }, [panelWidth])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(VIEW_PANEL_WIDTH_KEY, String(clampViewPanelWidth(viewPanelWidth)))
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [viewPanelWidth])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(VIEW_PANEL_OPEN_KEY, isViewPanelOpen ? 'open' : 'closed')
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [isViewPanelOpen])
+
+  useEffect(() => {
+    knownNodeIdsRef.current = knownNodeIds
+  }, [knownNodeIds])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || hasHydratedNodeSelectionFromUrlRef.current) {
+      return
+    }
+
+    const nodeIdFromUrl = getCurrentNodeIdFromLocation()
+    if (nodeIdFromUrl && knownNodeIds.has(nodeIdFromUrl)) {
+      setSelectedNodeId(nodeIdFromUrl)
+    }
+    skipNextNodeUrlSyncRef.current = true
+    hasHydratedNodeSelectionFromUrlRef.current = true
+  }, [knownNodeIds])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    if (!hasHydratedNodeSelectionFromUrlRef.current) {
+      return
+    }
+
+    if (skipNextNodeUrlSyncRef.current) {
+      skipNextNodeUrlSyncRef.current = false
+      return
+    }
+
+    const selectedNodeIdForUrl =
+      typeof selectedNodeId === 'string' && knownNodeIds.has(selectedNodeId) ? selectedNodeId : null
+    const nextHref = buildHrefWithNode(selectedNodeIdForUrl)
+    const currentHref = `${window.location.pathname}${window.location.search}${window.location.hash}`
+    if (nextHref === currentHref) {
+      return
+    }
+
+    const historyState = { nodeId: selectedNodeIdForUrl }
+    if (!hasWrittenNodeUrlRef.current) {
+      window.history.replaceState(historyState, '', nextHref)
+      hasWrittenNodeUrlRef.current = true
+      return
+    }
+    window.history.pushState(historyState, '', nextHref)
+  }, [knownNodeIds, selectedNodeId])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const handlePopState = () => {
+      const nodeIdFromUrl = getCurrentNodeIdFromLocation()
+      const nextSelectedNodeId =
+        nodeIdFromUrl && knownNodeIdsRef.current.has(nodeIdFromUrl) ? nodeIdFromUrl : null
+      skipNextNodeUrlSyncRef.current = true
+      setSelectedNodeId(nextSelectedNodeId)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -411,8 +711,8 @@ export default function App() {
 
 
   const positionedNodes = useMemo(() => {
-    const computedPositions = getLayoutPositions(allEntities, edges)
-    return allEntities.map((node) => ({
+    const computedPositions = getLayoutPositions(allEntitiesForGraph, edges)
+    return allEntitiesForGraph.map((node) => ({
       ...node,
       mass: massByNodeId.get(node.id) ?? DEFAULT_MASS,
       position: resolveRenderPosition({
@@ -423,7 +723,7 @@ export default function App() {
         warnOnMissingComputed: import.meta.env.DEV,
       }),
     }))
-  }, [allEntities, edges, massByNodeId, userLayoutStore.positions])
+  }, [allEntitiesForGraph, edges, massByNodeId, userLayoutStore.positions])
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNodeId(node?.id ?? null)
@@ -446,6 +746,39 @@ export default function App() {
       return next
     })
   }, [])
+  const selectAllDomains = useCallback(() => {
+    setVisibleDomains(new Set(allDomainKeys))
+  }, [allDomainKeys])
+  const clearAllDomains = useCallback(() => {
+    setVisibleDomains(new Set())
+  }, [])
+
+  const toggleTag = useCallback((tagId) => {
+    setActiveTags((current) => {
+      const next = new Set(current)
+      if (next.has(tagId)) {
+        next.delete(tagId)
+      } else {
+        next.add(tagId)
+      }
+      return next
+    })
+  }, [])
+
+  const selectAllTags = useCallback(() => {
+    setActiveTags(new Set(visibleTagIds))
+  }, [visibleTagIds])
+
+  const clearAllTags = useCallback(() => {
+    setActiveTags(new Set())
+  }, [])
+
+  const focusSingleTag = useCallback((tagId) => {
+    if (!visibleTagIdSet.has(tagId)) {
+      return
+    }
+    setActiveTags(new Set([tagId]))
+  }, [visibleTagIdSet])
 
   const toggleLayer = useCallback((layerId) => {
     if (typeof LAYERS[layerId]?.schema_validator !== 'function') {
@@ -460,6 +793,15 @@ export default function App() {
       }
       return next
     })
+  }, [])
+  const selectAllLayers = useCallback(() => {
+    const enabledLayerIds = layerEntries
+      .filter(([, layer]) => typeof layer?.schema_validator === 'function')
+      .map(([layerId]) => layerId)
+    setVisibleLayers(new Set(enabledLayerIds))
+  }, [])
+  const clearAllLayers = useCallback(() => {
+    setVisibleLayers(new Set())
   }, [])
 
   const handleClosePanel = useCallback(() => {
@@ -476,6 +818,12 @@ export default function App() {
 
   const handlePanelWidthChange = useCallback((nextWidth) => {
     setPanelWidth(clampPanelWidth(nextWidth))
+  }, [])
+  const handleViewPanelWidthChange = useCallback((nextWidth) => {
+    setViewPanelWidth(clampViewPanelWidth(nextWidth))
+  }, [])
+  const toggleViewPanelOpen = useCallback(() => {
+    setIsViewPanelOpen((value) => !value)
   }, [])
 
   const toggleMobileControls = useCallback(() => {
@@ -691,6 +1039,15 @@ export default function App() {
     return enablesByNodeId.get(selectedNodeId) ?? []
   }, [enablesByNodeId, selectedNodeId])
 
+  const tagLabelById = useMemo(
+    () => Object.fromEntries(allRegistryTags.map((tag) => [tag.id, getTagLabel(tag.id)])),
+    [allRegistryTags],
+  )
+  const tagDescriptionById = useMemo(
+    () => Object.fromEntries(allRegistryTags.map((tag) => [tag.id, getTagDescription(tag.id)])),
+    [allRegistryTags],
+  )
+
   return (
     <main className="relative h-screen w-screen overflow-hidden">
       {includeDraftContent ? (
@@ -700,12 +1057,31 @@ export default function App() {
       ) : null}
       {!isMobile ? (
         <DesktopControlsPanel
+          isOpen={isViewPanelOpen}
+          panelWidth={viewPanelWidth}
+          onToggleOpen={toggleViewPanelOpen}
+          onPanelWidthChange={handleViewPanelWidthChange}
+          searchNodes={searchableNodes}
+          onSelectSearchNode={handleSelectEntity}
+          isMobile={false}
           layerEntries={layerEntries}
+          allLayerKeys={allLayerKeys}
           visibleLayers={visibleLayers}
           onToggleLayer={toggleLayer}
+          onSelectAllLayers={selectAllLayers}
+          onClearAllLayers={clearAllLayers}
           allDomains={allDomains}
+          allDomainKeys={allDomainKeys}
           visibleDomains={visibleDomains}
           onToggleDomain={toggleDomain}
+          onSelectAllDomains={selectAllDomains}
+          onClearAllDomains={clearAllDomains}
+          tags={allRegistryTags}
+          includeDraftContent={includeDraftContent}
+          activeTags={activeVisibleTagIdSet}
+          onToggleTag={toggleTag}
+          onSelectAllTags={selectAllTags}
+          onClearAllTags={clearAllTags}
           visibleConceptRows={visibleConceptRows}
           legendCollapsed={legendCollapsed}
           onToggleLegendCollapsed={() => setLegendCollapsed((value) => !value)}
@@ -723,12 +1099,27 @@ export default function App() {
         <MobileControlsOverlay
           isOpen={mobileControlsOpen}
           onToggleOpen={toggleMobileControls}
+          searchNodes={searchableNodes}
+          onSelectSearchNode={handleSelectEntity}
+          isMobile
           layerEntries={layerEntries}
+          allLayerKeys={allLayerKeys}
           visibleLayers={visibleLayers}
           onToggleLayer={toggleLayer}
+          onSelectAllLayers={selectAllLayers}
+          onClearAllLayers={clearAllLayers}
           allDomains={allDomains}
+          allDomainKeys={allDomainKeys}
           visibleDomains={visibleDomains}
           onToggleDomain={toggleDomain}
+          onSelectAllDomains={selectAllDomains}
+          onClearAllDomains={clearAllDomains}
+          tags={allRegistryTags}
+          includeDraftContent={includeDraftContent}
+          activeTags={activeVisibleTagIdSet}
+          onToggleTag={toggleTag}
+          onSelectAllTags={selectAllTags}
+          onClearAllTags={clearAllTags}
           visibleConceptRows={visibleConceptRows}
           legendCollapsed={legendCollapsed}
           onToggleLegendCollapsed={() => setLegendCollapsed((value) => !value)}
@@ -773,6 +1164,9 @@ export default function App() {
         onClose={handleClosePanel}
         onUnderstandingStateChange={handleUnderstandingStateChange}
         onSelectEntity={handleSelectEntity}
+        onTagClick={focusSingleTag}
+        tagLabelById={tagLabelById}
+        tagDescriptionById={tagDescriptionById}
         conceptById={conceptById}
         appearsInByVariableId={appearsInByVariableId}
         understandingStatesById={understandingStatesById}

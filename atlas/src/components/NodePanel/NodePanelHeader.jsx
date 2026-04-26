@@ -22,6 +22,9 @@ export default function NodePanelHeader({
   understandingState = 'unseen',
   isVariableKnown = false,
   onUnderstandingStateChange,
+  onTagClick,
+  tagLabelById = {},
+  tagDescriptionById = {},
 }) {
   const title = selectedNode?.title ?? selectedNode?.name ?? ''
   const badgeLabel =
@@ -31,6 +34,10 @@ export default function NodePanelHeader({
   const formulaInTitle =
     selectedNode?.formula && title.includes(selectedNode.formula) ? selectedNode.formula : null
   const titleParts = formulaInTitle ? title.split(formulaInTitle) : [title]
+  const conceptTags =
+    selectedNode?.layer === 'concept' && Array.isArray(selectedNode?.tags)
+      ? selectedNode.tags
+      : []
 
   return (
     <header className="border-b border-slate-700/80 px-5 py-4">
@@ -49,6 +56,21 @@ export default function NodePanelHeader({
           </h2>
           {typeof selectedNode?.domain === 'string' ? (
             <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{selectedNode.domain}</p>
+          ) : null}
+          {conceptTags.length > 0 ? (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              {conceptTags.map((tagId) => (
+                <button
+                  key={tagId}
+                  type="button"
+                  onClick={() => onTagClick?.(tagId)}
+                  title={tagDescriptionById[tagId] ?? ''}
+                  className="rounded border border-slate-600/70 bg-slate-800/85 px-2 py-0.5 text-[11px] font-medium capitalize tracking-wide text-slate-300 transition hover:bg-slate-700/90"
+                >
+                  {tagLabelById[tagId] ?? tagId}
+                </button>
+              ))}
+            </div>
           ) : null}
           {selectedNode?.layer === 'concept' ? (
             <div className="mt-3 flex flex-wrap items-center gap-2">

@@ -1,0 +1,364 @@
+{
+  "tags": [
+    {
+      "id": "one-d-motion",
+      "label": "1D motion",
+      "description": "Concepts and variables related to one-dimensional kinematics and motion analysis.",
+      "review_state": "published"
+    },
+    {
+      "id": "two-d-motion",
+      "label": "2D motion",
+      "description": "Concepts and variables related to two-dimensional trajectories and vector decomposition.",
+      "review_state": "published"
+    },
+    {
+      "id": "acceleration",
+      "label": "Acceleration",
+      "description": "Content focused on acceleration, its causes, and quantitative relationships.",
+      "review_state": "published"
+    },
+    {
+      "id": "application",
+      "label": "Application",
+      "description": "Applied problem-solving and contextual use of core physics relationships.",
+      "review_state": "published"
+    },
+    {
+      "id": "approximation",
+      "label": "Approximation",
+      "description": "Modeling assumptions and approximations used to simplify physical systems.",
+      "review_state": "published"
+    },
+    {
+      "id": "charge",
+      "label": "Charge",
+      "description": "Concepts and variables involving electric charge and related properties.",
+      "review_state": "published"
+    },
+    {
+      "id": "circuits",
+      "label": "Circuits",
+      "description": "Circuit behavior including current, resistance, emf, and network relationships.",
+      "review_state": "published"
+    },
+    {
+      "id": "collisions",
+      "label": "Collisions",
+      "description": "Momentum-transfer events and collision analysis across physical systems.",
+      "review_state": "published"
+    },
+    {
+      "id": "components",
+      "label": "Components",
+      "description": "Component-wise decomposition of vectors and forces in analysis workflows.",
+      "review_state": "published"
+    },
+    {
+      "id": "constant-acceleration",
+      "label": "Constant acceleration",
+      "description": "Kinematic cases where acceleration is constant in magnitude and direction.",
+      "review_state": "published"
+    },
+    {
+      "id": "constants",
+      "label": "Constants",
+      "description": "Physical constants and fixed parameters used in equations and models.",
+      "review_state": "published"
+    },
+    {
+      "id": "contact-force",
+      "label": "Contact force",
+      "description": "Forces arising from contact interactions such as normal, friction, and tension.",
+      "review_state": "published"
+    },
+    {
+      "id": "current",
+      "label": "Current",
+      "description": "Electric current, current flow constraints, and current-related quantities.",
+      "review_state": "published"
+    },
+    {
+      "id": "displacement",
+      "label": "Displacement",
+      "description": "Position change and related vector descriptions in motion problems.",
+      "review_state": "published"
+    },
+    {
+      "id": "dynamics",
+      "label": "Dynamics",
+      "description": "Force-motion relationships governed by Newtonian dynamics.",
+      "review_state": "published"
+    },
+    {
+      "id": "electromagnetism",
+      "label": "Electromagnetism",
+      "description": "Broad electromagnetism topics spanning electric and magnetic phenomena.",
+      "review_state": "published"
+    },
+    {
+      "id": "electrostatics",
+      "label": "Electrostatics",
+      "description": "Electric forces and fields in static or quasi-static charge configurations.",
+      "review_state": "published"
+    },
+    {
+      "id": "emf",
+      "label": "EMF",
+      "description": "Electromotive force, potential sources, and induced voltage behavior.",
+      "review_state": "published"
+    },
+    {
+      "id": "energy",
+      "label": "Energy",
+      "description": "Work-energy relationships and energetic state descriptions.",
+      "review_state": "published"
+    },
+    {
+      "id": "energy-conservation",
+      "label": "Energy conservation",
+      "description": "Conservation-based reasoning and equations for closed-system energy analysis.",
+      "review_state": "published"
+    },
+    {
+      "id": "estimation",
+      "label": "Estimation",
+      "description": "Order-of-magnitude and approximate quantitative reasoning strategies.",
+      "review_state": "published"
+    },
+    {
+      "id": "field",
+      "label": "Field",
+      "description": "Field-based representations of interactions in space.",
+      "review_state": "published"
+    },
+    {
+      "id": "field-symmetry",
+      "label": "Field symmetry",
+      "description": "Use of geometric symmetry to simplify field calculations and reasoning.",
+      "review_state": "published"
+    },
+    {
+      "id": "fields",
+      "label": "Fields",
+      "description": "General electric and magnetic field concepts and quantitative relations.",
+      "review_state": "published"
+    },
+    {
+      "id": "flux",
+      "label": "Flux",
+      "description": "Flux through surfaces and its relation to sources and induced effects.",
+      "review_state": "published"
+    },
+    {
+      "id": "force",
+      "label": "Force",
+      "description": "Forces, interactions, and net-force descriptions in mechanics.",
+      "review_state": "published"
+    },
+    {
+      "id": "force-components",
+      "label": "Force components",
+      "description": "Resolution of forces into components for analytical setup.",
+      "review_state": "published"
+    },
+    {
+      "id": "foundations",
+      "label": "Foundations",
+      "description": "Foundational concepts that support broad portions of the corpus.",
+      "review_state": "published"
+    },
+    {
+      "id": "free-fall",
+      "label": "Free fall",
+      "description": "Motion under gravity neglecting air resistance and related approximations.",
+      "review_state": "published"
+    },
+    {
+      "id": "geometry",
+      "label": "Geometry",
+      "description": "Geometric framing and relationships used in physics derivations and setups.",
+      "review_state": "published"
+    },
+    {
+      "id": "gravity",
+      "label": "Gravity",
+      "description": "Gravitational interactions, fields, and near-Earth approximations.",
+      "review_state": "published"
+    },
+    {
+      "id": "inclines",
+      "label": "Inclines",
+      "description": "Dynamics and force decomposition on inclined surfaces.",
+      "review_state": "published"
+    },
+    {
+      "id": "induction",
+      "label": "Induction",
+      "description": "Electromagnetic induction and changing-flux relationships.",
+      "review_state": "published"
+    },
+    {
+      "id": "inertia",
+      "label": "Inertia",
+      "description": "Inertial behavior and resistance to acceleration under applied force.",
+      "review_state": "published"
+    },
+    {
+      "id": "interaction-pairs",
+      "label": "Interaction pairs",
+      "description": "Newton's third-law interaction pairs and mutual force relations.",
+      "review_state": "published"
+    },
+    {
+      "id": "inverse-square",
+      "label": "Inverse square",
+      "description": "Inverse-square dependence in force and field strength models.",
+      "review_state": "published"
+    },
+    {
+      "id": "kinematics",
+      "label": "Kinematics",
+      "description": "Descriptive motion analysis independent of causal force modeling.",
+      "review_state": "published"
+    },
+    {
+      "id": "kinetic-energy",
+      "label": "Kinetic energy",
+      "description": "Energy associated with motion and velocity-dependent changes.",
+      "review_state": "published"
+    },
+    {
+      "id": "magnetism",
+      "label": "Magnetism",
+      "description": "Magnetic fields, forces, and induction-adjacent magnetic effects.",
+      "review_state": "published"
+    },
+    {
+      "id": "measurement",
+      "label": "Measurement",
+      "description": "Measurement practice, units, and interpretation constraints.",
+      "review_state": "published"
+    },
+    {
+      "id": "mechanics",
+      "label": "Mechanics",
+      "description": "Broad mechanics topics including motion, forces, and conservation laws.",
+      "review_state": "published"
+    },
+    {
+      "id": "method",
+      "label": "Method",
+      "description": "Problem-solving methods and structured analysis workflows.",
+      "review_state": "published"
+    },
+    {
+      "id": "momentum",
+      "label": "Momentum",
+      "description": "Linear momentum and momentum-conservation reasoning across systems.",
+      "review_state": "published"
+    },
+    {
+      "id": "motion",
+      "label": "Motion",
+      "description": "General motion concepts covering position, velocity, and acceleration.",
+      "review_state": "published"
+    },
+    {
+      "id": "newton",
+      "label": "Newton",
+      "description": "Content centered on Newtonian laws and interpretations.",
+      "review_state": "published"
+    },
+    {
+      "id": "position",
+      "label": "Position",
+      "description": "Position-based kinematic descriptions and coordinate framing.",
+      "review_state": "published"
+    },
+    {
+      "id": "potential-energy",
+      "label": "Potential energy",
+      "description": "Stored energy associated with configuration and conservative interactions.",
+      "review_state": "published"
+    },
+    {
+      "id": "problem-solving",
+      "label": "Problem solving",
+      "description": "General strategy tags for solving and checking quantitative physics problems.",
+      "review_state": "published"
+    },
+    {
+      "id": "projectile",
+      "label": "Projectile",
+      "description": "Projectile motion models and trajectory analysis.",
+      "review_state": "published"
+    },
+    {
+      "id": "projectile-foundation",
+      "label": "Projectile foundation",
+      "description": "Foundational ideas needed for projectile-motion problem setup.",
+      "review_state": "published"
+    },
+    {
+      "id": "range",
+      "label": "Range",
+      "description": "Range-focused trajectory outcomes and dependencies.",
+      "review_state": "published"
+    },
+    {
+      "id": "resistance",
+      "label": "Resistance",
+      "description": "Electrical resistance and related current-voltage behavior.",
+      "review_state": "published"
+    },
+    {
+      "id": "systems",
+      "label": "Systems",
+      "description": "System-boundary and interaction modeling decisions.",
+      "review_state": "published"
+    },
+    {
+      "id": "tension",
+      "label": "Tension",
+      "description": "Tension-force behavior in connected-body mechanics.",
+      "review_state": "published"
+    },
+    {
+      "id": "timeless-equation",
+      "label": "Timeless equation",
+      "description": "Equation forms that remove explicit time variables in kinematics.",
+      "review_state": "published"
+    },
+    {
+      "id": "uncertainty",
+      "label": "Uncertainty",
+      "description": "Uncertainty, precision limits, and error-aware reasoning.",
+      "review_state": "published"
+    },
+    {
+      "id": "vectors",
+      "label": "Vectors",
+      "description": "Vector operations, representation, and component reasoning.",
+      "review_state": "published"
+    },
+    {
+      "id": "velocity",
+      "label": "Velocity",
+      "description": "Velocity definitions, interpretation, and change over time.",
+      "review_state": "published"
+    },
+    {
+      "id": "weight",
+      "label": "Weight",
+      "description": "Weight force modeling and its relation to gravitational fields.",
+      "review_state": "published"
+    },
+    {
+      "id": "work",
+      "label": "Work",
+      "description": "Mechanical work and energy-transfer relationships.",
+      "review_state": "published"
+    }
+  ]
+}

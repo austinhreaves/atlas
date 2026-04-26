@@ -34,6 +34,7 @@ Each entity in Atlas includes a `layer` field and is validated by the schema val
 
 - Concepts: `src/data/concepts/*.json` (one file per domain)
 - Variables: `src/data/variables.json`
+- Tags registry: `src/data/tags.json`
 
 Runtime helpers in `src/data/index.js`:
 
@@ -42,6 +43,32 @@ Runtime helpers in `src/data/index.js`:
 - `computeAppearsIn(variables, concepts)` (reverse-derived map from variable ID to concept IDs)
 
 `appears_in` is not authored directly in variable JSON. It is computed from concept variable references.
+
+### Tags Registry
+
+Tags are a shared, registry-controlled vocabulary used for filtering and panel labels. Tags do not alter
+domain color/shape encodings.
+
+- Registry file: `src/data/tags.json`
+- Registry validation: `src/data/tags.js`
+- Entity tag membership validation: `src/data/schema.js`
+
+Registry rules:
+
+- `id` must be kebab-case and globally unique.
+- `label`, `description`, and `review_state` are required.
+- `audience_relevance` is optional and constrained to:
+  - `general`
+  - `phy-114`
+  - `phy-132`
+  - `ap-physics`
+  - `upper-division`
+
+Entity rules:
+
+- `tags` is optional for concept and variable entities; if omitted, it behaves like `[]`.
+- When tags are present, every tag must exist in the registry.
+- If the registry is malformed, Atlas degrades to "no tags configured" (filter UI hides) and logs a dev warning.
 
 ### Authoring Metadata Lifecycle
 

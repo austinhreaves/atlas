@@ -1,18 +1,35 @@
 import DomainFilterPanel from './DomainFilterPanel.jsx'
 import DomainLegend from './DomainLegend.jsx'
 import LayerToggleBar from './LayerToggleBar.jsx'
+import NodeSearch from './NodeSearch.jsx'
+import TagFilterPanel from './TagFilterPanel.jsx'
 import LayoutControls from './graph/LayoutControls.jsx'
 
-/** @param {{ isOpen: boolean, onToggleOpen: () => void, layerEntries: [string, object][], visibleLayers: Set<string>, onToggleLayer: (layerId: string) => void, allDomains: string[], visibleDomains: Set<string>, onToggleDomain: (domain: string) => void, visibleConceptRows: {domain: string, count: number}[], legendCollapsed: boolean, onToggleLegendCollapsed: () => void, selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, onFitGraph?: () => void, onCenterSelected?: () => void, autoRecenterEnabled?: boolean, onToggleAutoRecenter?: (enabled: boolean) => void }} props */
+/** @param {{ isOpen: boolean, onToggleOpen: () => void, searchNodes?: Array<{ id: string, title?: string, layer: string, domain?: string, canonical_symbol?: string }>, onSelectSearchNode?: (nodeId: string) => void, isMobile?: boolean, layerEntries: [string, object][], allLayerKeys?: Set<string>, visibleLayers: Set<string>, onToggleLayer: (layerId: string) => void, onSelectAllLayers?: () => void, onClearAllLayers?: () => void, allDomains: string[], allDomainKeys?: Set<string>, visibleDomains: Set<string>, onToggleDomain: (domain: string) => void, onSelectAllDomains?: () => void, onClearAllDomains?: () => void, tags?: Array<{id: string, label: string, description: string, review_state: string}>, includeDraftContent?: boolean, activeTags?: Set<string>, onToggleTag?: (tagId: string) => void, onSelectAllTags?: () => void, onClearAllTags?: () => void, visibleConceptRows: {domain: string, count: number}[], legendCollapsed: boolean, onToggleLegendCollapsed: () => void, selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, onFitGraph?: () => void, onCenterSelected?: () => void, autoRecenterEnabled?: boolean, onToggleAutoRecenter?: (enabled: boolean) => void }} props */
 export default function MobileControlsOverlay({
   isOpen,
   onToggleOpen,
+  searchNodes = [],
+  onSelectSearchNode,
+  isMobile = true,
   layerEntries,
+  allLayerKeys,
   visibleLayers,
   onToggleLayer,
+  onSelectAllLayers,
+  onClearAllLayers,
   allDomains,
+  allDomainKeys,
   visibleDomains,
   onToggleDomain,
+  onSelectAllDomains,
+  onClearAllDomains,
+  tags = [],
+  includeDraftContent = false,
+  activeTags = new Set(),
+  onToggleTag,
+  onSelectAllTags,
+  onClearAllTags,
   visibleConceptRows,
   legendCollapsed,
   onToggleLegendCollapsed,
@@ -53,15 +70,34 @@ export default function MobileControlsOverlay({
             </div>
 
             <div className="space-y-3">
+              <NodeSearch
+                nodes={searchNodes}
+                onSelectNode={onSelectSearchNode}
+                isMobile={isMobile}
+              />
               <LayerToggleBar
                 layerEntries={layerEntries}
+                allLayerKeys={allLayerKeys}
                 visibleLayers={visibleLayers}
                 onToggleLayer={onToggleLayer}
+                onSelectAllLayers={onSelectAllLayers}
+                onClearAllLayers={onClearAllLayers}
+              />
+              <TagFilterPanel
+                tags={tags}
+                includeDraftContent={includeDraftContent}
+                activeTags={activeTags}
+                onToggleTag={onToggleTag}
+                onSelectAllTags={onSelectAllTags}
+                onClearAllTags={onClearAllTags}
               />
               <DomainFilterPanel
                 allDomains={allDomains}
+                allDomainKeys={allDomainKeys}
                 visibleDomains={visibleDomains}
                 onToggleDomain={onToggleDomain}
+                onSelectAllDomains={onSelectAllDomains}
+                onClearAllDomains={onClearAllDomains}
               />
               <DomainLegend
                 rows={visibleConceptRows}

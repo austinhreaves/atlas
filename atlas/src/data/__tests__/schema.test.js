@@ -118,6 +118,21 @@ describe('validateConceptNode', () => {
     expect(errors).toContain('prerequisites[0].rationale must be a non-empty string when provided.')
   })
 
+  it('rejects concept tags that are not in the registry', () => {
+    const errors = validateConceptNode(createValidConcept({ tags: ['not-in-registry'] }))
+    expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
+  })
+
+  it('accepts concept tags as an empty array', () => {
+    expect(validateConceptNode(createValidConcept({ tags: [] }))).toEqual([])
+  })
+
+  it('accepts concept nodes with no tags field', () => {
+    const conceptWithoutTags = createValidConcept()
+    delete conceptWithoutTags.tags
+    expect(validateConceptNode(conceptWithoutTags)).toEqual([])
+  })
+
   it('rejects invalid geometries vocabulary values', () => {
     const errors = validateConceptNode(createValidConcept({ geometries: ['torus'] }))
     expect(errors).toContain(
@@ -156,6 +171,11 @@ describe('validateVariableNode', () => {
       }),
     )
     expect(errors).toContain('common_aliases[0].symbol must be a non-empty string.')
+  })
+
+  it('rejects variable tags that are not in the registry', () => {
+    const errors = validateVariableNode(createValidVariable({ tags: ['not-in-registry'] }))
+    expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
   })
 
   it('rejects invalid metadata for variable entities', () => {

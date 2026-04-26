@@ -18,7 +18,7 @@ function clampPanelWidth(width) {
   return Math.min(maxWidth, Math.max(minWidth, width))
 }
 
-/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingStateChange?: (entityId: string, state: string) => void, onSelectEntity?: (id: string) => void, conceptById?: Map<string, any>, appearsInByVariableId?: Record<string, string[]>, understandingStatesById?: Record<string, string> }} props */
+/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingStateChange?: (entityId: string, state: string) => void, onSelectEntity?: (id: string) => void, onTagClick?: (tagId: string) => void, tagLabelById?: Record<string, string>, tagDescriptionById?: Record<string, string>, conceptById?: Map<string, any>, appearsInByVariableId?: Record<string, string[]>, understandingStatesById?: Record<string, string> }} props */
 export default function NodePanel({
   selectedNode,
   panelWidth = 440,
@@ -29,6 +29,9 @@ export default function NodePanel({
   onClose,
   onUnderstandingStateChange,
   onSelectEntity,
+  onTagClick,
+  tagLabelById = {},
+  tagDescriptionById = {},
   conceptById = new Map(),
   appearsInByVariableId = {},
   understandingStatesById = {},
@@ -134,6 +137,9 @@ export default function NodePanel({
               understandingState={understandingState}
               isVariableKnown={isVariableKnown}
               onUnderstandingStateChange={onUnderstandingStateChange}
+              onTagClick={onTagClick}
+              tagLabelById={tagLabelById}
+              tagDescriptionById={tagDescriptionById}
             />
 
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">

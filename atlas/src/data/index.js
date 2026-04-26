@@ -1,5 +1,6 @@
 import electromagnetismConcepts from './concepts/electromagnetism.json'
 import mechanicsConcepts from './concepts/mechanics.json'
+import { getTagRegistry, getVisibleTagRegistry } from './tags'
 import variables from './variables.json'
 
 const concepts = [...electromagnetismConcepts, ...mechanicsConcepts]
@@ -32,3 +33,4 @@ export function computeAppearsIn(variableEntities = variables, conceptEntities =
 }
 
 export { concepts, variables }
+export { getTagRegistry, getVisibleTagRegistry }

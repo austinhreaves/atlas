@@ -79,6 +79,21 @@ describe('schema v3 validators', () => {
     expect(errors).toContain('prerequisites[0].rationale must be a non-empty string when provided.')
   })
 
+  it('rejects concept tags that are not in the registry', () => {
+    const errors = validateConceptNode({ ...validConcept, tags: ['not-in-registry'] })
+    expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
+  })
+
+  it('accepts empty concept tags', () => {
+    expect(validateConceptNode({ ...validConcept, tags: [] })).toEqual([])
+  })
+
+  it('accepts concept nodes when tags field is absent', () => {
+    const conceptWithoutTags = { ...validConcept }
+    delete conceptWithoutTags.tags
+    expect(validateConceptNode(conceptWithoutTags)).toEqual([])
+  })
+
   it('accepts a valid variable entity', () => {
     expect(validateVariableNode(validVariable)).toEqual([])
   })
@@ -86,6 +101,11 @@ describe('schema v3 validators', () => {
   it('rejects invalid vector_or_scalar values', () => {
     const errors = validateVariableNode({ ...validVariable, vector_or_scalar: 'matrix' })
     expect(errors).toContain('vector_or_scalar must be one of: scalar, vector, tensor')
+  })
+
+  it('rejects variable tags that are not in the registry', () => {
+    const errors = validateVariableNode({ ...validVariable, tags: ['not-in-registry'] })
+    expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
   })
 
   it('dispatches by entity.layer', () => {

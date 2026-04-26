@@ -1,3 +1,5 @@
+import { getTagValidationContext } from './tags'
+
 const REQUIRED_CONCEPT_FIELDS = [
   'id',
   'layer',
@@ -11,7 +13,6 @@ const REQUIRED_CONCEPT_FIELDS = [
   'description',
   'prerequisites',
   'visual',
-  'tags',
   'author',
   'review_state',
 ]
@@ -75,8 +76,36 @@ function validateMetadata(entity, errors) {
   }
 }
 
-export function validateConceptNode(node) {
+function validateTagsField({ entity, fieldPath, required, errors, validationContext }) {
+  const hasField = fieldPath in entity
+  if (!hasField) {
+    if (required) {
+      errors.push(`${fieldPath} must be an array of strings.`)
+    }
+    return
+  }
+
+  const value = entity[fieldPath]
+  if (!Array.isArray(value) || value.some((tag) => !isNonEmptyString(tag))) {
+    errors.push(`${fieldPath} must be an array of strings.`)
+    return
+  }
+
+  if (!validationContext?.enforceMembership) {
+    return
+  }
+
+  const tagIds = validationContext.tagIds instanceof Set ? validationContext.tagIds : new Set()
+  value.forEach((tag, index) => {
+    if (!tagIds.has(tag)) {
+      errors.push(`${fieldPath}[${index}] references unknown tag id: ${tag}`)
+    }
+  })
+}
+
+export function validateConceptNode(node, options = {}) {
   const errors = []
+  const tagValidationContext = options.tagValidationContext ?? getTagValidationContext()
 
   if (!node || typeof node !== 'object' || Array.isArray(node)) {
     return ['Node must be an object.']
@@ -356,9 +385,13 @@ export function validateConceptNode(node) {
     }
   }
 
-  if (!Array.isArray(node.tags) || node.tags.some((tag) => !isNonEmptyString(tag))) {
-    errors.push('tags must be an array of strings.')
-  }
+  validateTagsField({
+    entity: node,
+    fieldPath: 'tags',
+    required: false,
+    errors,
+    validationContext: tagValidationContext,
+  })
 
   if ('position' in node && node.position !== null) {
     if (typeof node.position !== 'object' || Array.isArray(node.position)) {
@@ -380,8 +413,9 @@ export function validateConceptNode(node) {
   return errors
 }
 
-export function validateVariableNode(variable) {
+export function validateVariableNode(variable, options = {}) {
   const errors = []
+  const tagValidationContext = options.tagValidationContext ?? getTagValidationContext()
 
   if (!variable || typeof variable !== 'object' || Array.isArray(variable)) {
     return ['Node must be an object.']
@@ -459,17 +493,20 @@ export function validateVariableNode(variable) {
     }
   }
 
-  if ('tags' in variable) {
-    if (!Array.isArray(variable.tags) || variable.tags.some((tag) => !isNonEmptyString(tag))) {
-      errors.push('tags must be an array of strings when provided.')
-    }
-  }
+  validateTagsField({
+    entity: variable,
+    fieldPath: 'tags',
+    required: false,
+    errors,
+    validationContext: tagValidationContext,
+  })
 
   validateMetadata(variable, errors)
   return errors
 }
 
-export function validateEntity(entity) {
+export function validateEntity(entity, options = {}) {
+  const tagValidationContext = options.tagValidationContext ?? getTagValidationContext()
   if (!entity || typeof entity !== 'object' || Array.isArray(entity)) {
     return ['Node must be an object.']
   }
@@ -479,11 +516,11 @@ export function validateEntity(entity) {
   }
 
   if (entity.layer === 'concept') {
-    return validateConceptNode(entity)
+    return validateConceptNode(entity, { tagValidationContext })
   }
 
   if (entity.layer === 'variable') {
-    return validateVariableNode(entity)
+    return validateVariableNode(entity, { tagValidationContext })
   }
 
   return [`Unsupported layer: ${entity.layer}`]

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../App.jsx'
@@ -37,6 +37,7 @@ vi.mock('../data', () => ({
       review_state: 'published',
       title: 'Mechanics Concept',
       domain: 'mechanics',
+      tags: ['mechanics'],
       prerequisites: [],
       position: { x: 0, y: 0 },
     },
@@ -46,6 +47,7 @@ vi.mock('../data', () => ({
       review_state: 'published',
       title: 'EM Concept',
       domain: 'electromagnetism',
+      tags: ['electromagnetism'],
       prerequisites: [],
       position: { x: 20, y: 20 },
     },
@@ -63,6 +65,7 @@ vi.mock('../data', () => ({
       review_state: 'draft',
       title: 'Draft Concept',
       domain: 'mechanics',
+      tags: ['dynamics'],
       prerequisites: [],
       position: { x: 60, y: 60 },
     },
@@ -160,7 +163,10 @@ describe('App visibility controls', () => {
 
     expect(screen.queryByRole('button', { name: 'Toggle variable layer' })).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'View' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Layers' }))
+    const expandLayersButton = screen.queryByRole('button', { name: 'Layers' })
+    if (expandLayersButton) {
+      fireEvent.click(expandLayersButton)
+    }
     fireEvent.click(screen.getByRole('button', { name: 'Toggle variable layer' }))
     fireEvent.click(screen.getAllByRole('button', { name: /Domain Legend/i })[0])
 
@@ -169,6 +175,61 @@ describe('App visibility controls', () => {
       expect(storedLayers).toContain('concept')
       expect(storedLayers).toContain('variable')
       expect(window.localStorage.getItem('atlas_legend_v1')).toBe('collapsed')
+    })
+  })
+
+  it('opens a desktop left view panel and persists open/closed state', async () => {
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'View' })).not.toBeNull()
+      expect(window.localStorage.getItem('atlas_view_panel_open_v1')).toBe('closed')
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'View' }))
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Close view' })).not.toBeNull()
+      expect(window.localStorage.getItem('atlas_view_panel_open_v1')).toBe('open')
+      expect(screen.getByTestId('desktop-view-controls-aside').getAttribute('aria-hidden')).toBe(
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'Close view' }).parentElement?.getAttribute('style')).toContain(
+        'translateX(',
+      )
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close view' }))
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'View' })).not.toBeNull()
+      expect(window.localStorage.getItem('atlas_view_panel_open_v1')).toBe('closed')
+      expect(screen.getByTestId('desktop-view-controls-aside').getAttribute('aria-hidden')).toBe(
+        'true',
+      )
+      expect(screen.getByRole('button', { name: 'View' }).parentElement?.getAttribute('style')).toContain(
+        'translateX(0px)',
+      )
+    })
+  })
+
+  it('restores and persists desktop left view panel width', async () => {
+    window.localStorage.setItem('atlas_view_panel_width_v1', '420')
+    render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'View' })).not.toBeNull()
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'View' }))
+
+    const aside = screen.getByTestId('desktop-view-controls-aside')
+    expect(aside.getAttribute('style')).toContain('420px')
+
+    const handle = screen.getByTestId('desktop-view-panel-resize-handle')
+    fireEvent.pointerDown(handle, { clientX: 120 })
+    fireEvent.pointerMove(window, { clientX: 220 })
+    fireEvent.pointerUp(window)
+
+    await waitFor(() => {
+      expect(window.localStorage.getItem('atlas_view_panel_width_v1')).toBe('520')
     })
   })
 
@@ -337,6 +398,47 @@ describe('App visibility controls', () => {
         screenY: 240,
       })
       expect(appState.graphProps.selectedNodeId).toBeNull()
+    })
+  })
+
+  it('filters concepts by active tags and hides untagged concepts when subset is active', async () => {
+    render(<App />)
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'View' }))
+    const tagToggleButton = screen.getByRole('button', { name: /Tags \(/i })
+    fireEvent.click(tagToggleButton)
+    const tagPanel = tagToggleButton.closest('section')
+    if (!tagPanel) {
+      throw new Error('Expected Tags panel container to exist')
+    }
+    fireEvent.click(within(tagPanel).getByRole('button', { name: 'None' }))
+    fireEvent.click(within(tagPanel).getByRole('button', { name: 'Mechanics' }))
+
+    expect(screen.getByRole('button', { name: 'mechanics' })).not.toBeNull()
+    expect(screen.getByRole('button', { name: 'electromagnetism' })).not.toBeNull()
+
+    await waitFor(() => {
+      const renderedNodeIds = appState.graphProps.nodes.map((node) => node.id)
+      expect(renderedNodeIds).toContain('concept-mechanics')
+      expect(renderedNodeIds).not.toContain('concept-electromagnetism')
+    })
+  })
+
+  it('round-trips active tags through localStorage and drops unknown ids', async () => {
+    window.localStorage.setItem(
+      'atlas_active_tags_v1',
+      JSON.stringify(['mechanics', 'definitely-old-tag']),
+    )
+    render(<App />)
+
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+      const stored = JSON.parse(window.localStorage.getItem('atlas_active_tags_v1') ?? '[]')
+      expect(stored).toContain('mechanics')
+      expect(stored).not.toContain('definitely-old-tag')
     })
   })
 })

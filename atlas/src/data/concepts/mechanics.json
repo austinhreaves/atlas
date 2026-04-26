@@ -154,7 +154,7 @@
     "tags": [
       "kinematics",
       "displacement",
-      "1d-motion"
+      "one-d-motion"
     ],
     "author": "austin",
     "review_state": "published",
@@ -212,7 +212,7 @@
     "tags": [
       "kinematics",
       "velocity",
-      "1d-motion"
+      "one-d-motion"
     ],
     "author": "austin",
     "review_state": "published",
@@ -270,7 +270,7 @@
     "tags": [
       "kinematics",
       "acceleration",
-      "1d-motion"
+      "one-d-motion"
     ],
     "author": "austin",
     "review_state": "published",
@@ -595,7 +595,7 @@
     "tags": [
       "vectors",
       "components",
-      "2d-motion"
+      "two-d-motion"
     ],
     "author": "austin",
     "review_state": "published",
@@ -661,7 +661,7 @@
     },
     "tags": [
       "kinematics",
-      "2d-motion",
+      "two-d-motion",
       "projectile-foundation"
     ],
     "author": "austin",
@@ -760,7 +760,7 @@
     "tags": [
       "application",
       "projectile",
-      "2d-motion"
+      "two-d-motion"
     ],
     "author": "austin",
     "review_state": "published",
