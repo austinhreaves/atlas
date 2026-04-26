@@ -1,10 +1,12 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../App.jsx'
 
 const appState = vi.hoisted(() => ({
   graphProps: null,
+  nodePanelProps: null,
 }))
 
 vi.mock('../components/GraphCanvas.jsx', () => ({
@@ -15,7 +17,16 @@ vi.mock('../components/GraphCanvas.jsx', () => ({
 }))
 
 vi.mock('../components/NodePanel.jsx', () => ({
-  default: () => <div data-testid="node-panel-mock" />,
+  default: (props) => {
+    appState.nodePanelProps = props
+    return (
+      <div data-testid="node-panel-mock">
+        <button type="button" onClick={() => props.onPanelWidthChange?.(512)}>
+          Set panel width 512
+        </button>
+      </div>
+    )
+  },
 }))
 
 vi.mock('../data', () => ({
@@ -130,11 +141,13 @@ describe('App visibility controls', () => {
     window.localStorage.clear()
     window.history.replaceState({}, '', '/')
     appState.graphProps = null
+    appState.nodePanelProps = null
   })
 
   afterEach(() => {
     cleanup()
     appState.graphProps = null
+    appState.nodePanelProps = null
   })
 
   it('persists layer visibility and legend collapse state to localStorage', async () => {
@@ -145,6 +158,9 @@ describe('App visibility controls', () => {
       expect(window.localStorage.getItem('atlas_legend_v1')).toBe('expanded')
     })
 
+    expect(screen.queryByRole('button', { name: 'Toggle variable layer' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'View' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Layers' }))
     fireEvent.click(screen.getByRole('button', { name: 'Toggle variable layer' }))
     fireEvent.click(screen.getAllByRole('button', { name: /Domain Legend/i })[0])
 
@@ -168,6 +184,7 @@ describe('App visibility controls', () => {
       expect(appState.graphProps.visibleLayers.has('variable')).toBe(true)
     })
 
+    fireEvent.click(screen.getByRole('button', { name: 'View' }))
     expect(screen.getAllByRole('button', { name: /Domain Legend/i })[0].textContent).toContain('Show')
 
     fireEvent.click(screen.getAllByRole('button', { name: /Domain Legend/i })[0])
@@ -227,5 +244,99 @@ describe('App visibility controls', () => {
     expect(renderedNodeIds).toContain('concept-draft')
     expect(renderedNodeIds).toContain('variable-reviewed')
     expect(screen.getByText('Showing draft content')).not.toBeNull()
+  })
+
+  it('persists panel width and restores a stored value on load', async () => {
+    window.localStorage.setItem('atlas_panel_width_v1', '490')
+    render(<App />)
+
+    await waitFor(() => {
+      expect(appState.nodePanelProps?.panelWidth).toBe(490)
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Set panel width 512' }))
+    await waitFor(() => {
+      expect(window.localStorage.getItem('atlas_panel_width_v1')).toBe('512')
+    })
+  })
+
+  it('clamps invalid stored panel widths to viewport limits', async () => {
+    window.localStorage.setItem('atlas_panel_width_v1', '9999')
+    setViewportWidth(1000)
+    render(<App />)
+
+    await waitFor(() => {
+      expect(appState.nodePanelProps?.panelWidth).toBe(550)
+    })
+  })
+
+  it('closes selection on Escape when focus is not in an editable field', async () => {
+    render(<App />)
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+    })
+
+    act(() => {
+      appState.graphProps.onNodeClick({ id: 'concept-mechanics' })
+    })
+    await waitFor(() => {
+      expect(appState.graphProps.selectedNodeId).toBe('concept-mechanics')
+    })
+
+    fireEvent.keyDown(window, { key: 'Escape' })
+    await waitFor(() => {
+      expect(appState.graphProps.selectedNodeId).toBeNull()
+    })
+  })
+
+  it('does not close selection on Escape while typing in an input', async () => {
+    render(<App />)
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+    })
+
+    act(() => {
+      appState.graphProps.onNodeClick({ id: 'concept-mechanics' })
+    })
+    await waitFor(() => {
+      expect(appState.graphProps.selectedNodeId).toBe('concept-mechanics')
+    })
+
+    const input = document.createElement('input')
+    document.body.appendChild(input)
+    input.focus()
+    fireEvent.keyDown(input, { key: 'Escape' })
+    await waitFor(() => {
+      expect(appState.graphProps.selectedNodeId).toBe('concept-mechanics')
+    })
+    document.body.removeChild(input)
+  })
+
+  it('threads shared hoveredEntity state through GraphCanvas props', async () => {
+    render(<App />)
+    await waitFor(() => {
+      expect(appState.graphProps).not.toBeNull()
+      expect(appState.graphProps.hoveredEntity).toBeNull()
+      expect(typeof appState.graphProps.onSetHover).toBe('function')
+    })
+
+    act(() => {
+      appState.graphProps.onSetHover({
+        kind: 'node',
+        id: 'concept-mechanics',
+        screenX: 120,
+        screenY: 240,
+      })
+    })
+
+    await waitFor(() => {
+      expect(appState.graphProps.hoveredEntity).toEqual({
+        kind: 'node',
+        id: 'concept-mechanics',
+        screenX: 120,
+        screenY: 240,
+      })
+      expect(appState.graphProps.selectedNodeId).toBeNull()
+    })
   })
 })

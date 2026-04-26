@@ -86,6 +86,38 @@ describe('validateConceptNode', () => {
     expect(errors).toContain('variables[0].id must be kebab-case.')
   })
 
+  it('accepts optional prerequisite rationale when provided as a string', () => {
+    const errors = validateConceptNode(
+      createValidConcept({
+        prerequisites: [
+          {
+            id: 'kinematics-velocity-time',
+            type: 'foundational',
+            weight: 0.9,
+            rationale: 'Velocity-time relationships ground acceleration reasoning.',
+          },
+        ],
+      }),
+    )
+    expect(errors).toEqual([])
+  })
+
+  it('rejects non-string prerequisite rationale values', () => {
+    const errors = validateConceptNode(
+      createValidConcept({
+        prerequisites: [
+          {
+            id: 'kinematics-velocity-time',
+            type: 'foundational',
+            weight: 0.9,
+            rationale: 42,
+          },
+        ],
+      }),
+    )
+    expect(errors).toContain('prerequisites[0].rationale must be a non-empty string when provided.')
+  })
+
   it('rejects invalid geometries vocabulary values', () => {
     const errors = validateConceptNode(createValidConcept({ geometries: ['torus'] }))
     expect(errors).toContain(

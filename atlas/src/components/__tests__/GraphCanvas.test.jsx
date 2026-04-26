@@ -1,16 +1,19 @@
 // @vitest-environment jsdom
-import { render } from '@testing-library/react'
-import { fireEvent, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { act } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import GraphCanvas from '../GraphCanvas.jsx'
 
 const reactFlowState = vi.hoisted(() => ({
+  fitView: vi.fn(),
+  zoomIn: vi.fn(),
+  zoomOut: vi.fn(),
   getNode: vi.fn(),
   getViewport: vi.fn(),
   setCenter: vi.fn(),
 }))
 const reactFlowHandlers = vi.hoisted(() => ({
+  onMoveStart: null,
   onMoveEnd: null,
   onNodeDragStop: null,
   onNodeDragStart: null,
@@ -27,6 +30,7 @@ vi.mock('reactflow', () => {
   return {
     ReactFlow: ({
       children,
+      onMoveStart,
       onMoveEnd,
       onNodeDragStart,
       onNodeDragStop,
@@ -38,6 +42,7 @@ vi.mock('reactflow', () => {
       onNodeClick,
       ...props
     }) => {
+      reactFlowHandlers.onMoveStart = onMoveStart
       reactFlowHandlers.onMoveEnd = onMoveEnd
       reactFlowHandlers.onNodeDragStart = onNodeDragStart
       reactFlowHandlers.onNodeDragStop = onNodeDragStop
@@ -51,7 +56,9 @@ vi.mock('reactflow', () => {
       return <div data-testid="react-flow-root">{children}</div>
     },
     Background: () => null,
-    Controls: () => null,
+    MiniMap: ({ className, ...props }) => (
+      <div data-testid="minimap" data-class-name={className} {...props} />
+    ),
     Handle: () => null,
     Position: {
       Top: 'top',
@@ -103,6 +110,9 @@ function createProps(overrides = {}) {
     onResetSelected: vi.fn(),
     onExportLayout: vi.fn(),
     onImportLayout: vi.fn(),
+    onViewportActionsChange: vi.fn(),
+    onSetHover: vi.fn(),
+    hoveredEntity: null,
     isMobile: false,
     ...overrides,
   }
@@ -112,6 +122,14 @@ function emitMoveEnd(event = {}) {
   if (typeof reactFlowHandlers.onMoveEnd === 'function') {
     act(() => {
       reactFlowHandlers.onMoveEnd(event)
+    })
+  }
+}
+
+function emitMoveStart(event = {}) {
+  if (typeof reactFlowHandlers.onMoveStart === 'function') {
+    act(() => {
+      reactFlowHandlers.onMoveStart(event)
     })
   }
 }
@@ -167,10 +185,14 @@ function emitPaneContextMenu(event = { pointerType: 'touch', type: 'contextmenu'
 describe('GraphCanvas camera behavior', () => {
   beforeEach(() => {
     vi.useFakeTimers()
+    reactFlowState.fitView.mockReset()
+    reactFlowState.zoomIn.mockReset()
+    reactFlowState.zoomOut.mockReset()
     reactFlowState.getNode.mockReset()
     reactFlowState.getViewport.mockReset()
     reactFlowState.setCenter.mockReset()
     reactFlowHandlers.onMoveEnd = null
+    reactFlowHandlers.onMoveStart = null
     reactFlowHandlers.onNodeDragStart = null
     reactFlowHandlers.onNodeDragStop = null
     reactFlowHandlers.onNodeMouseDown = null
@@ -192,6 +214,7 @@ describe('GraphCanvas camera behavior', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    cleanup()
   })
 
   it('does not recenter on initial mount', () => {
@@ -281,6 +304,51 @@ describe('GraphCanvas camera behavior', () => {
     expect(reactFlowState.setCenter).not.toHaveBeenCalled()
   })
 
+  it('does not schedule idle recenter when auto recenter is disabled', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          selectedNodeId: 'n1',
+          autoRecenterEnabled: false,
+        })}
+      />,
+    )
+
+    emitMoveEnd({})
+    act(() => {
+      vi.advanceTimersByTime(4600)
+    })
+
+    expect(reactFlowState.setCenter).not.toHaveBeenCalled()
+  })
+
+  it('cancels pending idle recenter when auto recenter is toggled off', () => {
+    const { rerender } = render(<GraphCanvas {...createProps({ selectedNodeId: 'n1' })} />)
+
+    emitMoveEnd({})
+    rerender(
+      <GraphCanvas
+        {...createProps({
+          selectedNodeId: 'n1',
+          autoRecenterEnabled: false,
+        })}
+      />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(4600)
+    })
+
+    expect(reactFlowState.setCenter).not.toHaveBeenCalled()
+  })
+
+  it('still recenters on selection change when auto recenter is disabled', () => {
+    const { rerender } = render(<GraphCanvas {...createProps({ autoRecenterEnabled: false })} />)
+
+    rerender(<GraphCanvas {...createProps({ selectedNodeId: 'n1', autoRecenterEnabled: false })} />)
+
+    expect(reactFlowState.setCenter).toHaveBeenCalledTimes(1)
+  })
+
   it('cleans up pending idle recenter timer on unmount', () => {
     const { rerender, unmount } = render(<GraphCanvas {...createProps()} />)
     rerender(<GraphCanvas {...createProps({ selectedNodeId: 'n1' })} />)
@@ -365,6 +433,37 @@ describe('GraphCanvas camera behavior', () => {
     expect(variableFlowNode?.type).toBe('variable')
     expect(variableFlowNode?.data?.title).toBe('Mass')
     expect(variableFlowNode?.data?.canonicalSymbol).toBe('m')
+  })
+
+  it('renders a lower-left minimap and viewport controls on desktop', () => {
+    const { getByTestId } = render(<GraphCanvas {...createProps({ isMobile: false })} />)
+    const minimap = getByTestId('desktop-minimap')
+    expect(minimap).not.toBeNull()
+    expect(minimap.getAttribute('data-class-name')).toContain('!bottom-3')
+    expect(minimap.getAttribute('data-class-name')).toContain('!left-3')
+
+    expect(getByTestId('desktop-viewport-controls')).not.toBeNull()
+  })
+
+  it('hides desktop minimap controls on mobile', () => {
+    const { queryAllByTestId } = render(<GraphCanvas {...createProps({ isMobile: true })} />)
+    expect(queryAllByTestId('minimap')).toHaveLength(0)
+    expect(queryAllByTestId('desktop-viewport-controls')).toHaveLength(0)
+  })
+
+  it('invokes fitView when Fit view camera button is clicked', () => {
+    const { getByRole } = render(<GraphCanvas {...createProps()} />)
+
+    fireEvent.click(getByRole('button', { name: 'Fit view' }))
+
+    expect(reactFlowState.fitView).toHaveBeenCalledTimes(1)
+    expect(reactFlowState.fitView).toHaveBeenCalledWith({ padding: 0.2, duration: 320 })
+  })
+
+  it('renders a distinct fit-view icon separate from fullscreen icon', () => {
+    render(<GraphCanvas {...createProps()} />)
+    expect(screen.getByTestId('fit-view-target-icon')).not.toBeNull()
+    expect(screen.getByTestId('fullscreen-toggle-icon')).not.toBeNull()
   })
 
   it('sets nodesDraggable explicitly and disables drag selection', () => {
@@ -748,6 +847,71 @@ describe('GraphCanvas camera behavior', () => {
     expect(onNodePositionCommit).toHaveBeenCalledWith('n2', { x: 640, y: -120 })
   })
 
+  it('clears hover state when node dragging starts', () => {
+    const onSetHover = vi.fn()
+    render(<GraphCanvas {...createProps({ onSetHover })} />)
+
+    emitNodeDragStart({ id: 'n1' })
+
+    expect(onSetHover).toHaveBeenCalledWith(null)
+  })
+
+  it('clears hover state when viewport movement starts or ends', () => {
+    const onSetHover = vi.fn()
+    render(<GraphCanvas {...createProps({ onSetHover })} />)
+
+    emitMoveStart({})
+    emitMoveEnd({})
+
+    expect(onSetHover).toHaveBeenCalledWith(null)
+    expect(onSetHover).toHaveBeenCalledTimes(2)
+  })
+
+  it('threads hover callback into flow node and edge data', () => {
+    const onSetHover = vi.fn()
+    render(
+      <GraphCanvas
+        {...createProps({
+          onSetHover,
+          nodes: [
+            {
+              id: 'concept-1',
+              layer: 'concept',
+              title: 'Concept One',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'variable-1',
+              layer: 'variable',
+              name: 'Mass',
+              canonical_symbol: 'm',
+              mass: 1,
+              position: { x: 10, y: 10 },
+            },
+          ],
+          edges: [
+            {
+              id: 'concept-1__uses-variable__variable-1',
+              source: 'concept-1',
+              target: 'variable-1',
+              type: 'uses-variable',
+              weight: 1,
+              layer_pair: 'concept-variable',
+            },
+          ],
+        })}
+      />,
+    )
+
+    const renderedNodes = reactFlowHandlers.lastProps?.nodes ?? []
+    const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
+
+    expect(typeof renderedNodes[0]?.data?.onSetHover).toBe('function')
+    expect(typeof renderedEdges[0]?.data?.onSetHover).toBe('function')
+  })
+
   it('dragging a node does not trigger node click selection', () => {
     const onNodeClick = vi.fn()
     render(<GraphCanvas {...createProps({ onNodeClick, selectedNodeId: 'n1' })} />)
@@ -760,25 +924,10 @@ describe('GraphCanvas camera behavior', () => {
     expect(onNodeClick).not.toHaveBeenCalled()
   })
 
-  it('wires layout reset actions to controls', () => {
-    const onResetToCanonical = vi.fn()
-    const onResetSelected = vi.fn()
-    render(
-      <GraphCanvas
-        {...createProps({
-          selectedNodeId: 'n1',
-          onResetToCanonical,
-          onResetSelected,
-        })}
-      />,
-    )
+  it('does not render layout reset actions inside graph viewport controls', () => {
+    render(<GraphCanvas {...createProps({ selectedNodeId: 'n1' })} />)
 
-    const canonicalButtons = screen.getAllByRole('button', { name: 'Reset to canonical' })
-    const selectedButtons = screen.getAllByRole('button', { name: 'Reset selected' })
-    fireEvent.click(canonicalButtons[canonicalButtons.length - 1])
-    fireEvent.click(selectedButtons[selectedButtons.length - 1])
-
-    expect(onResetToCanonical).toHaveBeenCalledTimes(1)
-    expect(onResetSelected).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('button', { name: 'Reset to canonical' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Reset selected' })).toBeNull()
   })
 })

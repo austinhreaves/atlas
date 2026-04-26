@@ -223,6 +223,13 @@ export function validateConceptNode(node) {
       if (Number.isNaN(effectiveWeight) || effectiveWeight < 0 || effectiveWeight > 1) {
         errors.push(`prerequisites[${index}].weight must be a number between 0 and 1.`)
       }
+
+      if (
+        'rationale' in prerequisite &&
+        !(typeof prerequisite.rationale === 'string' && prerequisite.rationale.trim().length > 0)
+      ) {
+        errors.push(`prerequisites[${index}].rationale must be a non-empty string when provided.`)
+      }
     })
   }
 

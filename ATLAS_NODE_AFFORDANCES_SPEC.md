@@ -173,7 +173,8 @@ importance.
 
 ### Authoring feedback loop
 
-The validator (`validateConceptNode`) gains a soft check: for every
+The validator (`validateConceptNode`, currently implemented in
+`atlas/src/data/schema.js`) gains a soft check: for every
 concept node, if `fitTitleToCircle(title, mass-implied diameter)`
 returns `willFit: false`, the validator emits a warning with a
 suggested remediation (rename, abbreviate, or override `mass` upward).
@@ -206,31 +207,57 @@ selection panel.
 
 ### Trigger and dismissal
 
-- **Open trigger:** `mouseenter` on the node, after a configured
-  delay (default 150 ms) to suppress flicker on quick mouse traversals.
-- **Open trigger (keyboard):** node receives keyboard focus (Tab
-  navigation). No delay for keyboard.
-- **Close trigger:** `mouseleave` from BOTH the node and the card,
-  with a small bridge timeout (default 120 ms) so the user can move
-  pointer from node to card without dismissing.
-- **Force close:** `Escape` key, viewport pan/zoom start, selection
-  change to a different node.
-- **Touch devices:** on touch, hover does not exist. Tap-and-hold
-  (≥ 400 ms) opens the card; release dismisses. A short tap is still
-  selection. This must be specified now so Phase 3b's mobile
-  responsiveness work does not redesign it.
+- **Open trigger:** `mouseenter` on the node, with no configured
+  delay. Hover-peek is immediate (single-frame target) so it reads as
+  responsive while scanning dense regions.
+- **Close trigger:** `mouseleave` from the node OR the card. No bridge
+  timeout. Card visibility follows active hover target directly.
+- **Force close:** viewport pan/zoom start, node-drag start, and
+  selection change to a different node.
+- **Touch devices:** on touch/mobile, hover does not exist and no
+  tap-and-hold surrogate is implemented in this move. Tap remains
+  selection only.
+- **Hover/selection contract:** hover never mutates `selectedId`.
+  Selection remains click/tap commit only.
 
 ### Position and rendering
 
 - The card renders in a portal at the React Flow viewport overlay
   layer, NOT inside the node DOM. Rendering inside the node would
   inflate the node's measured layout box and corrupt edge-anchor math.
-- The card is anchored to the hovered node's bounding box. It auto-
-  flips to the opposite side if the default position would clip the
-  viewport. Use `floating-ui` or equivalent (small dep, well-trodden);
-  do not hand-roll positioning for this.
+- The hover system is single-owner state (`hoveredEntity`) at app
+  level. Only one hover card can render at a time.
+- The card is anchored from cached screen coordinates (`clientX`,
+  `clientY`) and flips to the opposite side if the default anchor would
+  clip the viewport.
 - The card does NOT reposition the underlying graph, change the
   layout cache, or trigger a viewport pan. It is pure overlay.
+- Hover state is cleared on viewport move start/end and drag start so
+  stale coordinates are never reused.
+
+### Node + edge shared hover architecture
+
+Move 3's hover system is shared by node and edge surfaces; it is not
+node-only state.
+
+- **Single state owner:** App-level state
+  `hoveredEntity = null | { kind: 'node' | 'edge', id, screenX, screenY }`.
+- **One visible card invariant:** only one hover card is ever rendered
+  at a time. Entering a new hovered entity atomically replaces the
+  prior one.
+- **Event source boundaries:** node components and edge components are
+  producers only (publish hover enter/leave), overlay component is
+  consumer only (read + render), App is coordinator.
+- **Edge parity:** edge hover uses the same `hoveredEntity` channel and
+  must not run a separate tooltip state machine.
+- **Clear semantics:** all producers clear to `null` on leave; canvas
+  orchestration clears on drag start and viewport move so stale
+  coordinate anchors are never displayed.
+- **Selection independence:** neither node nor edge hover paths mutate
+  `selectedId`, panel state, focal/neighbor/distant emphasis, or any
+  understanding-state data.
+- **Mobile rule applies globally:** when `isMobile === true`, no node or
+  edge hover overlay is rendered.
 
 ### Content
 
@@ -280,8 +307,8 @@ The card is the headline; the panel is the article.
 The card includes a thin "Open" affordance at the bottom — a labeled
 icon or "Open detail" link — that, when clicked, performs the
 selection-commit equivalent of clicking the node directly. This gives
-keyboard users an explicit commit path and gives mouse users an
-acknowledged "I want to dive in" target.
+pointer users an explicit "I want to dive in" target without changing
+the hover-versus-selection model.
 
 ### Coexistence with halo + count badge
 
@@ -310,17 +337,15 @@ while still browsing the nearby nodes."
 
 - The card renders in a portal at the viewport overlay, not inside the
   node element.
-- The card opens on hover after the configured delay; closes on leave
-  with bridge timeout; force-closes on Escape, viewport pan, and
+- The card opens on hover immediately (no timer delay) and closes
+  immediately on leave.
+- The card force-closes on viewport pan/zoom, drag start, and
   selection change.
 - Hovering does not modify `selectedId` or the selection panel.
 - The card content is constrained to title, domain, principle, and
   formula. The forbidden-content list is enforced by component
   contract and tested.
-- Touch behavior (tap-and-hold to peek, tap to select) is implemented
-  or stubbed with a documented Phase 3b TODO.
-- Keyboard: focus opens the card; Escape closes; the Open affordance
-  is reachable by Tab.
+- Touch/mobile renders no hover card surface at all.
 
 ---
 
@@ -365,17 +390,17 @@ Pure-function tests of `fitTitleToCircle`:
 
 React Testing Library integration tests:
 
-- Hover triggers card after configured delay; mouseleave + bridge
-  timeout dismisses.
+- Hover triggers card immediately; mouseleave dismisses immediately.
 - Hover does not modify `selectedId` (asserted via store/spy or
   selection-derived UI assertion).
-- Mousing from node to card and back to node keeps the card open.
-- Tab focus opens the card; Escape closes it.
+- Starting a node drag while a card is open closes the card.
+- Viewport pan/zoom while a card is open closes the card.
 - Card content includes title, domain, principle. Card does NOT
   contain text matching applicability/limiting/misconception/variable
   field labels.
 - Selecting another node while a card is open: card closes; new
   panel opens; previous panel state replaced normally.
+- Mobile/touch rendering path never mounts the hover card.
 
 ### T4 — Visual regression (optional, Move 2 + 3)
 
@@ -415,8 +440,8 @@ Ship in this order, each as its own PR:
 2. **Move 2** — Implement `fitTitleToCircle`, integrate into
    `ConceptNode.jsx`, add validator warning, add T1, T2, T6.
    Permanently closes the truncation regression class.
-3. **Move 3** — Hover card overlay, with `floating-ui` integration,
-   T3, optionally T4. Unlocks the "browse while selected"
+3. **Move 3** — Hover card overlay, immediate-open immediate-close
+   behavior, T3, optionally T4. Unlocks the "browse while selected"
    affordance.
 
 Each move is independently shippable and adds value without the next.

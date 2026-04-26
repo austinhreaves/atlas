@@ -2,14 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Background,
   BackgroundVariant,
-  Controls,
+  MiniMap,
   ReactFlow,
+  useReactFlow,
   useNodesState,
 } from 'reactflow'
 import { isStateAtLeast, isStateAtMost } from '../lib/understanding'
 import FloatingEdge from './FloatingEdge.jsx'
-import CameraController from './graph/CameraController.jsx'
-import LayoutControls from './graph/LayoutControls.jsx'
+import HoverCardOverlay from './HoverCardOverlay.jsx'
+import CameraController, { centerOnNodeInViewport } from './graph/CameraController.jsx'
 import ConceptNode from './nodes/ConceptNode.jsx'
 import VariableNode from './nodes/VariableNode.jsx'
 
@@ -19,6 +20,204 @@ const MOBILE_LONG_PRESS_MS = 400
 const MOBILE_IDLE_DRAG_THRESHOLD = 9999
 const CLICK_SUPPRESSION_AFTER_DRAG_MS = 250
 
+function getMiniMapNodeColor(node) {
+  const domain = node?.data?.domain
+  if (domain === 'mechanics') {
+    return '#fb923c'
+  }
+  if (domain === 'electromagnetism') {
+    return '#f87171'
+  }
+  if (domain === 'thermodynamics') {
+    return '#22c55e'
+  }
+  if (domain === 'waves') {
+    return '#a855f7'
+  }
+  if (domain === 'optics') {
+    return '#38bdf8'
+  }
+  if (node?.type === 'variable') {
+    return '#94a3b8'
+  }
+  return '#64748b'
+}
+
+/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, isMobile?: boolean, onActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void }} props */
+function ViewportActionsBridge({
+  selectedNodeId,
+  panelWidth = 440,
+  isPanelOpen = false,
+  isMobile = false,
+  onActionsChange,
+}) {
+  const reactFlow = useReactFlow()
+
+  const fitGraph = useCallback(() => {
+    reactFlow.fitView({ padding: 0.2, duration: 320 })
+  }, [reactFlow])
+
+  const centerSelected = useCallback(() => {
+    if (!selectedNodeId) {
+      return
+    }
+    centerOnNodeInViewport({
+      reactFlow,
+      nodeId: selectedNodeId,
+      panelWidth,
+      isPanelOpen,
+      isMobile,
+      duration: 420,
+    })
+  }, [isMobile, isPanelOpen, panelWidth, reactFlow, selectedNodeId])
+
+  useEffect(() => {
+    if (typeof onActionsChange !== 'function') {
+      return undefined
+    }
+    onActionsChange({ fitGraph, centerSelected })
+    return () => onActionsChange(null)
+  }, [centerSelected, fitGraph, onActionsChange])
+
+  return null
+}
+
+function ZoomInIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+      <path
+        d="M12 6.5a.75.75 0 0 1 .75.75v4h4a.75.75 0 0 1 0 1.5h-4v4a.75.75 0 0 1-1.5 0v-4h-4a.75.75 0 0 1 0-1.5h4v-4a.75.75 0 0 1 .75-.75Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function ZoomOutIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+      <path
+        d="M7.25 12a.75.75 0 0 1 .75-.75h8a.75.75 0 0 1 0 1.5h-8a.75.75 0 0 1-.75-.75Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function FitViewIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      aria-hidden="true"
+      data-testid="fit-view-target-icon"
+    >
+      <path
+        d="M6 3.5h4a.75.75 0 0 1 0 1.5H7.5V7.5a.75.75 0 0 1-1.5 0V3.5Zm8 0h4v4a.75.75 0 0 1-1.5 0V5H14a.75.75 0 0 1 0-1.5ZM6.75 14.5a.75.75 0 0 1 .75.75v2.5H10a.75.75 0 0 1 0 1.5H6v-4a.75.75 0 0 1 .75-.75Zm10.5 0a.75.75 0 0 1 .75.75v4h-4a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 .75-.75ZM12 10.25a1.75 1.75 0 1 1 0 3.5a1.75 1.75 0 0 1 0-3.5Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function FullscreenIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      aria-hidden="true"
+      data-testid="fullscreen-toggle-icon"
+    >
+      <path
+        d="M5.5 4h4a.75.75 0 0 1 0 1.5H7v2.5a.75.75 0 0 1-1.5 0V4Zm9 0h4v4a.75.75 0 0 1-1.5 0V5.5h-2.5a.75.75 0 0 1 0-1.5ZM6.25 15.25a.75.75 0 0 1 .75.75v2.5h2.5a.75.75 0 0 1 0 1.5h-4v-4a.75.75 0 0 1 .75-.75Zm11.5 0a.75.75 0 0 1 .75.75v4h-4a.75.75 0 0 1 0-1.5H17V16a.75.75 0 0 1 .75-.75Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function ViewportUtilityControls({ isMobile = false, containerRef }) {
+  const reactFlow = useReactFlow()
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  useEffect(() => {
+    if (typeof document === 'undefined') {
+      return undefined
+    }
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === containerRef.current)
+    }
+    handleFullscreenChange()
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [containerRef])
+
+  const handleFullscreenToggle = useCallback(async () => {
+    const container = containerRef.current
+    if (!container) {
+      return
+    }
+
+    if (document.fullscreenElement === container && typeof document.exitFullscreen === 'function') {
+      await document.exitFullscreen()
+      return
+    }
+
+    if (!document.fullscreenElement && typeof container.requestFullscreen === 'function') {
+      await container.requestFullscreen()
+    }
+  }, [containerRef])
+
+  if (isMobile) {
+    return null
+  }
+
+  const buttonClassName =
+    'rounded-md border border-slate-600 bg-slate-800/90 p-2 text-slate-200 transition hover:bg-slate-700/90'
+
+  return (
+    <>
+      <MiniMap
+        data-testid="desktop-minimap"
+        className="!m-0 !left-3 !bottom-3 !top-auto !right-auto !h-28 !w-40 !overflow-hidden !rounded-lg !border !border-slate-600/60 !bg-slate-900/95 !shadow-xl !shadow-black/50"
+        nodeColor={getMiniMapNodeColor}
+        maskColor="rgb(15 23 42 / 0.65)"
+        pannable
+        zoomable
+      />
+      <div
+        data-testid="desktop-viewport-controls"
+        className="pointer-events-auto absolute bottom-3 left-[11.8rem] z-20 flex items-center gap-1.5 rounded-lg border border-slate-600/60 bg-slate-900/95 p-1.5 shadow-xl shadow-black/50"
+      >
+        <button type="button" onClick={() => reactFlow.zoomOut()} className={buttonClassName} aria-label="Zoom out">
+          <ZoomOutIcon />
+        </button>
+        <button type="button" onClick={() => reactFlow.zoomIn()} className={buttonClassName} aria-label="Zoom in">
+          <ZoomInIcon />
+        </button>
+        <button
+          type="button"
+          onClick={() => reactFlow.fitView({ padding: 0.2, duration: 320 })}
+          className={buttonClassName}
+          aria-label="Fit view"
+        >
+          <FitViewIcon />
+        </button>
+        <button
+          type="button"
+          onClick={handleFullscreenToggle}
+          className={buttonClassName}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+        >
+          <FullscreenIcon />
+        </button>
+      </div>
+    </>
+  )
+}
+
 function toFlowNodes(
   nodes,
   selectedNodeId,
@@ -27,6 +226,8 @@ function toFlowNodes(
   distantNodeIds,
   understandingStatesById,
   frontierConceptIds,
+  onSetHover,
+  isDraggingNode,
 ) {
   return nodes.map((node) => {
     const nodeX = typeof node.position?.x === 'number' ? node.position.x : 0
@@ -58,6 +259,8 @@ function toFlowNodes(
             ? understandingStatesById[node.id]
             : 'unseen',
         isFrontierConcept: node.layer === 'concept' && frontierConceptIds.has(node.id),
+        onSetHover: typeof onSetHover === 'function' ? onSetHover : null,
+        isDraggingNode,
         node,
       },
     }
@@ -90,6 +293,8 @@ function toFlowEdges(
   neighborNodeIds,
   understandingStatesById,
   nodeById,
+  onSetHover,
+  isMobile,
 ) {
   return edges.map((edge) => ({
     id: edge.id,
@@ -120,11 +325,24 @@ function toFlowEdges(
         const targetState = understandingStatesById?.[edge.target] ?? 'unseen'
         return isStateAtLeast(sourceState, 'apply') && isStateAtMost(targetState, 'seen')
       })(),
+      rationale: typeof edge.rationale === 'string' ? edge.rationale : undefined,
+      sourceTitle:
+        nodeById.get(edge.source)?.title ??
+        nodeById.get(edge.source)?.name ??
+        nodeById.get(edge.source)?.id ??
+        edge.source,
+      targetTitle:
+        nodeById.get(edge.target)?.title ??
+        nodeById.get(edge.target)?.name ??
+        nodeById.get(edge.target)?.id ??
+        edge.target,
+      onSetHover: typeof onSetHover === 'function' ? onSetHover : null,
+      isMobile,
     },
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understandingStatesById?: Record<string, string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, isMobile?: boolean }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understandingStatesById?: Record<string, string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onViewportActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void, autoRecenterEnabled?: boolean, isMobile?: boolean, hoveredEntity?: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null, onSetHover?: (nextHover: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null) => void }} props */
 export default function GraphCanvas({
   nodes,
   edges,
@@ -139,15 +357,18 @@ export default function GraphCanvas({
   understandingStatesById = {},
   onNodeClick,
   onNodePositionCommit,
-  onResetToCanonical,
-  onResetSelected,
-  onExportLayout,
-  onImportLayout,
+  onViewportActionsChange,
+  autoRecenterEnabled = true,
   isMobile = false,
+  hoveredEntity = null,
+  onSetHover,
 }) {
+  const canvasShellRef = useRef(null)
   const [userMoveEndCount, setUserMoveEndCount] = useState(0)
+  const [, setViewportActions] = useState({ fitGraph: null, centerSelected: null })
   const [mobileDragArmedNodeId, setMobileDragArmedNodeId] = useState(null)
   const [mobileTouchTrackingActive, setMobileTouchTrackingActive] = useState(false)
+  const [isDraggingNode, setIsDraggingNode] = useState(false)
   const longPressTimerRef = useRef(null)
   const pressedNodeIdRef = useRef(null)
   const suppressClickUntilRef = useRef(0)
@@ -173,6 +394,7 @@ export default function GraphCanvas({
     () => nodes.find((node) => node.id === selectedNodeId) ?? null,
     [nodes, selectedNodeId],
   )
+  const edgeById = useMemo(() => new Map(edges.map((edge) => [edge.id, edge])), [edges])
   const emphasisSelectedNodeId = selectedNode?.layer === 'concept' ? selectedNodeId : null
   const nodeById = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes])
   const frontierConceptIds = useMemo(
@@ -233,6 +455,8 @@ export default function GraphCanvas({
       distantNodeIds,
       understandingStatesById,
       frontierConceptIds,
+      onSetHover,
+      isDraggingNode,
     )
     return mapped
   }, [
@@ -244,6 +468,8 @@ export default function GraphCanvas({
     edges,
     understandingStatesById,
     frontierConceptIds,
+    isDraggingNode,
+    onSetHover,
     activeDomains,
     activeLayers,
     nodeById,
@@ -265,12 +491,16 @@ export default function GraphCanvas({
       neighborNodeIds,
       understandingStatesById,
       nodeById,
+      onSetHover,
+      isMobile,
     )
   }, [
     edges,
     emphasisSelectedNodeId,
     interactiveNodes,
     neighborNodeIds,
+    onSetHover,
+    isMobile,
     understandingStatesById,
     nodeById,
   ])
@@ -355,11 +585,24 @@ export default function GraphCanvas({
     if (!event) {
       return
     }
+    if (typeof onSetHover === 'function') {
+      onSetHover(null)
+    }
     setUserMoveEndCount((value) => value + 1)
-  }, [])
+  }, [onSetHover])
+
+  const handleMoveStart = useCallback(() => {
+    if (typeof onSetHover === 'function') {
+      onSetHover(null)
+    }
+  }, [onSetHover])
 
   const handleNodeDragStop = useCallback(
     (_, rfNode) => {
+      setIsDraggingNode(false)
+      if (typeof onSetHover === 'function') {
+        onSetHover(null)
+      }
       if (
         typeof onNodePositionCommit === 'function' &&
         typeof rfNode?.id === 'string' &&
@@ -373,15 +616,33 @@ export default function GraphCanvas({
         disarmMobileDrag()
       }
     },
-    [disarmMobileDrag, isMobile, onNodePositionCommit],
+    [disarmMobileDrag, isMobile, onNodePositionCommit, onSetHover],
   )
 
   const handleNodeDragStart = useCallback(() => {
+    setIsDraggingNode(true)
+    if (typeof onSetHover === 'function') {
+      onSetHover(null)
+    }
     if (!isMobile) {
       return
     }
     clearLongPressTimer()
-  }, [clearLongPressTimer, isMobile])
+  }, [clearLongPressTimer, isMobile, onSetHover])
+
+  const handleViewportActionsChange = useCallback(
+    (actions) => {
+      const safeActions =
+        actions && typeof actions.fitGraph === 'function' && typeof actions.centerSelected === 'function'
+          ? actions
+          : { fitGraph: null, centerSelected: null }
+      setViewportActions(safeActions)
+      if (typeof onViewportActionsChange === 'function') {
+        onViewportActionsChange(safeActions)
+      }
+    },
+    [onViewportActionsChange],
+  )
 
   useEffect(() => {
     if (!isMobile) {
@@ -406,16 +667,10 @@ export default function GraphCanvas({
     : 1
 
   return (
-    <div className={`h-screen w-screen bg-surface ${isMobile ? 'touch-none' : ''}`}>
-      {!isMobile ? (
-        <LayoutControls
-          selectedNodeId={selectedNodeId}
-          onResetToCanonical={onResetToCanonical}
-          onResetSelected={onResetSelected}
-          onExportLayout={onExportLayout}
-          onImportLayout={onImportLayout}
-        />
-      ) : null}
+    <div
+      ref={canvasShellRef}
+      className={`relative h-screen w-screen bg-surface ${isMobile ? 'touch-none' : ''}`}
+    >
       <ReactFlow
         nodes={interactiveNodes}
         edges={flowEdges}
@@ -440,14 +695,23 @@ export default function GraphCanvas({
         onPaneClick={handlePanePointerUp}
         onNodeDragStart={handleNodeDragStart}
         onNodeDragStop={handleNodeDragStop}
+        onMoveStart={handleMoveStart}
         onMoveEnd={handleMoveEnd}
         className={`atlas-react-flow h-full w-full ${isMobile ? 'touch-none' : ''}`}
       >
+        <ViewportActionsBridge
+          selectedNodeId={selectedNodeId}
+          panelWidth={panelWidth}
+          isPanelOpen={isPanelOpen}
+          isMobile={isMobile}
+          onActionsChange={handleViewportActionsChange}
+        />
         <CameraController
           selectedNodeId={selectedNodeId}
           isPanelOpen={isPanelOpen}
           panelWidth={panelWidth}
           userMoveEndCount={userMoveEndCount}
+          autoRecenterEnabled={autoRecenterEnabled}
           isMobile={isMobile}
         />
         <Background
@@ -456,10 +720,15 @@ export default function GraphCanvas({
           size={1.2}
           color="rgb(51 65 85 / 0.45)"
         />
-        <Controls
-          className="!m-3 !overflow-hidden !rounded-lg !border !border-slate-600/60 !bg-slate-900/95 !shadow-xl !shadow-black/50 [&_button]:!border-slate-600/50 [&_button]:!bg-slate-800/90 [&_button]:!fill-slate-200 [&_button:hover]:!bg-slate-700/90"
-        />
+        <ViewportUtilityControls isMobile={isMobile} containerRef={canvasShellRef} />
       </ReactFlow>
+      <HoverCardOverlay
+        hoveredEntity={hoveredEntity}
+        nodeById={nodeById}
+        edgeById={edgeById}
+        isMobile={isMobile}
+        isDraggingNode={isDraggingNode}
+      />
     </div>
   )
 }

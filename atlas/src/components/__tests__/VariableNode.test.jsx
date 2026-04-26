@@ -5,6 +5,7 @@ import VariableNode from '../nodes/VariableNode.jsx'
 
 vi.mock('reactflow', () => ({
   Handle: () => <div data-testid="rf-handle" />,
+  useStore: () => 1,
   Position: {
     Top: 'top',
     Right: 'right',

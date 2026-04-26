@@ -3,6 +3,33 @@ import { BaseEdge, MarkerType, Position, getBezierPath, useStore } from 'reactfl
 const EDGE_STROKE = '#94a3b8'
 const BRIGHT_EDGE_STROKE = '#cbd5e1'
 const VARIABLE_EDGE_STROKE = '#64748b'
+const EDGE_TYPE_LABELS = {
+  foundational: 'Foundational principle',
+  'uses-variable': 'Uses variable',
+  'defines-variable': 'Defines variable',
+  definitional: 'Definition',
+  lateral: 'Lateral connection',
+  supporting: 'Supporting concept',
+  isomorphic: 'Isomorphic structure',
+  'noether-consequence': 'Noether consequence',
+  applies: 'Applies concept',
+  instantiates: 'Instantiates concept',
+  establishes: 'Establishes concept',
+}
+
+export function getEdgeTypeLabel(edgeType) {
+  if (typeof edgeType !== 'string' || edgeType.length === 0) {
+    return 'Relationship'
+  }
+  if (EDGE_TYPE_LABELS[edgeType]) {
+    return EDGE_TYPE_LABELS[edgeType]
+  }
+  const normalized = edgeType.replace(/-/g, ' ').trim()
+  if (normalized.length === 0) {
+    return 'Relationship'
+  }
+  return normalized[0].toUpperCase() + normalized.slice(1)
+}
 
 export function getEdgeVisuals(edgeType, weight) {
   const clampedWeight = Math.max(0, Math.min(1, typeof weight === 'number' ? weight : 0))
@@ -201,13 +228,45 @@ export default function FloatingEdge({ id, source, target, data }) {
   const glyphInset = 10 + strokeWidth / 2
   const glyphX = targetPoint.x - unitX * glyphInset
   const glyphY = targetPoint.y - unitY * glyphInset
+  const edgeLabel = getEdgeTypeLabel(data?.type)
+  const onSetHover = typeof data?.onSetHover === 'function' ? data.onSetHover : null
+  const isMobile = data?.isMobile === true
+
+  const handleMouseEnter = (event) => {
+    if (isMobile || !onSetHover) {
+      return
+    }
+    onSetHover({
+      kind: 'edge',
+      id,
+      screenX: event.clientX,
+      screenY: event.clientY,
+    })
+  }
+
+  const handleMouseLeave = () => {
+    if (!onSetHover) {
+      return
+    }
+    onSetHover(null)
+  }
 
   return (
-    <>
+    <g>
+      <path
+        d={path}
+        fill="none"
+        stroke="transparent"
+        strokeWidth={12}
+        style={{ pointerEvents: 'stroke' }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      />
       <BaseEdge
         id={id}
         path={path}
         markerEnd={markerEnd}
+        aria-label={edgeLabel}
         className={shouldPulse ? 'atlas-frontier-edge' : undefined}
         style={{
           stroke,
@@ -233,6 +292,6 @@ export default function FloatingEdge({ id, source, target, data }) {
           {visuals.targetGlyph}
         </text>
       ) : null}
-    </>
+    </g>
   )
 }

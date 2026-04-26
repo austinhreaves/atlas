@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import DomainFilterPanel from './components/DomainFilterPanel.jsx'
-import DomainLegend from './components/DomainLegend.jsx'
+import DesktopControlsPanel from './components/DesktopControlsPanel.jsx'
 import GraphCanvas from './components/GraphCanvas.jsx'
-import LayerToggleBar from './components/LayerToggleBar.jsx'
 import MobileControlsOverlay from './components/MobileControlsOverlay.jsx'
 import NodePanel from './components/NodePanel.jsx'
 import { computeAppearsIn, getAllEntities } from './data'
@@ -29,6 +27,8 @@ import {
 const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
 const LAYER_VISIBILITY_KEY = 'atlas_layers_v1'
 const LEGEND_VISIBILITY_KEY = 'atlas_legend_v1'
+const AUTO_RECENTER_KEY = 'atlas_auto_recenter_v1'
+const PANEL_WIDTH_KEY = 'atlas_panel_width_v1'
 const DEFAULT_PANEL_WIDTH_FALLBACK = 440
 const DESKTOP_MIN_PANEL_WIDTH = 360
 const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
@@ -74,14 +74,74 @@ function readInitialLegendCollapsed() {
   }
 }
 
-function getInitialPanelWidth() {
+function readInitialAutoRecenterEnabled() {
   if (typeof window === 'undefined') {
+    return true
+  }
+  try {
+    const stored = window.localStorage.getItem(AUTO_RECENTER_KEY)
+    if (stored === 'on') {
+      return true
+    }
+    if (stored === 'off') {
+      return false
+    }
+    return true
+  } catch {
+    return true
+  }
+}
+
+function getInitialPanelWidth() {
+  if (typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT_PX) {
     return DEFAULT_PANEL_WIDTH_FALLBACK
   }
-  if (window.innerWidth < MOBILE_BREAKPOINT_PX) {
+  const maxWidth =
+    typeof window === 'undefined'
+      ? DEFAULT_PANEL_WIDTH_FALLBACK
+      : Math.max(1, Math.floor(window.innerWidth * 0.55))
+  const minWidth = Math.min(DESKTOP_MIN_PANEL_WIDTH, maxWidth)
+  return Math.min(maxWidth, Math.max(minWidth, DEFAULT_PANEL_WIDTH_FALLBACK))
+}
+
+function clampPanelWidth(width) {
+  if (typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT_PX) {
     return DEFAULT_PANEL_WIDTH_FALLBACK
   }
-  return Math.max(DESKTOP_MIN_PANEL_WIDTH, Math.floor(window.innerWidth * 0.55))
+  const baseWidth = typeof width === 'number' && Number.isFinite(width) ? width : getInitialPanelWidth()
+  const maxWidth =
+    typeof window === 'undefined'
+      ? DEFAULT_PANEL_WIDTH_FALLBACK
+      : Math.max(1, Math.floor(window.innerWidth * 0.55))
+  const minWidth = Math.min(DESKTOP_MIN_PANEL_WIDTH, maxWidth)
+  return Math.min(maxWidth, Math.max(minWidth, Math.round(baseWidth)))
+}
+
+function readInitialPanelWidth() {
+  if (typeof window === 'undefined') {
+    return getInitialPanelWidth()
+  }
+  try {
+    const stored = window.localStorage.getItem(PANEL_WIDTH_KEY)
+    if (!stored) {
+      return getInitialPanelWidth()
+    }
+    const parsed = Number(stored)
+    return clampPanelWidth(parsed)
+  } catch {
+    return getInitialPanelWidth()
+  }
+}
+
+function isEditableElement(target) {
+  if (!(target instanceof HTMLElement)) {
+    return false
+  }
+  if (target.isContentEditable) {
+    return true
+  }
+  const tagName = target.tagName.toLowerCase()
+  return tagName === 'input' || tagName === 'textarea' || tagName === 'select'
 }
 
 function getNodeIdSet(nodes) {
@@ -138,14 +198,19 @@ function getLayoutPositions(nodes, edges) {
 export default function App() {
   const isMobile = useIsMobile()
   const [selectedNodeId, setSelectedNodeId] = useState(null)
+  const [hoveredEntity, setHoveredEntity] = useState(null)
   const [understandingVersion, setUnderstandingVersion] = useState(0)
-  const [panelWidth, setPanelWidth] = useState(() => getInitialPanelWidth())
+  const [panelWidth, setPanelWidth] = useState(() => readInitialPanelWidth())
   const [userLayoutStore, setUserLayoutStore] = useState(() => getUserLayoutStore())
   const [atlasCorpusHash, setAtlasCorpusHash] = useState(
     () => getUserLayoutStore().metadata.atlas_corpus_hash,
   )
   const [visibleLayers, setVisibleLayers] = useState(() => readInitialVisibleLayers())
   const [legendCollapsed, setLegendCollapsed] = useState(() => readInitialLegendCollapsed())
+  const [autoRecenterEnabled, setAutoRecenterEnabled] = useState(() =>
+    readInitialAutoRecenterEnabled(),
+  )
+  const [viewportActions, setViewportActions] = useState({ fitGraph: null, centerSelected: null })
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false)
   const isPanelOpen = Boolean(selectedNodeId)
   const includeDraftContent = useMemo(() => shouldIncludeDraftContent(), [])
@@ -225,16 +290,64 @@ export default function App() {
   }, [legendCollapsed])
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(AUTO_RECENTER_KEY, autoRecenterEnabled ? 'on' : 'off')
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [autoRecenterEnabled])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(PANEL_WIDTH_KEY, String(clampPanelWidth(panelWidth)))
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [panelWidth])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Escape' || !selectedNodeId || isEditableElement(event.target)) {
+        return
+      }
+      setSelectedNodeId(null)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedNodeId])
+
+  useEffect(() => {
     if (!isMobile && mobileControlsOpen) {
       setMobileControlsOpen(false)
     }
   }, [isMobile, mobileControlsOpen])
 
   useEffect(() => {
+    if (isMobile && hoveredEntity) {
+      setHoveredEntity(null)
+    }
+  }, [hoveredEntity, isMobile])
+
+  useEffect(() => {
     if (selectedNodeId && mobileControlsOpen) {
       setMobileControlsOpen(false)
     }
   }, [mobileControlsOpen, selectedNodeId])
+
+  useEffect(() => {
+    setHoveredEntity(null)
+  }, [selectedNodeId])
 
   useEffect(() => {
     let isActive = true
@@ -278,6 +391,9 @@ export default function App() {
   const handleSelectEntity = useCallback((entityId) => {
     setSelectedNodeId(typeof entityId === 'string' ? entityId : null)
   }, [])
+  const handleSetHover = useCallback((nextHover) => {
+    setHoveredEntity(nextHover ?? null)
+  }, [])
 
   const toggleDomain = useCallback((domain) => {
     setVisibleDomains((current) => {
@@ -319,11 +435,21 @@ export default function App() {
   }, [])
 
   const handlePanelWidthChange = useCallback((nextWidth) => {
-    setPanelWidth(nextWidth)
+    setPanelWidth(clampPanelWidth(nextWidth))
   }, [])
 
   const toggleMobileControls = useCallback(() => {
     setMobileControlsOpen((value) => !value)
+  }, [])
+  const handleAutoRecenterToggle = useCallback((enabled) => {
+    setAutoRecenterEnabled(enabled)
+  }, [])
+  const handleViewportActionsChange = useCallback((actions) => {
+    const safeActions =
+      actions && typeof actions.fitGraph === 'function' && typeof actions.centerSelected === 'function'
+        ? actions
+        : { fitGraph: null, centerSelected: null }
+    setViewportActions(safeActions)
   }, [])
 
   const persistNextUserLayoutStore = useCallback((nextStore) => {
@@ -531,23 +657,26 @@ export default function App() {
         </div>
       ) : null}
       {!isMobile ? (
-        <div className="pointer-events-none absolute left-4 top-4 z-20 flex w-[360px] flex-col gap-2">
-          <LayerToggleBar
-            layerEntries={layerEntries}
-            visibleLayers={visibleLayers}
-            onToggleLayer={toggleLayer}
-          />
-          <DomainFilterPanel
-            allDomains={allDomains}
-            visibleDomains={visibleDomains}
-            onToggleDomain={toggleDomain}
-          />
-          <DomainLegend
-            rows={visibleConceptRows}
-            collapsed={legendCollapsed}
-            onToggleCollapsed={() => setLegendCollapsed((value) => !value)}
-          />
-        </div>
+        <DesktopControlsPanel
+          layerEntries={layerEntries}
+          visibleLayers={visibleLayers}
+          onToggleLayer={toggleLayer}
+          allDomains={allDomains}
+          visibleDomains={visibleDomains}
+          onToggleDomain={toggleDomain}
+          visibleConceptRows={visibleConceptRows}
+          legendCollapsed={legendCollapsed}
+          onToggleLegendCollapsed={() => setLegendCollapsed((value) => !value)}
+          selectedNodeId={selectedNodeId}
+          onResetToCanonical={handleResetToCanonical}
+          onResetSelected={handleResetSelected}
+          onExportLayout={handleExportLayout}
+          onImportLayout={handleImportLayout}
+          onFitGraph={viewportActions.fitGraph}
+          onCenterSelected={viewportActions.centerSelected}
+          autoRecenterEnabled={autoRecenterEnabled}
+          onToggleAutoRecenter={handleAutoRecenterToggle}
+        />
       ) : (
         <MobileControlsOverlay
           isOpen={mobileControlsOpen}
@@ -566,6 +695,10 @@ export default function App() {
           onResetSelected={handleResetSelected}
           onExportLayout={handleExportLayout}
           onImportLayout={handleImportLayout}
+          onFitGraph={viewportActions.fitGraph}
+          onCenterSelected={viewportActions.centerSelected}
+          autoRecenterEnabled={autoRecenterEnabled}
+          onToggleAutoRecenter={handleAutoRecenterToggle}
         />
       )}
       <GraphCanvas
@@ -582,11 +715,11 @@ export default function App() {
         understandingStatesById={understandingStatesById}
         onNodeClick={handleNodeClick}
         onNodePositionCommit={handleNodePositionCommit}
-        onResetToCanonical={handleResetToCanonical}
-        onResetSelected={handleResetSelected}
-        onExportLayout={handleExportLayout}
-        onImportLayout={handleImportLayout}
+        onViewportActionsChange={handleViewportActionsChange}
+        autoRecenterEnabled={autoRecenterEnabled}
         isMobile={isMobile}
+        hoveredEntity={hoveredEntity}
+        onSetHover={handleSetHover}
       />
       <NodePanel
         selectedNode={selectedNode}

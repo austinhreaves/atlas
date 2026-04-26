@@ -1,4 +1,4 @@
-import { Handle, Position } from 'reactflow'
+import { Handle, Position, useStore } from 'reactflow'
 import { getConceptDomainCardClass } from './domainVisuals'
 
 // Domain is never rendered as text (see ATLAS_NODE_AFFORDANCES_SPEC.md): encode via
@@ -12,8 +12,11 @@ const ARC_PROGRESS_BY_STATE = {
   apply: 0.7,
   derive: 1,
 }
+const LABEL_PIN_ZOOM = 0.6
+const LABEL_MAX_ZOOM = 1.5
 
 export default function ConceptNode({ data, selected }) {
+  const zoom = useStore((state) => state.transform[2])
   const domain = data.domain
   const card = getConceptDomainCardClass(domain)
   const mass = Math.max(1, Math.min(3, typeof data.mass === 'number' ? data.mass : 1))
@@ -34,6 +37,30 @@ export default function ConceptNode({ data, selected }) {
   const arcCircumference = 2 * Math.PI * arcRadius
   const arcDashoffset = arcCircumference * (1 - arcProgress)
   const isFrontierConcept = data.isFrontierConcept === true
+  const isDraggingNode = data.isDraggingNode === true
+  const onSetHover = typeof data.onSetHover === 'function' ? data.onSetHover : null
+  const safeZoom = typeof zoom === 'number' && zoom > 0 ? zoom : 1
+  const counterScale =
+    safeZoom < LABEL_PIN_ZOOM ? 1 / safeZoom : safeZoom > LABEL_MAX_ZOOM ? 1 : 1
+
+  const handleMouseEnter = (event) => {
+    if (isDraggingNode || !onSetHover) {
+      return
+    }
+    onSetHover({
+      kind: 'node',
+      id: data.node?.id ?? '',
+      screenX: event.clientX,
+      screenY: event.clientY,
+    })
+  }
+
+  const handleMouseLeave = () => {
+    if (!onSetHover) {
+      return
+    }
+    onSetHover(null)
+  }
 
   return (
     <div
@@ -47,6 +74,8 @@ export default function ConceptNode({ data, selected }) {
         transform: `scale(${scale})`,
         transformOrigin: 'center',
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <svg
         aria-hidden="true"
@@ -117,7 +146,13 @@ export default function ConceptNode({ data, selected }) {
         className={floatingHandleClass}
       />
       <Handle id="source-left" type="source" position={Position.Left} className={floatingHandleClass} />
-      <div className="flex h-full flex-col items-center justify-center text-center">
+      <div
+        className="flex h-full flex-col items-center justify-center text-center"
+        style={{
+          transform: `scale(${counterScale})`,
+          transformOrigin: 'center',
+        }}
+      >
         <p className="line-clamp-2 text-[13px] font-semibold leading-snug tracking-tight text-slate-50">
           {data.title}
         </p>

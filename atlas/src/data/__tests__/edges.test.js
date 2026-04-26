@@ -20,6 +20,41 @@ function variable(overrides = {}) {
 }
 
 describe('buildEdges', () => {
+  it('threads optional prerequisite rationale onto concept edges', () => {
+    const edges = buildEdges(
+      [
+        concept({
+          prerequisites: [
+            {
+              id: 'kinematics',
+              type: 'foundational',
+              weight: 0.9,
+              rationale: 'Kinematics defines acceleration that dynamics explains.',
+            },
+          ],
+        }),
+        {
+          id: 'kinematics',
+          layer: 'concept',
+          prerequisites: [],
+          variables: [],
+        },
+        variable(),
+      ],
+      { strict: true },
+    )
+
+    expect(edges).toContainEqual({
+      id: 'kinematics__foundational__newtons-second-law',
+      source: 'kinematics',
+      target: 'newtons-second-law',
+      type: 'foundational',
+      weight: 0.9,
+      rationale: 'Kinematics defines acceleration that dynamics explains.',
+      layer_pair: 'concept-concept',
+    })
+  })
+
   it('generates uses-variable edges for concept variable references', () => {
     const edges = buildEdges([concept(), variable()], { strict: true })
     expect(edges).toContainEqual({

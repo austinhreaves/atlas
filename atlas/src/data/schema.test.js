@@ -49,6 +49,36 @@ describe('schema v3 validators', () => {
     )
   })
 
+  it('accepts optional prerequisite rationale when provided as a string', () => {
+    const errors = validateConceptNode({
+      ...validConcept,
+      prerequisites: [
+        {
+          id: 'charge-conservation',
+          type: 'foundational',
+          weight: 0.8,
+          rationale: 'Charge conservation motivates current continuity.',
+        },
+      ],
+    })
+    expect(errors).toEqual([])
+  })
+
+  it('rejects non-string prerequisite rationale values', () => {
+    const errors = validateConceptNode({
+      ...validConcept,
+      prerequisites: [
+        {
+          id: 'charge-conservation',
+          type: 'foundational',
+          weight: 0.8,
+          rationale: 17,
+        },
+      ],
+    })
+    expect(errors).toContain('prerequisites[0].rationale must be a non-empty string when provided.')
+  })
+
   it('accepts a valid variable entity', () => {
     expect(validateVariableNode(validVariable)).toEqual([])
   })

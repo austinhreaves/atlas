@@ -3,7 +3,7 @@
  *
  * @param {Array<object>} entities
  * @param {{ strict?: boolean }} [options]
- * @returns {Array<{ id: string, source: string, target: string, type: string, weight: number, layer_pair?: string }>}
+ * @returns {Array<{ id: string, source: string, target: string, type: string, weight: number, rationale?: string, layer_pair?: string }>}
  */
 export function normalizePrerequisiteWeight(type, weight) {
   if (typeof weight === 'number' && !Number.isNaN(weight)) {
@@ -76,6 +76,10 @@ export function buildEdges(entities, options = {}) {
           target,
           type: prerequisite.type,
           weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
+          rationale:
+            typeof prerequisite.rationale === 'string' && prerequisite.rationale.trim().length > 0
+              ? prerequisite.rationale.trim()
+              : undefined,
           layer_pair: 'concept-concept',
         })
       }
