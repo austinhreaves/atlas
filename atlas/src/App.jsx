@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 import DesktopControlsPanel from './components/DesktopControlsPanel.jsx'
 import GraphCanvas from './components/GraphCanvas.jsx'
 import MobileControlsOverlay from './components/MobileControlsOverlay.jsx'
@@ -7,7 +7,7 @@ import { computeAppearsIn, getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { LAYERS } from './data/layers'
 import useIsMobile, { MOBILE_BREAKPOINT_PX } from './hooks/useIsMobile'
-import { computeLayout, computeMass } from './lib/layout'
+import { computeLayout } from './lib/layout'
 import { resolveRenderPosition } from './lib/resolveRenderPosition'
 import { getAllStates, setState } from './lib/understanding'
 import {
@@ -33,6 +33,8 @@ const DEFAULT_PANEL_WIDTH_FALLBACK = 440
 const DESKTOP_MIN_PANEL_WIDTH = 360
 const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
 const DRAFT_BANNER_TEXT = 'Showing draft content'
+const DEFAULT_MASS = 1
+const MAX_MASS = 3
 
 const layerEntries = Object.entries(LAYERS)
 const allLayerIds = layerEntries.map(([layerId]) => layerId)
@@ -151,6 +153,43 @@ function getNodeIdSet(nodes) {
     .join('|')
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value))
+}
+
+function computeMassByNodeId(nodes, edges) {
+  const foundationalOutgoingBySourceId = new Map()
+  for (const edge of Array.isArray(edges) ? edges : []) {
+    if (edge?.type !== 'foundational' || typeof edge?.source !== 'string') {
+      continue
+    }
+    foundationalOutgoingBySourceId.set(
+      edge.source,
+      (foundationalOutgoingBySourceId.get(edge.source) ?? 0) + 1,
+    )
+  }
+
+  const massByNodeId = new Map()
+  for (const node of Array.isArray(nodes) ? nodes : []) {
+    if (typeof node?.id !== 'string') {
+      continue
+    }
+
+    if (typeof node.mass === 'number') {
+      massByNodeId.set(node.id, node.mass)
+      continue
+    }
+
+    const foundationalOutgoingCount = foundationalOutgoingBySourceId.get(node.id) ?? 0
+    massByNodeId.set(
+      node.id,
+      clamp(DEFAULT_MASS + 0.5 * foundationalOutgoingCount, DEFAULT_MASS, MAX_MASS),
+    )
+  }
+
+  return massByNodeId
+}
+
 function shouldIncludeDraftContent() {
   if (typeof window === 'undefined') {
     return false
@@ -237,6 +276,7 @@ export default function App() {
   const edges = useMemo(() => {
     return buildEdges(allEntities)
   }, [allEntities])
+  const massByNodeId = useMemo(() => computeMassByNodeId(allEntities, edges), [allEntities, edges])
   const nodeById = useMemo(() => new Map(allEntities.map((node) => [node.id, node])), [allEntities])
   const conceptById = useMemo(
     () => new Map(conceptEntities.map((concept) => [concept.id, concept])),
@@ -374,7 +414,7 @@ export default function App() {
     const computedPositions = getLayoutPositions(allEntities, edges)
     return allEntities.map((node) => ({
       ...node,
-      mass: computeMass(node, edges),
+      mass: massByNodeId.get(node.id) ?? DEFAULT_MASS,
       position: resolveRenderPosition({
         entityId: node.id,
         userPositions: userLayoutStore.positions,
@@ -383,7 +423,7 @@ export default function App() {
         warnOnMissingComputed: import.meta.env.DEV,
       }),
     }))
-  }, [allEntities, edges, userLayoutStore.positions])
+  }, [allEntities, edges, massByNodeId, userLayoutStore.positions])
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNodeId(node?.id ?? null)
@@ -482,7 +522,9 @@ export default function App() {
     const nextStore = createUserLayoutStore({
       atlasCorpusHash: atlasCorpusHash ?? userLayoutStore.metadata.atlas_corpus_hash,
     })
-    persistNextUserLayoutStore(nextStore)
+    startTransition(() => {
+      persistNextUserLayoutStore(nextStore)
+    })
   }, [atlasCorpusHash, persistNextUserLayoutStore, userLayoutStore.metadata.atlas_corpus_hash])
 
   const handleResetSelected = useCallback(() => {
