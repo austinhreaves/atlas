@@ -32,35 +32,47 @@ function clampPanelWidth(width) {
   return Math.min(maxWidth, Math.max(minWidth, width))
 }
 
-/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, userMoveEndCount?: number, isMobile?: boolean }} props */
+export function centerOnNodeInViewport({
+  reactFlow,
+  nodeId,
+  panelWidth = 440,
+  isPanelOpen = false,
+  isMobile = false,
+  duration = 380,
+}) {
+  if (!reactFlow || !nodeId) {
+    return false
+  }
+  const node = reactFlow.getNode(nodeId)
+  const center = getNodeCenter(node)
+  if (!center) {
+    return false
+  }
+
+  const viewport = reactFlow.getViewport()
+  const zoom = viewport?.zoom ?? 1
+  const effectivePanelWidth = clampPanelWidth(panelWidth)
+  const offsetGraphX = isPanelOpen && !isMobile ? effectivePanelWidth / (2 * zoom) : 0
+  const targetX = center.x + offsetGraphX
+
+  reactFlow.setCenter(targetX, center.y, { zoom, duration })
+  return true
+}
+
+/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, userMoveEndCount?: number, isMobile?: boolean, autoRecenterEnabled?: boolean }} props */
 export default function CameraController({
   selectedNodeId,
   panelWidth = 440,
   isPanelOpen = false,
   userMoveEndCount = 0,
   isMobile = false,
+  autoRecenterEnabled = true,
 }) {
   const reactFlow = useReactFlow()
   const hasMountedRef = useRef(false)
   const idleTimerRef = useRef(null)
   const lastHandledMoveEndCountRef = useRef(0)
   const previousSelectedNodeIdRef = useRef(selectedNodeId)
-
-  const centerOnNode = (nodeId, { duration = 380 } = {}) => {
-    const node = reactFlow.getNode(nodeId)
-    const center = getNodeCenter(node)
-    if (!center) {
-      return
-    }
-
-    const viewport = reactFlow.getViewport()
-    const zoom = viewport?.zoom ?? 1
-    const effectivePanelWidth = clampPanelWidth(panelWidth)
-    const offsetGraphX = isPanelOpen && !isMobile ? effectivePanelWidth / (2 * zoom) : 0
-    const targetX = center.x + offsetGraphX
-
-    reactFlow.setCenter(targetX, center.y, { zoom, duration })
-  }
 
   useEffect(() => {
     if (!hasMountedRef.current) {
@@ -71,8 +83,15 @@ export default function CameraController({
     if (!selectedNodeId) {
       return
     }
-    centerOnNode(selectedNodeId, { duration: 420 })
-  }, [isMobile, isPanelOpen, panelWidth, selectedNodeId])
+    centerOnNodeInViewport({
+      reactFlow,
+      nodeId: selectedNodeId,
+      panelWidth,
+      isPanelOpen,
+      isMobile,
+      duration: 420,
+    })
+  }, [isMobile, isPanelOpen, panelWidth, reactFlow, selectedNodeId])
 
   useEffect(() => {
     const previousSelectedNodeId = previousSelectedNodeIdRef.current
@@ -90,6 +109,14 @@ export default function CameraController({
       return
     }
 
+    if (!autoRecenterEnabled) {
+      if (idleTimerRef.current) {
+        window.clearTimeout(idleTimerRef.current)
+        idleTimerRef.current = null
+      }
+      return
+    }
+
     if (userMoveEndCount <= lastHandledMoveEndCountRef.current) {
       return
     }
@@ -100,10 +127,25 @@ export default function CameraController({
     }
 
     idleTimerRef.current = window.setTimeout(() => {
-      centerOnNode(selectedNodeId, { duration: 420 })
+      centerOnNodeInViewport({
+        reactFlow,
+        nodeId: selectedNodeId,
+        panelWidth,
+        isPanelOpen,
+        isMobile,
+        duration: 420,
+      })
       idleTimerRef.current = null
     }, IDLE_RECENTER_MS)
-  }, [selectedNodeId, userMoveEndCount, isMobile, isPanelOpen, panelWidth])
+  }, [
+    autoRecenterEnabled,
+    isMobile,
+    isPanelOpen,
+    panelWidth,
+    reactFlow,
+    selectedNodeId,
+    userMoveEndCount,
+  ])
 
   useEffect(() => {
     return () => {

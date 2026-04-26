@@ -3,7 +3,7 @@ import DomainLegend from './DomainLegend.jsx'
 import LayerToggleBar from './LayerToggleBar.jsx'
 import LayoutControls from './graph/LayoutControls.jsx'
 
-/** @param {{ isOpen: boolean, onToggleOpen: () => void, layerEntries: [string, object][], visibleLayers: Set<string>, onToggleLayer: (layerId: string) => void, allDomains: string[], visibleDomains: Set<string>, onToggleDomain: (domain: string) => void, visibleConceptRows: {domain: string, count: number}[], legendCollapsed: boolean, onToggleLegendCollapsed: () => void, selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void> }} props */
+/** @param {{ isOpen: boolean, onToggleOpen: () => void, layerEntries: [string, object][], visibleLayers: Set<string>, onToggleLayer: (layerId: string) => void, allDomains: string[], visibleDomains: Set<string>, onToggleDomain: (domain: string) => void, visibleConceptRows: {domain: string, count: number}[], legendCollapsed: boolean, onToggleLegendCollapsed: () => void, selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, onFitGraph?: () => void, onCenterSelected?: () => void, autoRecenterEnabled?: boolean, onToggleAutoRecenter?: (enabled: boolean) => void }} props */
 export default function MobileControlsOverlay({
   isOpen,
   onToggleOpen,
@@ -21,6 +21,10 @@ export default function MobileControlsOverlay({
   onResetSelected,
   onExportLayout,
   onImportLayout,
+  onFitGraph,
+  onCenterSelected,
+  autoRecenterEnabled = true,
+  onToggleAutoRecenter,
 }) {
   return (
     <>
@@ -71,6 +75,10 @@ export default function MobileControlsOverlay({
                 onResetSelected={onResetSelected}
                 onExportLayout={onExportLayout}
                 onImportLayout={onImportLayout}
+                onFitGraph={onFitGraph}
+                onCenterSelected={onCenterSelected}
+                autoRecenterEnabled={autoRecenterEnabled}
+                onToggleAutoRecenter={onToggleAutoRecenter}
               />
             </div>
           </div>
