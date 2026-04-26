@@ -57,6 +57,36 @@ export function getEdgeVisuals(edgeType, weight) {
   }
 }
 
+export function resolveEdgeStyle(visuals, { isFrontier, isFocal, isDistant, isVariableEdge }) {
+  const frontierStrokeWidth =
+    isFrontier && !isVariableEdge ? visuals.strokeWidth + 0.5 : visuals.strokeWidth
+  const frontierOpacity = isFrontier
+    ? Math.max(0, Math.min(1, visuals.opacity + 0.2))
+    : visuals.opacity
+  const strokeWidth = isFocal
+    ? isVariableEdge
+      ? frontierStrokeWidth + 0.8
+      : frontierStrokeWidth + 1
+    : frontierStrokeWidth
+  const opacity = isVariableEdge
+    ? isDistant
+      ? 0.15
+      : frontierOpacity
+    : isFocal
+      ? 1
+      : isDistant
+        ? 0.15
+        : frontierOpacity
+  const stroke =
+    isFocal && !isVariableEdge ? BRIGHT_EDGE_STROKE : visuals.stroke ?? EDGE_STROKE
+  const markerEnd =
+    visuals.markerEnd && isFocal
+      ? { ...visuals.markerEnd, color: BRIGHT_EDGE_STROKE }
+      : visuals.markerEnd
+
+  return { strokeWidth, opacity, stroke, markerEnd }
+}
+
 function getNodeRect(node) {
   const width = node?.width ?? node?.measured?.width ?? 0
   const height = node?.height ?? node?.measured?.height ?? 0
@@ -131,26 +161,12 @@ export default function FloatingEdge({ id, source, target, data }) {
   const isDistant = emphasis === 'distant'
   const isVariableEdge = data?.type === 'uses-variable'
   const shouldPulse = isFrontier && !isFocal
-  const frontierStrokeWidth =
-    isFrontier && !isVariableEdge ? visuals.strokeWidth + 0.5 : visuals.strokeWidth
-  const frontierOpacity = isFrontier
-    ? Math.max(0, Math.min(1, visuals.opacity + 0.2))
-    : visuals.opacity
-  const strokeWidth = isFocal && !isVariableEdge ? frontierStrokeWidth + 1 : frontierStrokeWidth
-  const opacity = isVariableEdge
-    ? isDistant
-      ? 0.15
-      : frontierOpacity
-    : isFocal
-      ? 1
-      : isDistant
-        ? 0.15
-        : frontierOpacity
-  const stroke = isFocal && !isVariableEdge ? BRIGHT_EDGE_STROKE : visuals.stroke ?? EDGE_STROKE
-  const markerEnd =
-    visuals.markerEnd && isFocal
-      ? { ...visuals.markerEnd, color: BRIGHT_EDGE_STROKE }
-      : visuals.markerEnd
+  const { strokeWidth, opacity, stroke, markerEnd } = resolveEdgeStyle(visuals, {
+    isFrontier,
+    isFocal,
+    isDistant,
+    isVariableEdge,
+  })
   const pulseMin = Math.max(0, opacity - 0.1)
   const pulseMax = Math.min(1, opacity + 0.1)
   const endpointOffset = strokeWidth / 2

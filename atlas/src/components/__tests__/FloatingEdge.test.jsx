@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getEdgeVisuals } from '../FloatingEdge'
+import { getEdgeVisuals, resolveEdgeStyle } from '../FloatingEdge'
 
 describe('getEdgeVisuals', () => {
   it('renders definitional edges with solid stroke and equivalence glyph', () => {
@@ -15,5 +15,33 @@ describe('getEdgeVisuals', () => {
     expect(visuals.markerEnd).toBeUndefined()
     expect(visuals.opacity).toBe(0.35)
     expect(visuals.strokeWidth).toBe(1.2)
+  })
+})
+
+describe('resolveEdgeStyle', () => {
+  it('keeps uses-variable stroke color when focal', () => {
+    const visuals = getEdgeVisuals('uses-variable', 0.8)
+
+    const style = resolveEdgeStyle(visuals, {
+      isFrontier: false,
+      isFocal: true,
+      isDistant: false,
+      isVariableEdge: true,
+    })
+
+    expect(style.stroke).toBe(visuals.stroke)
+  })
+
+  it('uses bright stroke for focal non-variable edges', () => {
+    const visuals = getEdgeVisuals('foundational', 0.8)
+
+    const style = resolveEdgeStyle(visuals, {
+      isFrontier: false,
+      isFocal: true,
+      isDistant: false,
+      isVariableEdge: false,
+    })
+
+    expect(style.stroke).toBe('#cbd5e1')
   })
 })

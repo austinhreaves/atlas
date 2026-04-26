@@ -1,22 +1,14 @@
 import { Handle, Position } from 'reactflow'
+import { getConceptDomainCardClass } from './domainVisuals'
 
 // Domain is never rendered as text (see ATLAS_NODE_AFFORDANCES_SPEC.md): encode via
 // fill/glow (domain) plus border style (mechanics = solid, electromagnetism = dashed).
-const domainCardClass = {
-  mechanics:
-    'border-2 border-solid border-cyan-500/45 bg-slate-950/85 text-slate-100 shadow-[0_0_28px_-6px_rgba(34,211,238,0.28)]',
-  electromagnetism:
-    'border-2 border-dashed border-violet-500/55 bg-slate-950/85 text-slate-100 shadow-[0_0_28px_-6px_rgba(167,139,250,0.28)]',
-}
-
 const floatingHandleClass =
   '!h-0 !w-0 !border-0 !bg-transparent !opacity-0 !pointer-events-none'
 
 export default function ConceptNode({ data, selected }) {
   const domain = data.domain
-  const card =
-    domainCardClass[domain] ??
-    'border-2 border-dotted border-slate-500/50 bg-slate-950/85 text-slate-100 shadow-lg shadow-black/40'
+  const card = getConceptDomainCardClass(domain)
   const mass = Math.max(1, Math.min(3, typeof data.mass === 'number' ? data.mass : 1))
   const diameter = 80 + (mass - 1) * 20
   const visualState = data.visualState ?? 'base'

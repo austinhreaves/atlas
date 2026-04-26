@@ -84,6 +84,8 @@ function toFlowEdges(edges, selectedNodeId, neighborNodeIds, understoodNodeIds) 
 export default function GraphCanvas({
   nodes,
   edges,
+  visibleLayers,
+  visibleDomains,
   selectedNodeId,
   isPanelOpen = false,
   panelWidth = 440,
@@ -98,36 +100,77 @@ export default function GraphCanvas({
   onExportLayout,
   onImportLayout,
 }) {
-  const domains = useMemo(
-    () =>
-      [...new Set(nodes.map((node) => node.domain).filter((domain) => typeof domain === 'string'))]
-        .sort(),
-    [nodes],
-  )
-  const [visibleDomains, setVisibleDomains] = useState(() => new Set(domains))
   const [userMoveEndCount, setUserMoveEndCount] = useState(0)
+  const activeLayers = useMemo(
+    () =>
+      visibleLayers instanceof Set
+        ? visibleLayers
+        : new Set(nodes.map((node) => node.layer).filter((layer) => typeof layer === 'string')),
+    [nodes, visibleLayers],
+  )
+  const activeDomains = useMemo(
+    () =>
+      visibleDomains instanceof Set
+        ? visibleDomains
+        : new Set(
+            nodes
+              .map((node) => node.domain)
+              .filter((domain) => typeof domain === 'string'),
+          ),
+    [nodes, visibleDomains],
+  )
   const selectedNode = useMemo(
     () => nodes.find((node) => node.id === selectedNodeId) ?? null,
     [nodes, selectedNodeId],
   )
   const emphasisSelectedNodeId = selectedNode?.layer === 'concept' ? selectedNodeId : null
 
-  const toggleDomain = useCallback((domain) => {
-    setVisibleDomains((current) => {
-      const next = new Set(current)
-      if (next.has(domain)) {
-        next.delete(domain)
-      } else {
-        next.add(domain)
-      }
-      return next
-    })
-  }, [])
-
   const flowNodes = useMemo(() => {
-    const filtered = nodes.filter(
-      (node) => typeof node.domain !== 'string' || visibleDomains.has(node.domain),
+    const nodeById = new Map(nodes.map((node) => [node.id, node]))
+    const visibleConceptIds = new Set(
+      nodes
+        .filter(
+          (node) =>
+            node.layer === 'concept' &&
+            activeLayers.has(node.layer) &&
+            (typeof node.domain !== 'string' || activeDomains.has(node.domain)),
+        )
+        .map((node) => node.id),
     )
+    const variablesLinkedToVisibleConcepts = new Set()
+    for (const edge of edges) {
+      const sourceNode = nodeById.get(edge.source)
+      const targetNode = nodeById.get(edge.target)
+      if (!sourceNode || !targetNode) {
+        continue
+      }
+      if (
+        sourceNode.layer === 'concept' &&
+        targetNode.layer === 'variable' &&
+        visibleConceptIds.has(sourceNode.id)
+      ) {
+        variablesLinkedToVisibleConcepts.add(targetNode.id)
+      } else if (
+        sourceNode.layer === 'variable' &&
+        targetNode.layer === 'concept' &&
+        visibleConceptIds.has(targetNode.id)
+      ) {
+        variablesLinkedToVisibleConcepts.add(sourceNode.id)
+      }
+    }
+
+    const filtered = nodes.filter((node) => {
+      if (!activeLayers.has(node.layer)) {
+        return false
+      }
+      if (node.layer === 'concept') {
+        return typeof node.domain !== 'string' || activeDomains.has(node.domain)
+      }
+      if (node.layer === 'variable') {
+        return variablesLinkedToVisibleConcepts.has(node.id)
+      }
+      return typeof node.domain !== 'string' || activeDomains.has(node.domain)
+    })
     const mapped = toFlowNodes(
       filtered,
       emphasisSelectedNodeId,
@@ -143,10 +186,10 @@ export default function GraphCanvas({
     focalNodeIds,
     neighborNodeIds,
     nodes,
-    selectedNode,
-    selectedNodeId,
+    edges,
     understoodNodeIds,
-    visibleDomains,
+    activeDomains,
+    activeLayers,
   ])
   const [interactiveNodes, setInteractiveNodes, onNodesChange] = useNodesState(flowNodes)
 
@@ -196,32 +239,6 @@ export default function GraphCanvas({
 
   return (
     <div className="h-screen w-screen bg-surface">
-      <div className="pointer-events-none absolute left-4 top-4 z-20">
-        <div className="pointer-events-auto rounded-xl border border-slate-700/70 bg-slate-900/90 p-2 shadow-xl shadow-black/40 backdrop-blur-sm">
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-            Domains
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {domains.map((domain) => {
-              const active = visibleDomains.has(domain)
-              return (
-                <button
-                  key={domain}
-                  type="button"
-                  onClick={() => toggleDomain(domain)}
-                  className={`rounded-md border px-2.5 py-1 text-xs font-semibold capitalize tracking-wide transition ${
-                    active
-                      ? 'border-cyan-400/50 bg-cyan-500/15 text-cyan-200'
-                      : 'border-slate-600 bg-slate-800/80 text-slate-300 hover:bg-slate-700/90'
-                  }`}
-                >
-                  {domain}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </div>
       <LayoutControls
         selectedNodeId={selectedNodeId}
         onResetToCanonical={onResetToCanonical}

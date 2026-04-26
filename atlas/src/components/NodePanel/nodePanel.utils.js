@@ -8,6 +8,13 @@ export function getCausalStructureLabel(causalStructure) {
   return 'driver(s) -> response via parameter(s)'
 }
 
+export function getVariableTypeLabel(variableType) {
+  if (variableType === 'constant') return 'Constant'
+  if (variableType === 'fundamental') return 'Fundamental Quantity'
+  if (variableType === 'derived') return 'Derived Quantity'
+  return 'Quantity'
+}
+
 export function getVariableRowClass(role, hasUnifiedConservedBand) {
   if (hasUnifiedConservedBand) {
     return 'border-emerald-400/25 bg-emerald-500/10'

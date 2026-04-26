@@ -133,7 +133,9 @@ export default function NodePanel({
 
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
               <ConceptPrincipleSection principle={selectedNode.principle} />
-              <ConceptFormulaSection formula={selectedNode.formula} />
+              {selectedNode.layer === 'concept' ? (
+                <ConceptFormulaSection formula={selectedNode.formula} />
+              ) : null}
               <ConceptVariablesSection selectedNode={selectedNode} variableRows={variableRows} />
               <ConceptApplicabilitySection
                 selectedNodeId={selectedNode.id}

@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import DomainLegend from './components/DomainLegend.jsx'
 import GraphCanvas from './components/GraphCanvas.jsx'
+import LayerToggleBar from './components/LayerToggleBar.jsx'
 import NodePanel from './components/NodePanel.jsx'
 import { getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
+import { LAYERS } from './data/layers'
 import { computeLayout, computeMass } from './lib/layout'
 import { resolveRenderPosition } from './lib/resolveRenderPosition'
 import { getUnderstood } from './lib/understanding'
@@ -21,8 +24,50 @@ import {
 } from './lib/userLayout'
 
 const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
+const LAYER_VISIBILITY_KEY = 'atlas_layers_v1'
+const LEGEND_VISIBILITY_KEY = 'atlas_legend_v1'
 const DEFAULT_PANEL_WIDTH_FALLBACK = 440
 const ATLAS_CORPUS_VERSION = import.meta.env.VITE_ATLAS_CORPUS_VERSION ?? 'unknown'
+
+const layerEntries = Object.entries(LAYERS)
+const allLayerIds = layerEntries.map(([layerId]) => layerId)
+
+function getDefaultVisibleLayers() {
+  return allLayerIds.filter((layerId) => LAYERS[layerId]?.default_visible === true)
+}
+
+function readInitialVisibleLayers() {
+  if (typeof window === 'undefined') {
+    return new Set(getDefaultVisibleLayers())
+  }
+
+  const fallback = new Set(getDefaultVisibleLayers())
+  try {
+    const raw = window.localStorage.getItem(LAYER_VISIBILITY_KEY)
+    if (!raw) {
+      return fallback
+    }
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) {
+      return fallback
+    }
+    const validLayers = parsed.filter((layerId) => allLayerIds.includes(layerId))
+    return validLayers.length > 0 ? new Set(validLayers) : fallback
+  } catch {
+    return fallback
+  }
+}
+
+function readInitialLegendCollapsed() {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  try {
+    return window.localStorage.getItem(LEGEND_VISIBILITY_KEY) === 'collapsed'
+  } catch {
+    return false
+  }
+}
 
 function getInitialPanelWidth() {
   if (typeof window === 'undefined') {
@@ -78,6 +123,8 @@ export default function App() {
   const [atlasCorpusHash, setAtlasCorpusHash] = useState(
     () => getUserLayoutStore().metadata.atlas_corpus_hash,
   )
+  const [visibleLayers, setVisibleLayers] = useState(() => readInitialVisibleLayers())
+  const [legendCollapsed, setLegendCollapsed] = useState(() => readInitialLegendCollapsed())
   const isPanelOpen = Boolean(selectedNodeId)
   const allEntities = useMemo(() => getAllEntities(), [])
   const conceptEntities = useMemo(
@@ -89,6 +136,47 @@ export default function App() {
   }, [allEntities])
   const nodeById = useMemo(() => new Map(allEntities.map((node) => [node.id, node])), [allEntities])
   const understoodNodeIds = useMemo(() => getUnderstood(), [understandingVersion])
+  const allDomains = useMemo(
+    () =>
+      [...new Set(allEntities.map((entity) => entity.domain).filter((domain) => typeof domain === 'string'))]
+        .sort(),
+    [allEntities],
+  )
+  const [visibleDomains, setVisibleDomains] = useState(() => new Set(allDomains))
+
+  useEffect(() => {
+    setVisibleDomains((current) => {
+      const next = new Set([...current].filter((domain) => allDomains.includes(domain)))
+      for (const domain of allDomains) {
+        if (!current.has(domain)) {
+          next.add(domain)
+        }
+      }
+      return next
+    })
+  }, [allDomains])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(LAYER_VISIBILITY_KEY, JSON.stringify(Array.from(visibleLayers)))
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [visibleLayers])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    try {
+      window.localStorage.setItem(LEGEND_VISIBILITY_KEY, legendCollapsed ? 'collapsed' : 'expanded')
+    } catch {
+      // Ignore write failures in constrained environments.
+    }
+  }, [legendCollapsed])
 
   useEffect(() => {
     let isActive = true
@@ -128,6 +216,33 @@ export default function App() {
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNodeId(node?.id ?? null)
+  }, [])
+
+  const toggleDomain = useCallback((domain) => {
+    setVisibleDomains((current) => {
+      const next = new Set(current)
+      if (next.has(domain)) {
+        next.delete(domain)
+      } else {
+        next.add(domain)
+      }
+      return next
+    })
+  }, [])
+
+  const toggleLayer = useCallback((layerId) => {
+    if (typeof LAYERS[layerId]?.schema_validator !== 'function') {
+      return
+    }
+    setVisibleLayers((current) => {
+      const next = new Set(current)
+      if (next.has(layerId)) {
+        next.delete(layerId)
+      } else {
+        next.add(layerId)
+      }
+      return next
+    })
   }, [])
 
   const handleClosePanel = useCallback(() => {
@@ -272,6 +387,25 @@ export default function App() {
     () => positionedNodes.find((node) => node.id === selectedNodeId) ?? null,
     [positionedNodes, selectedNodeId],
   )
+  const visibleConceptRows = useMemo(() => {
+    const counts = new Map()
+    for (const entity of positionedNodes) {
+      if (entity.layer !== 'concept') {
+        continue
+      }
+      if (!visibleLayers.has(entity.layer)) {
+        continue
+      }
+      if (typeof entity.domain === 'string' && !visibleDomains.has(entity.domain)) {
+        continue
+      }
+      const domain = typeof entity.domain === 'string' ? entity.domain : 'other'
+      counts.set(domain, (counts.get(domain) ?? 0) + 1)
+    }
+    return [...counts.entries()]
+      .map(([domain, count]) => ({ domain, count }))
+      .sort((a, b) => a.domain.localeCompare(b.domain))
+  }, [positionedNodes, visibleDomains, visibleLayers])
 
   const enablesByNodeId = useMemo(() => {
     const map = new Map()
@@ -322,9 +456,47 @@ export default function App() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden">
+      <div className="pointer-events-none absolute left-4 top-4 z-20 flex w-[360px] flex-col gap-2">
+        <LayerToggleBar
+          layerEntries={layerEntries}
+          visibleLayers={visibleLayers}
+          onToggleLayer={toggleLayer}
+        />
+        <section className="pointer-events-auto rounded-xl border border-slate-700/70 bg-slate-900/90 p-2 shadow-xl shadow-black/40 backdrop-blur-sm">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
+            Domains
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {allDomains.map((domain) => {
+              const active = visibleDomains.has(domain)
+              return (
+                <button
+                  key={domain}
+                  type="button"
+                  onClick={() => toggleDomain(domain)}
+                  className={`rounded-md border px-2.5 py-1 text-xs font-semibold capitalize tracking-wide transition ${
+                    active
+                      ? 'border-cyan-400/50 bg-cyan-500/15 text-cyan-200'
+                      : 'border-slate-600 bg-slate-800/80 text-slate-300 hover:bg-slate-700/90'
+                  }`}
+                >
+                  {domain}
+                </button>
+              )
+            })}
+          </div>
+        </section>
+        <DomainLegend
+          rows={visibleConceptRows}
+          collapsed={legendCollapsed}
+          onToggleCollapsed={() => setLegendCollapsed((value) => !value)}
+        />
+      </div>
       <GraphCanvas
         nodes={positionedNodes}
         edges={edges}
+        visibleLayers={visibleLayers}
+        visibleDomains={visibleDomains}
         selectedNodeId={selectedNodeId}
         isPanelOpen={isPanelOpen}
         panelWidth={panelWidth}

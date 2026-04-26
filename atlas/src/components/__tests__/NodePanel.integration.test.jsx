@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, cleanup } from '@testing-library/react'
 import NodePanel from '../NodePanel'
 import nodes from '../../data/concepts.json'
+import variables from '../../data/variables.json'
 
 describe('NodePanel formula rendering - integration', () => {
   beforeEach(() => {
@@ -55,6 +56,33 @@ describe('NodePanel formula rendering - integration', () => {
     const { container } = render(<NodePanel selectedNode={node} onClose={() => {}} />)
     const katexEls = container.querySelectorAll('.katex')
     expect(katexEls.length).toBeGreaterThanOrEqual(1 + node.variables.length)
+  })
+
+  it('hides formula section and uses definition copy for variable nodes', () => {
+    const variableNode = variables[0]
+    const { container } = render(<NodePanel selectedNode={variableNode} onClose={() => {}} />)
+    const text = container.textContent || ''
+
+    expect(text).not.toContain('Formula')
+    expect(text).toContain('I understand this definition.')
+    expect(text).toContain('Description')
+    expect(text).toContain(variableNode.description)
+    expect(text).not.toContain('Variables')
+    expect(text).not.toContain('driver(s)')
+    expect(text).not.toContain('response via parameter(s)')
+  })
+
+  it('renders asymmetric causal arrow and variable units with KaTeX', () => {
+    const node = nodes.find((candidate) => candidate.id === 'ohms-law')
+    expect(node).toBeDefined()
+
+    const { container } = render(<NodePanel selectedNode={node} onClose={() => {}} />)
+    const text = container.textContent || ''
+
+    expect(text).toContain('driver(s)')
+    expect(text).toContain('→')
+    expect(text).toContain('response via parameter(s)')
+    expect(container.querySelectorAll('.katex').length).toBeGreaterThanOrEqual(1 + node.variables.length)
   })
 
   it('renders prerequisites and enables lists when provided', () => {

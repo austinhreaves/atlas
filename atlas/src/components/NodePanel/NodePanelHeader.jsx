@@ -1,5 +1,6 @@
 import KatexText from '../KatexText'
 import { isUnderstood, setUnderstood } from '../../lib/understanding'
+import { getVariableTypeLabel } from './nodePanel.utils'
 
 function TypeBadge({ type }) {
   return (
@@ -11,6 +12,14 @@ function TypeBadge({ type }) {
 
 export default function NodePanelHeader({ selectedNode, onClose, onUnderstandingChange }) {
   const title = selectedNode?.title ?? selectedNode?.name ?? ''
+  const badgeLabel =
+    selectedNode?.layer === 'variable'
+      ? getVariableTypeLabel(selectedNode?.variable_type)
+      : selectedNode?.type
+  const understandingLabel =
+    selectedNode?.layer === 'variable'
+      ? 'I understand this definition.'
+      : 'I understand this concept.'
   const formulaInTitle =
     selectedNode?.formula && title.includes(selectedNode.formula) ? selectedNode.formula : null
   const titleParts = formulaInTitle ? title.split(formulaInTitle) : [title]
@@ -45,7 +54,7 @@ export default function NodePanelHeader({ selectedNode, onClose, onUnderstanding
               }}
               className="h-3.5 w-3.5 rounded border-slate-500 bg-slate-800 text-cyan-400 focus:ring-cyan-400/60"
             />
-            <span>I understand this concept.</span>
+            <span>{understandingLabel}</span>
           </label>
         </div>
         <button
@@ -56,7 +65,7 @@ export default function NodePanelHeader({ selectedNode, onClose, onUnderstanding
           Close
         </button>
       </div>
-      <TypeBadge type={selectedNode.type} />
+      <TypeBadge type={badgeLabel} />
     </header>
   )
 }

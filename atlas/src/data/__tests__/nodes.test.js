@@ -210,4 +210,15 @@ describe('entities data integrity', () => {
 
     expect(formulaErrors).toEqual([])
   })
+
+  it('limiting-case math strings do not use ascii arrows', () => {
+    const asciiArrowCases = concepts.flatMap((node) =>
+      (node.limiting_cases ?? [])
+        .map((limitingCase) => limitingCase.case)
+        .filter((caseText) => typeof caseText === 'string' && /->|=>/.test(caseText))
+        .map((caseText) => `${node.id}:${caseText}`),
+    )
+
+    expect(asciiArrowCases).toEqual([])
+  })
 })

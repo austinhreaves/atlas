@@ -36,6 +36,7 @@ const ALLOWED_PREREQUISITE_TYPES = ['foundational', 'supporting', 'lateral', 'de
 const ALLOWED_IDEALIZATION_SCOPES = ['idealized', 'noted', 'primary']
 const ALLOWED_REVIEW_STATES = ['draft', 'reviewed', 'published']
 const ALLOWED_VECTOR_OR_SCALAR = ['scalar', 'vector', 'tensor']
+const ALLOWED_VARIABLE_TYPES = ['constant', 'fundamental', 'derived', 'quantity']
 const ALLOWED_GEOMETRIES = ['cylindrical', 'spherical', 'planar', 'axial', 'none', 'other']
 const KEBAB_CASE_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
@@ -417,6 +418,13 @@ export function validateVariableNode(variable) {
 
   if (!ALLOWED_VECTOR_OR_SCALAR.includes(variable.vector_or_scalar)) {
     errors.push(`vector_or_scalar must be one of: ${ALLOWED_VECTOR_OR_SCALAR.join(', ')}`)
+  }
+
+  if (
+    'variable_type' in variable &&
+    !ALLOWED_VARIABLE_TYPES.includes(variable.variable_type)
+  ) {
+    errors.push(`variable_type must be one of: ${ALLOWED_VARIABLE_TYPES.join(', ')}`)
   }
 
   if ('sign_convention' in variable && !isNonEmptyString(variable.sign_convention)) {

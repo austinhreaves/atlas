@@ -62,6 +62,8 @@ function createProps(overrides = {}) {
       },
     ],
     edges: [],
+    visibleLayers: new Set(['concept', 'variable']),
+    visibleDomains: new Set(['mechanics', 'electromagnetism']),
     selectedNodeId: null,
     isPanelOpen: false,
     panelWidth: 440,
@@ -264,6 +266,16 @@ describe('GraphCanvas camera behavior', () => {
               position: { x: 10, y: 10 },
             },
           ],
+          edges: [
+            {
+              id: 'n-concept__uses-variable__n-variable',
+              source: 'n-concept',
+              target: 'n-variable',
+              type: 'uses-variable',
+              weight: 1,
+              layer_pair: 'concept-variable',
+            },
+          ],
         })}
       />,
     )
@@ -286,6 +298,165 @@ describe('GraphCanvas camera behavior', () => {
 
     expect(reactFlowHandlers.lastProps?.nodesDraggable).toBe(true)
     expect(reactFlowHandlers.lastProps?.selectNodesOnDrag).toBe(false)
+  })
+
+  it('marks uses-variable edges as focal when their concept is selected', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          nodes: [
+            {
+              id: 'concept-1',
+              layer: 'concept',
+              title: 'Concept One',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'variable-1',
+              layer: 'variable',
+              name: 'Mass',
+              canonical_symbol: 'm',
+              mass: 1,
+              position: { x: 10, y: 10 },
+            },
+          ],
+          edges: [
+            {
+              id: 'concept-1__uses-variable__variable-1',
+              source: 'concept-1',
+              target: 'variable-1',
+              type: 'uses-variable',
+              weight: 1,
+              layer_pair: 'concept-variable',
+            },
+          ],
+          selectedNodeId: 'concept-1',
+          focalNodeIds: new Set(['concept-1']),
+          neighborNodeIds: new Set(['variable-1']),
+          distantNodeIds: new Set(),
+        })}
+      />,
+    )
+
+    const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
+    expect(renderedEdges).toHaveLength(1)
+    expect(renderedEdges[0].data?.emphasis).toBe('focal')
+  })
+
+  it('applies composed layer and domain visibility to nodes and edges', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          nodes: [
+            {
+              id: 'concept-mech',
+              layer: 'concept',
+              title: 'Mechanics Concept',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'concept-em',
+              layer: 'concept',
+              title: 'EM Concept',
+              domain: 'electromagnetism',
+              mass: 1,
+              position: { x: 20, y: 0 },
+            },
+            {
+              id: 'variable-1',
+              layer: 'variable',
+              name: 'Mass',
+              canonical_symbol: 'm',
+              mass: 1,
+              position: { x: 40, y: 0 },
+            },
+          ],
+          edges: [
+            {
+              id: 'edge-visible',
+              source: 'concept-mech',
+              target: 'variable-1',
+              type: 'uses-variable',
+              weight: 1,
+              layer_pair: 'concept-variable',
+            },
+            {
+              id: 'edge-hidden-domain',
+              source: 'concept-em',
+              target: 'variable-1',
+              type: 'uses-variable',
+              weight: 1,
+              layer_pair: 'concept-variable',
+            },
+          ],
+          visibleLayers: new Set(['concept', 'variable']),
+          visibleDomains: new Set(['mechanics']),
+        })}
+      />,
+    )
+
+    const renderedNodes = reactFlowHandlers.lastProps?.nodes ?? []
+    const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
+
+    expect(renderedNodes.map((node) => node.id)).toEqual(['concept-mech', 'variable-1'])
+    expect(renderedEdges.map((edge) => edge.id)).toEqual(['edge-visible'])
+  })
+
+  it('hides variables that are only connected to filtered-out domains', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          nodes: [
+            {
+              id: 'concept-mech',
+              layer: 'concept',
+              title: 'Mechanics Concept',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'concept-em',
+              layer: 'concept',
+              title: 'EM Concept',
+              domain: 'electromagnetism',
+              mass: 1,
+              position: { x: 20, y: 0 },
+            },
+            {
+              id: 'variable-em-only',
+              layer: 'variable',
+              name: 'Electric Field',
+              canonical_symbol: 'E',
+              mass: 1,
+              position: { x: 40, y: 0 },
+            },
+          ],
+          edges: [
+            {
+              id: 'edge-hidden-domain-only',
+              source: 'concept-em',
+              target: 'variable-em-only',
+              type: 'uses-variable',
+              weight: 1,
+              layer_pair: 'concept-variable',
+            },
+          ],
+          visibleLayers: new Set(['concept', 'variable']),
+          visibleDomains: new Set(['mechanics']),
+        })}
+      />,
+    )
+
+    const renderedNodes = reactFlowHandlers.lastProps?.nodes ?? []
+    const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
+
+    expect(renderedNodes.map((node) => node.id)).toEqual(['concept-mech'])
+    expect(renderedEdges).toHaveLength(0)
   })
 
   it('commits dragged node positions on drag stop', () => {

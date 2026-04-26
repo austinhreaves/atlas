@@ -14,7 +14,7 @@
       "Mass is effectively constant over the interval"
     ],
     "limiting_cases": [
-      { "case": "m -> infinity", "result": "Acceleration tends toward zero for fixed finite net force." },
+      { "case": "m \\rightarrow \\infty", "result": "Acceleration tends toward zero for fixed finite net force." },
       { "case": "\\vec{F}_{\\text{net}} = 0", "result": "Acceleration is zero and velocity remains constant." }
     ],
     "misconceptions": [
@@ -218,8 +218,8 @@
       "Electrostatic regime with negligible radiation effects"
     ],
     "limiting_cases": [
-      { "case": "r -> infinity", "result": "Force magnitude tends to zero." },
-      { "case": "r -> 0", "result": "Point-charge model predicts divergence and breaks down physically." }
+      { "case": "r \\rightarrow \\infty", "result": "Force magnitude tends to zero." },
+      { "case": "r \\rightarrow 0", "result": "Point-charge model predicts divergence and breaks down physically." }
     ],
     "misconceptions": [
       {
@@ -266,7 +266,7 @@
     "causal_structure": "asymmetric",
     "principle": "Electric field gives force per unit positive test charge at each point in space.",
     "limiting_cases": [
-      { "case": "q -> 0", "result": "Test-force tends to zero while field remains defined by source charges." }
+      { "case": "q \\rightarrow 0", "result": "Test-force tends to zero while field remains defined by source charges." }
     ],
     "geometries": ["none"],
     "variables": [
