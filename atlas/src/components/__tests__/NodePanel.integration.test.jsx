@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, cleanup } from '@testing-library/react'
 import NodePanel from '../NodePanel'
-import nodes from '../../data/concepts.json'
+import { concepts as nodes } from '../../data'
 import variables from '../../data/variables.json'
 
 describe('NodePanel formula rendering - integration', () => {

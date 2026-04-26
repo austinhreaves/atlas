@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import katex from 'katex'
-import concepts from '../concepts.json'
 import variables from '../variables.json'
 import { buildEdges } from '../edges'
 import { validateEntity } from '../schema'
-import { computeAppearsIn, getAllEntities } from '../index'
+import { computeAppearsIn, concepts, getAllEntities } from '../index'
 
 describe('entities data integrity', () => {
   it('contains exactly 10 concepts', () => {

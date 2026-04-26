@@ -641,11 +641,6 @@ Wrap Phase 3a.
      approximation per Session 3 note).
    - Cross-panel navigation feels instant, no stale state.
 
-5. Deploy to Vercel.
-   - Confirm build passes.
-   - Provide live URL.
-   - Smoke test the `?include=draft` parameter on the deployed site.
-
 Do not implement Phase 3b features (problem/lab/experiment content,
 isomorphism edges, search, permalinks, mobile).
 ```

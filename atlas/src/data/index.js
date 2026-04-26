@@ -1,5 +1,8 @@
-import concepts from './concepts.json'
+import electromagnetismConcepts from './concepts/electromagnetism.json'
+import mechanicsConcepts from './concepts/mechanics.json'
 import variables from './variables.json'
+
+const concepts = [...electromagnetismConcepts, ...mechanicsConcepts]
 
 export function getAllEntities() {
   return [...concepts, ...variables]

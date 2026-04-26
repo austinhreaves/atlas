@@ -1,0 +1,446 @@
+[
+  {
+    "id": "coulombs-law",
+    "layer": "concept",
+    "title": "Coulomb's Law",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "F = k\\frac{|q_1 q_2|}{r^2}",
+    "causal_structure": "asymmetric",
+    "principle": "Electrostatic force between point charges scales with charge product and inverse-square separation.",
+    "applicability_conditions": [
+      "Charges are approximated as point charges or spherically symmetric",
+      "Medium is uniform, commonly vacuum in introductory form",
+      "Electrostatic regime with negligible radiation effects"
+    ],
+    "limiting_cases": [
+      {
+        "case": "r \\rightarrow \\infty",
+        "result": "Force magnitude tends to zero."
+      },
+      {
+        "case": "r \\rightarrow 0",
+        "result": "Point-charge model predicts divergence and breaks down physically."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Like charges attract if one charge is much larger.",
+        "correction": "Sign determines attraction or repulsion; magnitude only changes force size."
+      },
+      {
+        "wrong_model": "Doubling distance halves force.",
+        "correction": "Inverse-square scaling means doubling distance reduces force to one quarter."
+      }
+    ],
+    "historical_context": "Formulated by Charles-Augustin de Coulomb in the 1780s using torsion balance experiments.",
+    "geometries": [
+      "spherical"
+    ],
+    "variables": [
+      {
+        "id": "charge",
+        "symbol": "q_1, q_2",
+        "role": "driver",
+        "name": "Charges",
+        "unit": "C"
+      },
+      {
+        "id": "separation-distance",
+        "symbol": "r",
+        "role": "driver",
+        "name": "Separation distance",
+        "unit": "m"
+      },
+      {
+        "id": "coulomb-constant",
+        "symbol": "k",
+        "role": "parameter",
+        "name": "Coulomb constant",
+        "unit": "N\\cdot m^2/C^2"
+      },
+      {
+        "id": "electric-force",
+        "symbol": "F",
+        "role": "response",
+        "name": "Electrostatic force magnitude",
+        "unit": "N"
+      }
+    ],
+    "description": "The electric force between two point charges scales with charge product and falls with inverse-square distance.",
+    "prerequisites": [],
+    "mass": null,
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+      "caption": "Charges and Fields"
+    },
+    "tags": [
+      "electrostatics",
+      "inverse-square",
+      "charge"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Material medium",
+        "scope": "idealized",
+        "note": "The vacuum form is emphasized before introducing dielectric effects."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "electric-field-definition",
+    "layer": "concept",
+    "title": "Electric Field (F = qE)",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{F} = q\\vec{E}",
+    "causal_structure": "asymmetric",
+    "principle": "Electric field gives force per unit positive test charge at each point in space.",
+    "limiting_cases": [
+      {
+        "case": "q \\rightarrow 0",
+        "result": "Test-force tends to zero while field remains defined by source charges."
+      }
+    ],
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "electric-field",
+        "symbol": "\\vec{E}",
+        "role": "driver",
+        "name": "Electric field",
+        "unit": "N/C"
+      },
+      {
+        "id": "charge",
+        "symbol": "q",
+        "role": "parameter",
+        "name": "Test charge",
+        "unit": "C"
+      },
+      {
+        "id": "electric-force",
+        "symbol": "\\vec{F}",
+        "role": "response",
+        "name": "Electric force",
+        "unit": "N"
+      }
+    ],
+    "description": "Electric field describes how strongly and in what direction charges would be pushed at each point in space.",
+    "prerequisites": [
+      {
+        "id": "coulombs-law",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+      "caption": "Charges and Fields"
+    },
+    "tags": [
+      "field",
+      "electrostatics",
+      "force"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Polarization effects",
+        "scope": "idealized",
+        "note": "Intro field definitions assume simple media or vacuum behavior."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "ohms-law",
+    "layer": "concept",
+    "title": "Ohm's Law (I = V/R)",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "I = \\frac{V}{R}",
+    "causal_structure": "asymmetric",
+    "principle": "For ohmic conductors, current is proportional to voltage with resistance as proportionality constant.",
+    "applicability_conditions": [
+      "Conductor operates in approximately linear ohmic regime",
+      "Temperature is approximately constant",
+      "Steady-state circuit conditions apply"
+    ],
+    "limiting_cases": [
+      {
+        "case": "R \\rightarrow 0",
+        "result": "Ideal short-circuit behavior with very large current for finite voltage."
+      },
+      {
+        "case": "R \\rightarrow \\infty",
+        "result": "Open-circuit behavior with current approaching zero."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Current is consumed by a resistor.",
+        "correction": "Charge flow is continuous; resistors dissipate energy, not charge."
+      },
+      {
+        "wrong_model": "Voltage is a flowing substance in wires.",
+        "correction": "Voltage is a potential difference; current is what flows."
+      }
+    ],
+    "historical_context": "Georg Ohm published this relationship in 1827, initially meeting significant skepticism.",
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "voltage",
+        "symbol": "V",
+        "role": "driver",
+        "name": "Voltage",
+        "unit": "V"
+      },
+      {
+        "id": "current",
+        "symbol": "I",
+        "role": "response",
+        "name": "Current",
+        "unit": "A"
+      },
+      {
+        "id": "resistance",
+        "symbol": "R",
+        "role": "parameter",
+        "name": "Resistance",
+        "unit": "\\Omega"
+      }
+    ],
+    "description": "In many conductors, voltage is proportional to current with resistance as the proportionality constant.",
+    "prerequisites": [
+      {
+        "id": "electric-field-definition",
+        "type": "supporting",
+        "weight": 0.55
+      },
+      {
+        "id": "coulombs-law",
+        "type": "lateral",
+        "weight": 0.2
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
+      "caption": "Circuit Construction Kit: DC"
+    },
+    "tags": [
+      "circuits",
+      "current",
+      "resistance"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Temperature",
+        "scope": "idealized",
+        "note": "Resistance is treated as constant in the linear ohmic regime."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "faradays-law-induction",
+    "layer": "concept",
+    "title": "Faraday's Law of Induction",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\mathcal{E} = -\\frac{d\\Phi_B}{dt}",
+    "causal_structure": "asymmetric",
+    "principle": "Changing magnetic flux through a loop induces an emf opposing the change.",
+    "applicability_conditions": [
+      "Magnetic flux through a conducting loop changes over time",
+      "Loop orientation and area are well-defined",
+      "Macroscopic classical electromagnetism applies"
+    ],
+    "limiting_cases": [
+      {
+        "case": "d\\Phi_B/dt = 0",
+        "result": "No induced emf is produced."
+      }
+    ],
+    "geometries": [
+      "planar"
+    ],
+    "variables": [
+      {
+        "id": "magnetic-flux",
+        "symbol": "\\Phi_B",
+        "role": "driver",
+        "name": "Magnetic flux",
+        "unit": "Wb"
+      },
+      {
+        "id": "time",
+        "symbol": "t",
+        "role": "driver",
+        "name": "Time",
+        "unit": "s"
+      },
+      {
+        "id": "emf-induced",
+        "symbol": "\\mathcal{E}",
+        "role": "response",
+        "name": "Induced emf",
+        "unit": "V"
+      }
+    ],
+    "description": "A changing magnetic flux induces an emf, which drives current in a closed loop.",
+    "prerequisites": [
+      {
+        "id": "ohms-law",
+        "type": "lateral",
+        "weight": 0.2
+      },
+      {
+        "id": "gauss-law",
+        "type": "supporting",
+        "weight": 0.45
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "widget",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "induction",
+      "magnetism",
+      "emf"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Circuit resistance",
+        "scope": "idealized",
+        "note": "The flux-emf relation is introduced independent of resistive details."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "gauss-law",
+    "layer": "concept",
+    "title": "Gauss's Law",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}",
+    "causal_structure": "contextual",
+    "principle": "Electric flux through a closed surface equals enclosed charge divided by vacuum permittivity.",
+    "applicability_conditions": [
+      "Closed Gaussian surface is defined",
+      "Field and charge distribution satisfy electrostatic modeling assumptions",
+      "Symmetry is used when solving for explicit field magnitudes"
+    ],
+    "limiting_cases": [
+      {
+        "case": "Q_{\\text{enc}} = 0",
+        "result": "Net electric flux through the closed surface is zero."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Only charges located on the surface contribute to flux.",
+        "correction": "Only net enclosed charge determines total flux, regardless of exact placement inside."
+      },
+      {
+        "wrong_model": "Zero net flux means electric field is zero everywhere on the surface.",
+        "correction": "Field can be nonzero locally while positive and negative contributions cancel in net flux."
+      }
+    ],
+    "historical_context": "Integral law developed by Carl Friedrich Gauss and became foundational to Maxwell's framework.",
+    "geometries": [
+      "spherical"
+    ],
+    "variables": [
+      {
+        "id": "enclosed-charge",
+        "symbol": "Q_{\\text{enc}}",
+        "role": "parameter",
+        "name": "Enclosed charge",
+        "unit": "C"
+      },
+      {
+        "id": "vacuum-permittivity",
+        "symbol": "\\varepsilon_0",
+        "role": "parameter",
+        "name": "Vacuum permittivity",
+        "unit": "C^2/(N\\cdot m^2)"
+      },
+      {
+        "id": "area-vector",
+        "symbol": "d\\vec{A}",
+        "role": "parameter",
+        "name": "Area element",
+        "unit": "m^2"
+      },
+      {
+        "id": "electric-field",
+        "symbol": "\\vec{E}",
+        "role": "parameter",
+        "name": "Electric field",
+        "unit": "N/C"
+      }
+    ],
+    "description": "Total electric flux through a closed surface equals enclosed charge divided by vacuum permittivity.",
+    "prerequisites": [
+      {
+        "id": "electric-field-definition",
+        "type": "foundational",
+        "weight": 0.8
+      },
+      {
+        "id": "coulombs-law",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "electrostatics",
+      "flux",
+      "field-symmetry"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Symmetry imperfections",
+        "scope": "idealized",
+        "note": "Canonical examples assume ideal geometric symmetry for tractable flux integrals."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  }
+]

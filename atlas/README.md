@@ -32,7 +32,7 @@ Each entity in Atlas includes a `layer` field and is validated by the schema val
 
 ### Entity Files
 
-- Concepts: `src/data/concepts.json`
+- Concepts: `src/data/concepts/*.json` (one file per domain)
 - Variables: `src/data/variables.json`
 
 Runtime helpers in `src/data/index.js`:

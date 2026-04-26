@@ -1,0 +1,418 @@
+[
+  {
+    "id": "newtons-second-law",
+    "layer": "concept",
+    "title": "Newton's Second Law",
+    "type": "law",
+    "domain": "mechanics",
+    "formula": "\\vec{a} = \\frac{\\vec{F}_{\\text{net}}}{m}",
+    "causal_structure": "asymmetric",
+    "principle": "Net force changes motion by producing acceleration inversely proportional to mass.",
+    "applicability_conditions": [
+      "Reference frame is approximately inertial",
+      "Speeds are well below relativistic regimes",
+      "Mass is effectively constant over the interval"
+    ],
+    "limiting_cases": [
+      {
+        "case": "m \\rightarrow \\infty",
+        "result": "Acceleration tends toward zero for fixed finite net force."
+      },
+      {
+        "case": "\\vec{F}_{\\text{net}} = 0",
+        "result": "Acceleration is zero and velocity remains constant."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "A force is required to keep an object moving at constant velocity.",
+        "correction": "Force is required to change velocity, not to maintain constant velocity."
+      },
+      {
+        "wrong_model": "Heavier objects always accelerate more under the same net force.",
+        "correction": "For the same net force, larger mass means smaller acceleration."
+      }
+    ],
+    "historical_context": "Published in 1687 in Newton's Principia as a core law of classical mechanics.",
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "force-net",
+        "symbol": "\\vec{F}_{\\text{net}}",
+        "role": "driver",
+        "name": "Net force",
+        "unit": "N"
+      },
+      {
+        "id": "acceleration",
+        "symbol": "\\vec{a}",
+        "role": "response",
+        "name": "Acceleration",
+        "unit": "m/s^2"
+      },
+      {
+        "id": "mass",
+        "symbol": "m",
+        "role": "parameter",
+        "name": "Mass",
+        "unit": "kg"
+      }
+    ],
+    "description": "The acceleration of an object is proportional to the net force and inversely proportional to its mass.",
+    "prerequisites": [
+      {
+        "id": "kinematics-velocity-time",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "phet",
+      "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
+      "caption": "Forces and Motion Basics"
+    },
+    "tags": [
+      "dynamics",
+      "force",
+      "acceleration"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Friction",
+        "scope": "idealized",
+        "note": "Intro derivations usually assume idealized low-friction motion."
+      },
+      {
+        "name": "Air resistance",
+        "scope": "idealized",
+        "note": "Drag is neglected to keep acceleration approximately constant."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "work-energy-theorem",
+    "layer": "concept",
+    "title": "Work-Energy Theorem",
+    "type": "theorem",
+    "domain": "mechanics",
+    "formula": "\\Delta K = W_{\\text{net}}",
+    "causal_structure": "asymmetric",
+    "principle": "Net work on a system equals the change in its kinetic energy.",
+    "limiting_cases": [
+      {
+        "case": "W_{\\text{net}} = 0",
+        "result": "Kinetic energy remains unchanged."
+      }
+    ],
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "work-net",
+        "symbol": "W_{\\text{net}}",
+        "role": "driver",
+        "name": "Net work",
+        "unit": "J"
+      },
+      {
+        "id": "kinetic-energy-change",
+        "symbol": "\\Delta K",
+        "role": "response",
+        "name": "Change in kinetic energy",
+        "unit": "J"
+      }
+    ],
+    "description": "Net work on a body changes its kinetic energy, linking force-based motion to energy language.",
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "foundational",
+        "weight": 0.85
+      },
+      {
+        "id": "kinematics-velocity-time",
+        "type": "supporting",
+        "weight": 0.6
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "widget",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "energy",
+      "work",
+      "kinetic-energy"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Friction",
+        "scope": "idealized",
+        "note": "Dissipative losses are often ignored in first-pass applications."
+      },
+      {
+        "name": "Air resistance",
+        "scope": "idealized",
+        "note": "Drag work is omitted in idealized work-energy examples."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "conservation-of-momentum",
+    "layer": "concept",
+    "title": "Conservation of Momentum",
+    "type": "principle",
+    "domain": "mechanics",
+    "formula": "\\sum \\vec{p}_{\\text{initial}} = \\sum \\vec{p}_{\\text{final}}",
+    "causal_structure": "symmetric",
+    "principle": "In an isolated system, total momentum remains constant through interactions.",
+    "applicability_conditions": [
+      "Net external impulse on the system is negligible",
+      "System boundary is chosen to include interacting bodies"
+    ],
+    "limiting_cases": [
+      {
+        "case": "Perfectly isolated system",
+        "result": "Momentum conservation is exact."
+      },
+      {
+        "case": "Large external impulse",
+        "result": "System momentum changes by the impulse amount."
+      }
+    ],
+    "misconceptions": [
+      {
+        "wrong_model": "Momentum is conserved separately for each colliding object.",
+        "correction": "Conservation applies to the total system momentum, not each object independently."
+      },
+      {
+        "wrong_model": "Momentum conservation requires kinetic energy conservation.",
+        "correction": "Kinetic energy can change in inelastic events while momentum is still conserved."
+      }
+    ],
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "momentum",
+        "symbol": "\\vec{p}",
+        "role": "conserved",
+        "name": "Momentum",
+        "unit": "kg\\cdot m/s"
+      },
+      {
+        "id": "system-momentum",
+        "symbol": "\\sum \\vec{p}",
+        "role": "conserved",
+        "name": "System momentum sum",
+        "unit": "kg\\cdot m/s"
+      }
+    ],
+    "description": "For an isolated system, total momentum stays constant during interactions like collisions and explosions.",
+    "prerequisites": [
+      {
+        "id": "newtons-second-law",
+        "type": "supporting",
+        "weight": 0.55
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "video",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "momentum",
+      "collisions",
+      "systems"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "External impulses",
+        "scope": "idealized",
+        "note": "The principle is introduced assuming negligible external force over collision time."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "kinematics-velocity-time",
+    "layer": "concept",
+    "title": "Kinematics (v = v0 + at)",
+    "type": "equation",
+    "domain": "mechanics",
+    "formula": "\\vec{v} = \\vec{v}_0 + \\vec{a}t",
+    "causal_structure": "asymmetric",
+    "principle": "Under constant acceleration, velocity changes linearly with elapsed time.",
+    "limiting_cases": [
+      {
+        "case": "a = 0",
+        "result": "Final velocity equals initial velocity."
+      },
+      {
+        "case": "t = 0",
+        "result": "Final velocity equals initial velocity."
+      }
+    ],
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "acceleration",
+        "symbol": "\\vec{a}",
+        "role": "driver",
+        "name": "Acceleration",
+        "unit": "m/s^2"
+      },
+      {
+        "id": "time",
+        "symbol": "t",
+        "role": "driver",
+        "name": "Time",
+        "unit": "s"
+      },
+      {
+        "id": "initial-velocity",
+        "symbol": "\\vec{v}_0",
+        "role": "parameter",
+        "name": "Initial velocity",
+        "unit": "m/s"
+      },
+      {
+        "id": "velocity",
+        "symbol": "\\vec{v}",
+        "role": "response",
+        "name": "Final velocity",
+        "unit": "m/s"
+      }
+    ],
+    "description": "This constant-acceleration relation predicts velocity changes over time without directly using forces.",
+    "prerequisites": [],
+    "mass": null,
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "kinematics",
+      "motion",
+      "constant-acceleration"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Air resistance",
+        "scope": "idealized",
+        "note": "Constant-acceleration forms assume negligible drag."
+      },
+      {
+        "name": "Friction",
+        "scope": "idealized",
+        "note": "Surface interactions are typically neglected in introductory kinematics."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  },
+  {
+    "id": "gravitational-potential-energy",
+    "layer": "concept",
+    "title": "Gravitational Potential Energy",
+    "type": "definition",
+    "domain": "mechanics",
+    "formula": "U = mgh",
+    "causal_structure": "asymmetric",
+    "principle": "Gravitational potential energy measures stored energy due to vertical position in a gravitational field.",
+    "limiting_cases": [
+      {
+        "case": "h = 0",
+        "result": "Potential energy is zero relative to the chosen reference."
+      }
+    ],
+    "geometries": [
+      "none"
+    ],
+    "variables": [
+      {
+        "id": "mass",
+        "symbol": "m",
+        "role": "parameter",
+        "name": "Mass",
+        "unit": "kg"
+      },
+      {
+        "id": "gravitational-acceleration",
+        "symbol": "g",
+        "role": "parameter",
+        "name": "Gravitational field strength",
+        "unit": "m/s^2"
+      },
+      {
+        "id": "height",
+        "symbol": "h",
+        "role": "driver",
+        "name": "Height",
+        "unit": "m"
+      },
+      {
+        "id": "potential-energy",
+        "symbol": "U",
+        "role": "response",
+        "name": "Potential energy",
+        "unit": "J"
+      }
+    ],
+    "description": "An object elevated in a gravitational field stores energy that can convert into kinetic energy.",
+    "prerequisites": [
+      {
+        "id": "work-energy-theorem",
+        "type": "foundational",
+        "weight": 0.85
+      }
+    ],
+    "mass": null,
+    "visual": {
+      "type": "none",
+      "url": null,
+      "caption": null
+    },
+    "tags": [
+      "potential-energy",
+      "gravity",
+      "energy-conservation"
+    ],
+    "position": null,
+    "idealizations": [
+      {
+        "name": "Local gravity variation",
+        "scope": "idealized",
+        "note": "Intro treatments assume constant g near Earth's surface."
+      }
+    ],
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-25"
+  }
+]

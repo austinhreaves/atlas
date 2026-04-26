@@ -1,1 +1,7 @@
 .vercel
+
+# Cursor local artifacts
+.cursor/
+
+# Logs
+*.log

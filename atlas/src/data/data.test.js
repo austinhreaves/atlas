@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import concepts from './concepts.json'
 import variables from './variables.json'
 import { buildEdges } from './edges'
-import { computeAppearsIn, getAllEntities, getEntitiesByLayer } from './index'
+import { computeAppearsIn, concepts, getAllEntities, getEntitiesByLayer } from './index'
 
 describe('data layer integrity', () => {
   it('contains exactly 10 concept entities', () => {
