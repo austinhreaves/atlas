@@ -6,7 +6,14 @@ import NodePanel from './components/NodePanel.jsx'
 import { computeAppearsIn, getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { LAYERS } from './data/layers'
-import { getTagDescription, getTagLabel, getTagRegistry, getVisibleTagRegistry } from './data/tags'
+import {
+  getSubdomainDescription,
+  getSubdomainLabel,
+  getSubdomainRegistry,
+  getVisibleSubdomainRegistry,
+} from './data/subdomains'
+import { getVisibleSubjectRegistry } from './data/subjects'
+import { getTagDescription, getTagLabel, getVisibleTagRegistry } from './data/tags'
 import useIsMobile, { MOBILE_BREAKPOINT_PX } from './hooks/useIsMobile'
 import { computeLayout } from './lib/layout'
 import { resolveRenderPosition } from './lib/resolveRenderPosition'
@@ -27,7 +34,7 @@ import {
 
 const LAYOUT_CACHE_KEY = 'atlas_layout_v1'
 const LAYER_VISIBILITY_KEY = 'atlas_layers_v1'
-const TAG_VISIBILITY_KEY = 'atlas_active_tags_v1'
+const SUBDOMAIN_VISIBILITY_KEY = 'atlas_active_subdomains_v1'
 const LEGEND_VISIBILITY_KEY = 'atlas_legend_v1'
 const AUTO_RECENTER_KEY = 'atlas_auto_recenter_v1'
 const PANEL_WIDTH_KEY = 'atlas_panel_width_v1'
@@ -71,14 +78,14 @@ function readInitialVisibleLayers() {
   }
 }
 
-function readInitialActiveTags(defaultVisibleTagIds) {
+function readInitialActiveSubdomains(defaultVisibleSubdomainIds) {
   if (typeof window === 'undefined') {
-    return new Set(defaultVisibleTagIds)
+    return new Set(defaultVisibleSubdomainIds)
   }
 
-  const fallback = new Set(defaultVisibleTagIds)
+  const fallback = new Set(defaultVisibleSubdomainIds)
   try {
-    const raw = window.localStorage.getItem(TAG_VISIBILITY_KEY)
+    const raw = window.localStorage.getItem(SUBDOMAIN_VISIBILITY_KEY)
     if (!raw) {
       return fallback
     }
@@ -86,13 +93,13 @@ function readInitialActiveTags(defaultVisibleTagIds) {
     if (!Array.isArray(parsed)) {
       return fallback
     }
-    const validTags = parsed.filter(
-      (tagId) => typeof tagId === 'string' && defaultVisibleTagIds.includes(tagId),
+    const validSubdomains = parsed.filter(
+      (subdomainId) => typeof subdomainId === 'string' && defaultVisibleSubdomainIds.includes(subdomainId),
     )
-    if (validTags.length === 0) {
+    if (validSubdomains.length === 0) {
       return fallback
     }
-    return new Set(validTags)
+    return new Set(validSubdomains)
   } catch {
     return fallback
   }
@@ -347,6 +354,16 @@ function getLayoutPositions(nodes, edges) {
   return positions
 }
 
+function buildKeywordSearchText(tags) {
+  if (!Array.isArray(tags) || tags.length === 0) {
+    return ''
+  }
+  return tags
+    .filter((id) => typeof id === 'string' && id.length > 0)
+    .map((id) => `${id} ${getTagLabel(id)}`.trim().toLowerCase())
+    .join(' ')
+}
+
 export default function App() {
   const isMobile = useIsMobile()
   const [selectedNodeId, setSelectedNodeId] = useState(null)
@@ -372,18 +389,40 @@ export default function App() {
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false)
   const isPanelOpen = Boolean(selectedNodeId)
   const includeDraftContent = useMemo(() => shouldIncludeDraftContent(), [])
-  const allRegistryTags = useMemo(() => getTagRegistry(), [])
-  const visibleTagEntries = useMemo(
+  const allRegistrySubdomains = useMemo(() => getSubdomainRegistry(), [])
+  const visibleSubdomainEntries = useMemo(
+    () => getVisibleSubdomainRegistry(includeDraftContent),
+    [includeDraftContent],
+  )
+  const publishedSubdomainIds = useMemo(
+    () =>
+      allRegistrySubdomains
+        .filter((subdomain) => subdomain.review_state === 'published')
+        .map((subdomain) => subdomain.id),
+    [allRegistrySubdomains],
+  )
+  const visibleSubdomainIds = useMemo(
+    () => visibleSubdomainEntries.map((subdomain) => subdomain.id),
+    [visibleSubdomainEntries],
+  )
+  const visibleSubdomainIdSet = useMemo(() => new Set(visibleSubdomainIds), [visibleSubdomainIds])
+  const [activeSubdomains, setActiveSubdomains] = useState(() =>
+    readInitialActiveSubdomains(publishedSubdomainIds),
+  )
+  const visibleSubjectEntries = useMemo(
+    () => getVisibleSubjectRegistry(includeDraftContent),
+    [includeDraftContent],
+  )
+  const visibleSubjectIds = useMemo(
+    () => visibleSubjectEntries.map((subject) => subject.id),
+    [visibleSubjectEntries],
+  )
+  const visibleSubjectIdSet = useMemo(() => new Set(visibleSubjectIds), [visibleSubjectIds])
+  const [visibleSubjects, setVisibleSubjects] = useState(() => new Set(visibleSubjectIds))
+  const visibleKeywordTagEntries = useMemo(
     () => getVisibleTagRegistry(includeDraftContent),
     [includeDraftContent],
   )
-  const publishedTagIds = useMemo(
-    () => allRegistryTags.filter((tag) => tag.review_state === 'published').map((tag) => tag.id),
-    [allRegistryTags],
-  )
-  const visibleTagIds = useMemo(() => visibleTagEntries.map((tag) => tag.id), [visibleTagEntries])
-  const visibleTagIdSet = useMemo(() => new Set(visibleTagIds), [visibleTagIds])
-  const [activeTags, setActiveTags] = useState(() => readInitialActiveTags(publishedTagIds))
   const rawEntities = useMemo(() => getAllEntities(), [])
   const allEntities = useMemo(
     () =>
@@ -409,23 +448,39 @@ export default function App() {
     () => allEntities.filter((entity) => entity.layer === 'concept'),
     [allEntities],
   )
-  const activeVisibleTagIdSet = useMemo(
-    () => new Set([...activeTags].filter((tagId) => visibleTagIdSet.has(tagId))),
-    [activeTags, visibleTagIdSet],
+  const activeVisibleSubdomainIdSet = useMemo(
+    () =>
+      new Set(
+        [...activeSubdomains].filter((subdomainId) => visibleSubdomainIdSet.has(subdomainId)),
+      ),
+    [activeSubdomains, visibleSubdomainIdSet],
   )
-  const tagFilterIsBypassed =
-    visibleTagIds.length === 0 || activeVisibleTagIdSet.size === visibleTagIdSet.size
+  const subdomainFilterIsBypassed =
+    visibleSubdomainIds.length === 0 ||
+    activeVisibleSubdomainIdSet.size === visibleSubdomainIdSet.size
+  const subjectFilterIsBypassed = visibleSubjectIds.length <= 1
   const filteredConceptEntities = useMemo(() => {
-    if (tagFilterIsBypassed) {
-      return conceptEntities
-    }
     return conceptEntities.filter((entity) => {
-      if (!Array.isArray(entity.tags) || entity.tags.length === 0) {
+      if (!subjectFilterIsBypassed) {
+        if (typeof entity.subject !== 'string' || !visibleSubjects.has(entity.subject)) {
+          return false
+        }
+      }
+      if (subdomainFilterIsBypassed) {
+        return true
+      }
+      if (!Array.isArray(entity.sub_domains) || entity.sub_domains.length === 0) {
         return false
       }
-      return entity.tags.some((tagId) => activeVisibleTagIdSet.has(tagId))
+      return entity.sub_domains.some((subdomainId) => activeVisibleSubdomainIdSet.has(subdomainId))
     })
-  }, [activeVisibleTagIdSet, conceptEntities, tagFilterIsBypassed])
+  }, [
+    activeVisibleSubdomainIdSet,
+    conceptEntities,
+    subdomainFilterIsBypassed,
+    subjectFilterIsBypassed,
+    visibleSubjects,
+  ])
   const allEntitiesForGraph = useMemo(() => {
     const visibleConceptIds = new Set(filteredConceptEntities.map((entity) => entity.id))
     return allEntities.filter(
@@ -442,6 +497,7 @@ export default function App() {
           layer: entity.layer,
           domain: entity.domain,
           canonical_symbol: entity.canonical_symbol,
+          keywordSearchText: buildKeywordSearchText(entity.tags),
         })),
     [allEntitiesForGraph],
   )
@@ -498,14 +554,31 @@ export default function App() {
   }, [allDomains])
 
   useEffect(() => {
-    setActiveTags((current) => {
-      const next = new Set([...current].filter((tagId) => visibleTagIdSet.has(tagId)))
+    setVisibleSubjects((current) => {
+      const next = new Set([...current].filter((subjectId) => visibleSubjectIdSet.has(subjectId)))
+      for (const subjectId of visibleSubjectIds) {
+        if (!current.has(subjectId)) {
+          next.add(subjectId)
+        }
+      }
       if (next.size === current.size) {
         return current
       }
       return next
     })
-  }, [visibleTagIdSet])
+  }, [visibleSubjectIdSet, visibleSubjectIds])
+
+  useEffect(() => {
+    setActiveSubdomains((current) => {
+      const next = new Set(
+        [...current].filter((subdomainId) => visibleSubdomainIdSet.has(subdomainId)),
+      )
+      if (next.size === current.size) {
+        return current
+      }
+      return next
+    })
+  }, [visibleSubdomainIdSet])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -523,11 +596,14 @@ export default function App() {
       return
     }
     try {
-      window.localStorage.setItem(TAG_VISIBILITY_KEY, JSON.stringify(Array.from(activeTags)))
+      window.localStorage.setItem(
+        SUBDOMAIN_VISIBILITY_KEY,
+        JSON.stringify(Array.from(activeSubdomains)),
+      )
     } catch {
       // Ignore write failures in constrained environments.
     }
-  }, [activeTags])
+  }, [activeSubdomains])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -753,32 +829,32 @@ export default function App() {
     setVisibleDomains(new Set())
   }, [])
 
-  const toggleTag = useCallback((tagId) => {
-    setActiveTags((current) => {
+  const toggleSubdomain = useCallback((subdomainId) => {
+    setActiveSubdomains((current) => {
       const next = new Set(current)
-      if (next.has(tagId)) {
-        next.delete(tagId)
+      if (next.has(subdomainId)) {
+        next.delete(subdomainId)
       } else {
-        next.add(tagId)
+        next.add(subdomainId)
       }
       return next
     })
   }, [])
 
-  const selectAllTags = useCallback(() => {
-    setActiveTags(new Set(visibleTagIds))
-  }, [visibleTagIds])
+  const selectAllSubdomains = useCallback(() => {
+    setActiveSubdomains(new Set(visibleSubdomainIds))
+  }, [visibleSubdomainIds])
 
-  const clearAllTags = useCallback(() => {
-    setActiveTags(new Set())
+  const clearAllSubdomains = useCallback(() => {
+    setActiveSubdomains(new Set())
   }, [])
 
-  const focusSingleTag = useCallback((tagId) => {
-    if (!visibleTagIdSet.has(tagId)) {
+  const focusSingleSubdomain = useCallback((subdomainId) => {
+    if (!visibleSubdomainIdSet.has(subdomainId)) {
       return
     }
-    setActiveTags(new Set([tagId]))
-  }, [visibleTagIdSet])
+    setActiveSubdomains(new Set([subdomainId]))
+  }, [visibleSubdomainIdSet])
 
   const toggleLayer = useCallback((layerId) => {
     if (typeof LAYERS[layerId]?.schema_validator !== 'function') {
@@ -1039,13 +1115,33 @@ export default function App() {
     return enablesByNodeId.get(selectedNodeId) ?? []
   }, [enablesByNodeId, selectedNodeId])
 
+  const subdomainLabelById = useMemo(
+    () =>
+      Object.fromEntries(
+        allRegistrySubdomains.map((subdomain) => [subdomain.id, getSubdomainLabel(subdomain.id)]),
+      ),
+    [allRegistrySubdomains],
+  )
+  const subdomainDescriptionById = useMemo(
+    () =>
+      Object.fromEntries(
+        allRegistrySubdomains.map((subdomain) => [
+          subdomain.id,
+          getSubdomainDescription(subdomain.id),
+        ]),
+      ),
+    [allRegistrySubdomains],
+  )
   const tagLabelById = useMemo(
-    () => Object.fromEntries(allRegistryTags.map((tag) => [tag.id, getTagLabel(tag.id)])),
-    [allRegistryTags],
+    () => Object.fromEntries(visibleKeywordTagEntries.map((tag) => [tag.id, getTagLabel(tag.id)])),
+    [visibleKeywordTagEntries],
   )
   const tagDescriptionById = useMemo(
-    () => Object.fromEntries(allRegistryTags.map((tag) => [tag.id, getTagDescription(tag.id)])),
-    [allRegistryTags],
+    () =>
+      Object.fromEntries(
+        visibleKeywordTagEntries.map((tag) => [tag.id, getTagDescription(tag.id)]),
+      ),
+    [visibleKeywordTagEntries],
   )
 
   return (
@@ -1076,12 +1172,12 @@ export default function App() {
           onToggleDomain={toggleDomain}
           onSelectAllDomains={selectAllDomains}
           onClearAllDomains={clearAllDomains}
-          tags={allRegistryTags}
+          tags={allRegistrySubdomains}
           includeDraftContent={includeDraftContent}
-          activeTags={activeVisibleTagIdSet}
-          onToggleTag={toggleTag}
-          onSelectAllTags={selectAllTags}
-          onClearAllTags={clearAllTags}
+          activeTags={activeVisibleSubdomainIdSet}
+          onToggleTag={toggleSubdomain}
+          onSelectAllTags={selectAllSubdomains}
+          onClearAllTags={clearAllSubdomains}
           visibleConceptRows={visibleConceptRows}
           legendCollapsed={legendCollapsed}
           onToggleLegendCollapsed={() => setLegendCollapsed((value) => !value)}
@@ -1114,12 +1210,12 @@ export default function App() {
           onToggleDomain={toggleDomain}
           onSelectAllDomains={selectAllDomains}
           onClearAllDomains={clearAllDomains}
-          tags={allRegistryTags}
+          tags={allRegistrySubdomains}
           includeDraftContent={includeDraftContent}
-          activeTags={activeVisibleTagIdSet}
-          onToggleTag={toggleTag}
-          onSelectAllTags={selectAllTags}
-          onClearAllTags={clearAllTags}
+          activeTags={activeVisibleSubdomainIdSet}
+          onToggleTag={toggleSubdomain}
+          onSelectAllTags={selectAllSubdomains}
+          onClearAllTags={clearAllSubdomains}
           visibleConceptRows={visibleConceptRows}
           legendCollapsed={legendCollapsed}
           onToggleLegendCollapsed={() => setLegendCollapsed((value) => !value)}
@@ -1142,6 +1238,8 @@ export default function App() {
         selectedNodeId={selectedNodeId}
         isPanelOpen={isPanelOpen}
         panelWidth={panelWidth}
+        viewPanelWidth={viewPanelWidth}
+        isViewPanelOpen={isViewPanelOpen}
         focalNodeIds={focalNodeIds}
         neighborNodeIds={neighborNodeIds}
         distantNodeIds={distantNodeIds}
@@ -1164,7 +1262,9 @@ export default function App() {
         onClose={handleClosePanel}
         onUnderstandingStateChange={handleUnderstandingStateChange}
         onSelectEntity={handleSelectEntity}
-        onTagClick={focusSingleTag}
+        onSubdomainClick={focusSingleSubdomain}
+        subdomainLabelById={subdomainLabelById}
+        subdomainDescriptionById={subdomainDescriptionById}
         tagLabelById={tagLabelById}
         tagDescriptionById={tagDescriptionById}
         conceptById={conceptById}

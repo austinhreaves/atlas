@@ -14,7 +14,7 @@ function getNodeDisplayTitle(node) {
   return node?.id ?? ''
 }
 
-/** @param {{ nodes: Array<{ id: string, title?: string, layer: string, domain?: string, canonical_symbol?: string }>, onSelectNode: (nodeId: string) => void, isMobile?: boolean }} props */
+/** @param {{ nodes: Array<{ id: string, title?: string, layer: string, domain?: string, canonical_symbol?: string, keywordSearchText?: string }>, onSelectNode: (nodeId: string) => void, isMobile?: boolean }} props */
 export default function NodeSearch({ nodes = [], onSelectNode, isMobile = false }) {
   const containerRef = useRef(null)
   const [query, setQuery] = useState('')
@@ -33,7 +33,8 @@ export default function NodeSearch({ nodes = [], onSelectNode, isMobile = false 
         const symbolMatch =
           node.layer === 'variable' &&
           toSearchableText(node.canonical_symbol).includes(normalizedQuery)
-        return titleMatch || idMatch || symbolMatch
+        const keywordMatch = toSearchableText(node.keywordSearchText).includes(normalizedQuery)
+        return titleMatch || idMatch || symbolMatch || keywordMatch
       })
       .slice(0, MAX_RESULTS)
   }, [nodes, normalizedQuery])
@@ -126,7 +127,9 @@ export default function NodeSearch({ nodes = [], onSelectNode, isMobile = false 
           }
         }}
         onKeyDown={handleKeyDown}
-        placeholder={isMobile ? 'Search nodes' : 'Search by title, id, or symbol'}
+        placeholder={
+          isMobile ? 'Search by title, id, symbol, keywords' : 'Search by title, id, symbol, or keywords'
+        }
         aria-expanded={shouldShowDropdown}
         aria-label="Search nodes"
         className="w-full rounded-md border border-slate-600 bg-slate-800/90 px-2.5 py-1.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400/60"

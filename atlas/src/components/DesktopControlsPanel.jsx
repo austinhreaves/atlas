@@ -6,7 +6,7 @@ import NodeSearch from './NodeSearch.jsx'
 import TagFilterPanel from './TagFilterPanel.jsx'
 import LayoutControls from './graph/LayoutControls.jsx'
 
-/** @param {{ isOpen?: boolean, panelWidth?: number, onToggleOpen?: () => void, onPanelWidthChange?: (width: number) => void, searchNodes?: Array<{ id: string, title?: string, layer: string, domain?: string, canonical_symbol?: string }>, onSelectSearchNode?: (nodeId: string) => void, isMobile?: boolean, layerEntries: [string, object][], allLayerKeys?: Set<string>, visibleLayers: Set<string>, onToggleLayer: (layerId: string) => void, onSelectAllLayers?: () => void, onClearAllLayers?: () => void, allDomains: string[], allDomainKeys?: Set<string>, visibleDomains: Set<string>, onToggleDomain: (domain: string) => void, onSelectAllDomains?: () => void, onClearAllDomains?: () => void, tags?: Array<{id: string, label: string, description: string, review_state: string}>, includeDraftContent?: boolean, activeTags?: Set<string>, onToggleTag?: (tagId: string) => void, onSelectAllTags?: () => void, onClearAllTags?: () => void, visibleConceptRows: {domain: string, count: number}[], legendCollapsed: boolean, onToggleLegendCollapsed: () => void, selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, onFitGraph?: () => void, onCenterSelected?: () => void, autoRecenterEnabled?: boolean, onToggleAutoRecenter?: (enabled: boolean) => void }} props */
+/** @param {{ isOpen?: boolean, panelWidth?: number, onToggleOpen?: () => void, onPanelWidthChange?: (width: number) => void, searchNodes?: Array<{ id: string, title?: string, layer: string, domain?: string, canonical_symbol?: string, keywordSearchText?: string }>, onSelectSearchNode?: (nodeId: string) => void, isMobile?: boolean, layerEntries: [string, object][], allLayerKeys?: Set<string>, visibleLayers: Set<string>, onToggleLayer: (layerId: string) => void, onSelectAllLayers?: () => void, onClearAllLayers?: () => void, allDomains: string[], allDomainKeys?: Set<string>, visibleDomains: Set<string>, onToggleDomain: (domain: string) => void, onSelectAllDomains?: () => void, onClearAllDomains?: () => void, tags?: Array<{id: string, label: string, description: string, review_state: string}>, includeDraftContent?: boolean, activeTags?: Set<string>, onToggleTag?: (tagId: string) => void, onSelectAllTags?: () => void, onClearAllTags?: () => void, visibleConceptRows: {domain: string, count: number}[], legendCollapsed: boolean, onToggleLegendCollapsed: () => void, selectedNodeId: string | null, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, onFitGraph?: () => void, onCenterSelected?: () => void, autoRecenterEnabled?: boolean, onToggleAutoRecenter?: (enabled: boolean) => void }} props */
 export default function DesktopControlsPanel({
   isOpen = false,
   panelWidth = 360,
@@ -157,6 +157,7 @@ export default function DesktopControlsPanel({
               onToggleTag={onToggleTag}
               onSelectAllTags={onSelectAllTags}
               onClearAllTags={onClearAllTags}
+              title="Sub-domains"
             />
             <DomainLegend
               rows={visibleConceptRows}

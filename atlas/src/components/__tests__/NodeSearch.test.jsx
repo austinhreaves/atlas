@@ -40,6 +40,36 @@ describe('NodeSearch', () => {
     expect(screen.getByRole('option', { name: /variable/i })).not.toBeNull()
   })
 
+  it('matches by keywordSearchText from tag labels and ids', () => {
+    const nodesWithKeywords = [
+      {
+        id: 'concept-work-energy',
+        title: 'Work-Energy Theorem',
+        layer: 'concept',
+        domain: 'mechanics',
+        keywordSearchText: 'kw-kinetic-energy kinetic energy kw-work work',
+      },
+      {
+        id: 'concept-measurement-intro',
+        title: 'Reporting Values',
+        layer: 'concept',
+        domain: 'mechanics',
+        keywordSearchText: 'kw-uncertainty uncertainty kw-measurement measurement',
+      },
+    ]
+    render(<NodeSearch nodes={nodesWithKeywords} onSelectNode={vi.fn()} />)
+    const input = screen.getByLabelText('Search nodes')
+
+    fireEvent.change(input, { target: { value: 'kinetic' } })
+    expect(screen.getByRole('option', { name: /Work-Energy Theorem/i })).not.toBeNull()
+
+    fireEvent.change(input, { target: { value: 'uncertainty' } })
+    expect(screen.getByRole('option', { name: /Reporting Values/i })).not.toBeNull()
+
+    fireEvent.change(input, { target: { value: 'kw-uncertainty' } })
+    expect(screen.getByRole('option', { name: /Reporting Values/i })).not.toBeNull()
+  })
+
   it('caps results at 8', () => {
     const manyNodes = Array.from({ length: 12 }, (_, index) => ({
       id: `concept-node-${index}`,
