@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { getUnderstood, isUnderstood, setUnderstood } from '../understanding'
+import {
+  getAllStates,
+  getState,
+  isStateAtLeast,
+  isStateAtMost,
+  setState,
+} from '../understanding'
 
 function createLocalStorageMock() {
   const store = new Map()
@@ -24,23 +30,34 @@ describe('understanding storage helpers', () => {
     globalThis.localStorage = createLocalStorageMock()
   })
 
-  it('setUnderstood persists and round-trips via localStorage', () => {
-    setUnderstood('newtons-second-law', true)
-    const understood = getUnderstood()
+  it('setState persists and round-trips via v2 localStorage map', () => {
+    setState('newtons-second-law', 'apply')
+    setState('ohms-law', 'seen')
+    const allStates = getAllStates()
 
-    expect(understood.has('newtons-second-law')).toBe(true)
+    expect(allStates['newtons-second-law']).toBe('apply')
+    expect(allStates['ohms-law']).toBe('seen')
+    expect(getState('newtons-second-law')).toBe('apply')
   })
 
-  it('multiple setUnderstood calls accumulate understood ids', () => {
-    setUnderstood('newtons-second-law', true)
-    setUnderstood('ohms-law', true)
-    const understood = getUnderstood()
+  it('migrates legacy v1 understood ids to v2 apply state', () => {
+    globalThis.localStorage.setItem(
+      'atlas_understood_v1',
+      JSON.stringify(['newtons-second-law', 'ohms-law']),
+    )
 
-    expect(understood.has('newtons-second-law')).toBe(true)
-    expect(understood.has('ohms-law')).toBe(true)
+    const allStates = getAllStates()
+    expect(allStates['newtons-second-law']).toBe('apply')
+    expect(allStates['ohms-law']).toBe('apply')
+    expect(globalThis.localStorage.getItem('atlas_understood_v1')).toBeNull()
+    expect(globalThis.localStorage.getItem('atlas_understanding_v2')).not.toBeNull()
   })
 
-  it('isUnderstood returns false for never-set ids', () => {
-    expect(isUnderstood('gauss-law')).toBe(false)
+  it('defaults unknown ids to unseen and supports rank comparisons', () => {
+    expect(getState('gauss-law')).toBe('unseen')
+    expect(isStateAtLeast('derive', 'apply')).toBe(true)
+    expect(isStateAtLeast('seen', 'apply')).toBe(false)
+    expect(isStateAtMost('seen', 'seen')).toBe(true)
+    expect(isStateAtMost('recognize', 'seen')).toBe(false)
   })
 })

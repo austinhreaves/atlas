@@ -44,6 +44,9 @@ vi.mock('../data', () => ({
       position: { x: 40, y: 40 },
     },
   ],
+  computeAppearsIn: () => ({
+    'variable-mass': ['concept-mechanics'],
+  }),
 }))
 
 vi.mock('../data/edges', () => ({
@@ -65,7 +68,8 @@ vi.mock('../lib/resolveRenderPosition', () => ({
 }))
 
 vi.mock('../lib/understanding', () => ({
-  getUnderstood: () => new Set(),
+  getAllStates: () => ({}),
+  setState: vi.fn(),
 }))
 
 vi.mock('../lib/userLayout', () => ({

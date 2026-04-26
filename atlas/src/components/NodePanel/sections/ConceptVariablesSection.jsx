@@ -4,7 +4,7 @@ import {
   getVariableRowClass,
 } from '../nodePanel.utils'
 
-export default function ConceptVariablesSection({ selectedNode, variableRows }) {
+export default function ConceptVariablesSection({ selectedNode, variableRows, onSelectEntity }) {
   const isConceptNode = selectedNode?.layer === 'concept'
   const hasUnifiedConservedBand =
     selectedNode?.causal_structure === 'symmetric' &&
@@ -34,26 +34,45 @@ export default function ConceptVariablesSection({ selectedNode, variableRows }) 
         </div>
       ) : null}
       <div className="space-y-2">
-        {variableRows.map((variable) => (
-          <div
-            key={`${selectedNode.id}-${variable.symbol}`}
-            className={`rounded-lg border px-3 py-2 text-xs text-slate-200 ${getVariableRowClass(variable.role, hasUnifiedConservedBand)}`}
-          >
-            <div className="mb-1 flex flex-wrap items-center gap-2">
-              <span className="font-mono text-cyan-200">
-                <KatexText math={variable.symbol} />
-              </span>
-              <span className="rounded border border-slate-500/60 bg-slate-900/60 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
-                {variable.role}
-              </span>
-              <span className="font-semibold text-slate-100">{variable.name}</span>
-              <span className="text-slate-400">
-                (<KatexText math={variable.unit} />)
-              </span>
+        {variableRows.map((variable) => {
+          const isClickable = typeof onSelectEntity === 'function' && typeof variable.id === 'string'
+          const rowClass = `rounded-lg border px-3 py-2 text-xs text-slate-200 ${getVariableRowClass(variable.role, hasUnifiedConservedBand)}`
+          const body = (
+            <>
+              <div className="mb-1 flex flex-wrap items-center gap-2">
+                <span className="font-mono text-cyan-200">
+                  <KatexText math={variable.symbol} />
+                </span>
+                <span className="rounded border border-slate-500/60 bg-slate-900/60 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
+                  {variable.role}
+                </span>
+                <span className="font-semibold text-slate-100">{variable.name}</span>
+                <span className="text-slate-400">
+                  (<KatexText math={variable.unit} />)
+                </span>
+              </div>
+              {typeof variable.description === 'string' && variable.description.length > 0 ? (
+                <p className="leading-relaxed text-slate-300">{variable.description}</p>
+              ) : null}
+            </>
+          )
+
+          return (
+            <div key={`${selectedNode.id}-${variable.symbol}`}>
+              {isClickable ? (
+                <button
+                  type="button"
+                  onClick={() => onSelectEntity(variable.id)}
+                  className={`${rowClass} w-full text-left transition hover:border-cyan-400/40 hover:bg-slate-800/70`}
+                >
+                  {body}
+                </button>
+              ) : (
+                <div className={rowClass}>{body}</div>
+              )}
             </div>
-            <p className="leading-relaxed text-slate-300">{variable.description}</p>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )

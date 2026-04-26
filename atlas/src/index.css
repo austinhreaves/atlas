@@ -16,6 +16,20 @@
   animation: atlas-frontier-pulse 2s ease-in-out infinite;
 }
 
+@keyframes atlas-frontier-concept-arc-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.atlas-frontier-concept-arc {
+  animation: atlas-frontier-concept-arc-pulse 2.5s ease-in-out infinite;
+}
+
 @layer base {
   :root {
     color-scheme: dark;

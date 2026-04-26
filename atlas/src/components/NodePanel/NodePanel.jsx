@@ -1,16 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { isStateAtLeast } from '../../lib/understanding'
 import NodePanelHeader from './NodePanelHeader'
-import ConceptPrincipleSection from './sections/ConceptPrincipleSection'
-import ConceptFormulaSection from './sections/ConceptFormulaSection'
-import ConceptVariablesSection from './sections/ConceptVariablesSection'
-import ConceptApplicabilitySection from './sections/ConceptApplicabilitySection'
-import ConceptLimitingCasesSection from './sections/ConceptLimitingCasesSection'
-import ConceptAssumptionsSection from './sections/ConceptAssumptionsSection'
-import ConceptDescriptionSection from './sections/ConceptDescriptionSection'
-import ConceptMisconceptionsSection from './sections/ConceptMisconceptionsSection'
-import ConceptHistorySection from './sections/ConceptHistorySection'
-import ConceptLinksSection from './sections/ConceptLinksSection'
-import ConceptVisualSceneSection from './sections/ConceptVisualSceneSection'
+import ConceptPanel from './panels/ConceptPanel'
+import VariablePanel from './panels/VariablePanel'
 
 const DESKTOP_MIN_PANEL_WIDTH = 360
 
@@ -26,7 +18,7 @@ function clampPanelWidth(width) {
   return Math.min(maxWidth, Math.max(minWidth, width))
 }
 
-/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingChange?: () => void }} props */
+/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingStateChange?: (entityId: string, state: string) => void, onSelectEntity?: (id: string) => void, conceptById?: Map<string, any>, appearsInByVariableId?: Record<string, string[]>, understandingStatesById?: Record<string, string> }} props */
 export default function NodePanel({
   selectedNode,
   panelWidth = 440,
@@ -35,27 +27,23 @@ export default function NodePanel({
   prerequisiteLinks = [],
   enablesLinks = [],
   onClose,
-  onUnderstandingChange,
+  onUnderstandingStateChange,
+  onSelectEntity,
+  conceptById = new Map(),
+  appearsInByVariableId = {},
+  understandingStatesById = {},
 }) {
+  const understandingState = selectedNode ? understandingStatesById[selectedNode.id] ?? 'unseen' : 'unseen'
+  const variableAppearsInConceptIds =
+    selectedNode?.layer === 'variable' && Array.isArray(appearsInByVariableId[selectedNode.id])
+      ? appearsInByVariableId[selectedNode.id]
+      : []
+  const isVariableKnown = variableAppearsInConceptIds.some((conceptId) =>
+    isStateAtLeast(understandingStatesById[conceptId] ?? 'unseen', 'recognize'),
+  )
+
   const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
   const dragStateRef = useRef(null)
-
-  const variableRows = selectedNode?.variables ?? []
-  const applicabilityConditions = Array.isArray(selectedNode?.applicability_conditions)
-    ? selectedNode.applicability_conditions
-    : []
-  const limitingCases = Array.isArray(selectedNode?.limiting_cases) ? selectedNode.limiting_cases : []
-  const misconceptions = Array.isArray(selectedNode?.misconceptions) ? selectedNode.misconceptions : []
-
-  const idealizations = selectedNode?.idealizations ?? []
-  const visibleIdealizations = useMemo(
-    () => idealizations.filter((idealization) => idealization.scope !== 'idealized'),
-    [idealizations],
-  )
-  const idealizedAssumptions = useMemo(
-    () => idealizations.filter((idealization) => idealization.scope === 'idealized'),
-    [idealizations],
-  )
 
   const handlePointerMove = useCallback(
     (event) => {
@@ -143,42 +131,29 @@ export default function NodePanel({
             <NodePanelHeader
               selectedNode={selectedNode}
               onClose={onClose}
-              onUnderstandingChange={onUnderstandingChange}
+              understandingState={understandingState}
+              isVariableKnown={isVariableKnown}
+              onUnderstandingStateChange={onUnderstandingStateChange}
             />
 
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
-              <ConceptPrincipleSection principle={selectedNode.principle} />
               {selectedNode.layer === 'concept' ? (
-                <ConceptFormulaSection formula={selectedNode.formula} />
+                <ConceptPanel
+                  selectedNode={selectedNode}
+                  prerequisiteLinks={prerequisiteLinks}
+                  enablesLinks={enablesLinks}
+                  showIdealizedAssumptions={showIdealizedAssumptions}
+                  setShowIdealizedAssumptions={setShowIdealizedAssumptions}
+                  onSelectEntity={onSelectEntity}
+                />
+              ) : selectedNode.layer === 'variable' ? (
+                <VariablePanel
+                  selectedNode={selectedNode}
+                  conceptById={conceptById}
+                  appearsInByVariableId={appearsInByVariableId}
+                  onSelectEntity={onSelectEntity}
+                />
               ) : null}
-              <ConceptVariablesSection selectedNode={selectedNode} variableRows={variableRows} />
-              <ConceptApplicabilitySection
-                selectedNodeId={selectedNode.id}
-                applicabilityConditions={applicabilityConditions}
-              />
-              <ConceptLimitingCasesSection
-                selectedNodeId={selectedNode.id}
-                limitingCases={limitingCases}
-              />
-              <ConceptAssumptionsSection
-                selectedNodeId={selectedNode.id}
-                visibleIdealizations={visibleIdealizations}
-                idealizedAssumptions={idealizedAssumptions}
-                showIdealizedAssumptions={showIdealizedAssumptions}
-                setShowIdealizedAssumptions={setShowIdealizedAssumptions}
-              />
-              <ConceptDescriptionSection description={selectedNode.description} />
-              <ConceptMisconceptionsSection
-                selectedNodeId={selectedNode.id}
-                misconceptions={misconceptions}
-              />
-              <ConceptHistorySection historicalContext={selectedNode.historical_context} />
-              <ConceptLinksSection
-                selectedNodeId={selectedNode.id}
-                prerequisiteLinks={prerequisiteLinks}
-                enablesLinks={enablesLinks}
-              />
-              <ConceptVisualSceneSection selectedNode={selectedNode} />
             </div>
           </div>
         ) : null}

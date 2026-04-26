@@ -1,6 +1,11 @@
 import { formatWeight } from '../nodePanel.utils'
 
-export default function ConceptLinksSection({ selectedNodeId, prerequisiteLinks, enablesLinks }) {
+export default function ConceptLinksSection({
+  selectedNodeId,
+  prerequisiteLinks,
+  enablesLinks,
+  onSelectEntity,
+}) {
   return (
     <section>
       <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-slate-300">Concept Links</h3>
@@ -12,12 +17,15 @@ export default function ConceptLinksSection({ selectedNodeId, prerequisiteLinks,
           {prerequisiteLinks.length > 0 ? (
             <ul className="space-y-1.5 text-xs text-slate-200">
               {prerequisiteLinks.map((link) => (
-                <li
-                  key={`prerequisite-${selectedNodeId}-${link.id}-${link.type}`}
-                  className="flex items-center justify-between gap-3 rounded border border-slate-700/70 bg-slate-900/40 px-2 py-1.5"
-                >
-                  <span className="truncate">{link.title}</span>
-                  <span className="shrink-0 text-slate-400">{`<- (${formatWeight(link.weight)})`}</span>
+                <li key={`prerequisite-${selectedNodeId}-${link.id}-${link.type}`}>
+                  <button
+                    type="button"
+                    onClick={() => onSelectEntity?.(link.id)}
+                    className="flex w-full items-center justify-between gap-3 rounded border border-slate-700/70 bg-slate-900/40 px-2 py-1.5 text-left transition hover:border-cyan-400/40 hover:bg-slate-800/70"
+                  >
+                    <span className="truncate">{link.title}</span>
+                    <span className="shrink-0 text-slate-400">{`<- (${formatWeight(link.weight)})`}</span>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -31,12 +39,15 @@ export default function ConceptLinksSection({ selectedNodeId, prerequisiteLinks,
           {enablesLinks.length > 0 ? (
             <ul className="space-y-1.5 text-xs text-slate-200">
               {enablesLinks.map((link) => (
-                <li
-                  key={`enables-${selectedNodeId}-${link.id}-${link.type}`}
-                  className="flex items-center justify-between gap-3 rounded border border-slate-700/70 bg-slate-900/40 px-2 py-1.5"
-                >
-                  <span className="truncate">{link.title}</span>
-                  <span className="shrink-0 text-slate-400">{`(${formatWeight(link.weight)})`}</span>
+                <li key={`enables-${selectedNodeId}-${link.id}-${link.type}`}>
+                  <button
+                    type="button"
+                    onClick={() => onSelectEntity?.(link.id)}
+                    className="flex w-full items-center justify-between gap-3 rounded border border-slate-700/70 bg-slate-900/40 px-2 py-1.5 text-left transition hover:border-cyan-400/40 hover:bg-slate-800/70"
+                  >
+                    <span className="truncate">{link.title}</span>
+                    <span className="shrink-0 text-slate-400">{`(${formatWeight(link.weight)})`}</span>
+                  </button>
                 </li>
               ))}
             </ul>

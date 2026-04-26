@@ -5,6 +5,13 @@ import { getConceptDomainCardClass } from './domainVisuals'
 // fill/glow (domain) plus border style (mechanics = solid, electromagnetism = dashed).
 const floatingHandleClass =
   '!h-0 !w-0 !border-0 !bg-transparent !opacity-0 !pointer-events-none'
+const ARC_PROGRESS_BY_STATE = {
+  unseen: 0,
+  seen: 0.2,
+  recognize: 0.45,
+  apply: 0.7,
+  derive: 1,
+}
 
 export default function ConceptNode({ data, selected }) {
   const domain = data.domain
@@ -14,10 +21,19 @@ export default function ConceptNode({ data, selected }) {
   const visualState = data.visualState ?? 'base'
   const scale = visualState === 'focal' ? 1.1 : visualState === 'neighbor' ? 1.06 : 1
   const selectionActive = visualState !== 'base'
-  const isUnderstood = data.isUnderstood === true
-  const opacity = selectionActive ? (visualState === 'distant' ? 0.3 : 1) : isUnderstood ? 0.7 : 1
+  const opacity = selectionActive && visualState === 'distant' ? 0.3 : 1
   const accentRing = visualState === 'focal'
-  const filter = !selectionActive && isUnderstood ? 'saturate(0.3)' : undefined
+  const understandingState =
+    typeof data.understandingState === 'string' ? data.understandingState : 'unseen'
+  const arcProgress = ARC_PROGRESS_BY_STATE[understandingState] ?? 0
+  const arcStrokeWidth = 3
+  const arcInset = 8
+  const arcSvgSize = diameter + arcInset * 2
+  const arcCenter = arcSvgSize / 2
+  const arcRadius = diameter / 2 + 4
+  const arcCircumference = 2 * Math.PI * arcRadius
+  const arcDashoffset = arcCircumference * (1 - arcProgress)
+  const isFrontierConcept = data.isFrontierConcept === true
 
   return (
     <div
@@ -30,14 +46,49 @@ export default function ConceptNode({ data, selected }) {
         opacity,
         transform: `scale(${scale})`,
         transformOrigin: 'center',
-        filter,
       }}
     >
-      {isUnderstood ? (
-        <span className="absolute -right-1 -top-1 inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/80 text-[10px] font-bold text-slate-950">
-          ✓
-        </span>
-      ) : null}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 overflow-visible"
+        width={arcSvgSize}
+        height={arcSvgSize}
+        viewBox={`0 0 ${arcSvgSize} ${arcSvgSize}`}
+        style={{ transform: 'translate(-50%, -50%) rotate(-90deg)' }}
+      >
+        <circle
+          cx={arcCenter}
+          cy={arcCenter}
+          r={arcRadius}
+          fill="none"
+          stroke="rgb(71 85 105 / 0.45)"
+          strokeWidth={arcStrokeWidth}
+        />
+        {isFrontierConcept ? (
+          <circle
+            cx={arcCenter}
+            cy={arcCenter}
+            r={arcRadius}
+            fill="none"
+            stroke="rgb(34 211 238 / 0.75)"
+            strokeWidth={arcStrokeWidth}
+            className="atlas-frontier-concept-arc"
+          />
+        ) : null}
+        {arcProgress > 0 ? (
+          <circle
+            cx={arcCenter}
+            cy={arcCenter}
+            r={arcRadius}
+            fill="none"
+            stroke="rgb(34 211 238 / 0.95)"
+            strokeWidth={arcStrokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={arcCircumference}
+            strokeDashoffset={arcDashoffset}
+          />
+        ) : null}
+      </svg>
       <Handle id="target-top" type="target" position={Position.Top} className={floatingHandleClass} />
       <Handle
         id="target-right"

@@ -96,7 +96,7 @@ function createProps(overrides = {}) {
     focalNodeIds: new Set(),
     neighborNodeIds: new Set(),
     distantNodeIds: new Set(),
-    understoodNodeIds: new Set(),
+    understandingStatesById: {},
     onNodeClick: vi.fn(),
     onNodePositionCommit: vi.fn(),
     onResetToCanonical: vi.fn(),
@@ -529,6 +529,96 @@ describe('GraphCanvas camera behavior', () => {
     const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
     expect(renderedEdges).toHaveLength(1)
     expect(renderedEdges[0].data?.emphasis).toBe('focal')
+  })
+
+  it('flags foundational concept-to-concept edges as frontier when rule matches', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          nodes: [
+            {
+              id: 'concept-source',
+              layer: 'concept',
+              title: 'Source Concept',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'concept-target',
+              layer: 'concept',
+              title: 'Target Concept',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 10, y: 10 },
+            },
+          ],
+          edges: [
+            {
+              id: 'source__foundational__target',
+              source: 'concept-source',
+              target: 'concept-target',
+              type: 'foundational',
+              weight: 0.9,
+              layer_pair: 'concept-concept',
+            },
+          ],
+          understandingStatesById: {
+            'concept-source': 'apply',
+            'concept-target': 'seen',
+          },
+        })}
+      />,
+    )
+
+    const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
+    expect(renderedEdges).toHaveLength(1)
+    expect(renderedEdges[0].data?.isFrontier).toBe(true)
+  })
+
+  it('never flags frontier for foundational edges that target variable nodes', () => {
+    render(
+      <GraphCanvas
+        {...createProps({
+          nodes: [
+            {
+              id: 'concept-source',
+              layer: 'concept',
+              title: 'Source Concept',
+              domain: 'mechanics',
+              mass: 1,
+              position: { x: 0, y: 0 },
+            },
+            {
+              id: 'variable-target',
+              layer: 'variable',
+              name: 'Mass',
+              canonical_symbol: 'm',
+              mass: 1,
+              position: { x: 20, y: 20 },
+            },
+          ],
+          edges: [
+            {
+              id: 'source__foundational__variable',
+              source: 'concept-source',
+              target: 'variable-target',
+              type: 'foundational',
+              weight: 0.9,
+              layer_pair: 'concept-variable',
+            },
+          ],
+          understandingStatesById: {
+            'concept-source': 'derive',
+            'variable-target': 'unseen',
+          },
+        })}
+      />,
+    )
+
+    const renderedEdges = reactFlowHandlers.lastProps?.edges ?? []
+    expect(renderedEdges).toHaveLength(1)
+    expect(renderedEdges[0].data?.isFrontier).toBe(false)
   })
 
   it('applies composed layer and domain visibility to nodes and edges', () => {

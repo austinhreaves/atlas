@@ -9,14 +9,11 @@ const VARIABLE_BASE_SIZE = 70
 export default function VariableNode({ data, selected }) {
   const visualState = data.visualState ?? 'base'
   const scale = visualState === 'focal' ? 1.08 : visualState === 'neighbor' ? 1.04 : 1
-  const selectionActive = visualState !== 'base'
-  const isUnderstood = data.isUnderstood === true
-  const opacity = selectionActive ? (visualState === 'distant' ? 0.3 : 1) : isUnderstood ? 0.7 : 1
-  const filter = !selectionActive && isUnderstood ? 'saturate(0.3)' : undefined
+  const opacity = visualState === 'distant' ? 0.3 : 1
 
   return (
     <div
-      className={`relative transition-[transform,opacity,filter] duration-300 ease-out ${
+      className={`relative transition-[transform,opacity] duration-300 ease-out ${
         selected || visualState === 'focal' ? 'drop-shadow-[0_0_10px_rgba(148,163,184,0.75)]' : ''
       }`}
       style={{
@@ -25,7 +22,6 @@ export default function VariableNode({ data, selected }) {
         opacity,
         transform: `scale(${scale})`,
         transformOrigin: 'center',
-        filter,
       }}
     >
       <Handle id="target-top" type="target" position={Position.Top} className={floatingHandleClass} />
@@ -68,11 +64,6 @@ export default function VariableNode({ data, selected }) {
           {data.title}
         </p>
       </div>
-      {isUnderstood ? (
-        <span className="absolute -right-1 -top-1 inline-flex h-4 w-4 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/80 text-[9px] font-bold text-slate-950">
-          ✓
-        </span>
-      ) : null}
     </div>
   )
 }

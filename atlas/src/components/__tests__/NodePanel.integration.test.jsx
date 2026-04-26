@@ -64,7 +64,8 @@ describe('NodePanel formula rendering - integration', () => {
     const text = container.textContent || ''
 
     expect(text).not.toContain('Formula')
-    expect(text).toContain('I understand this definition.')
+    expect(text).toContain('Status:')
+    expect(text).toContain('Unfamiliar')
     expect(text).toContain('Description')
     expect(text).toContain(variableNode.description)
     expect(text).not.toContain('Variables')
@@ -87,6 +88,7 @@ describe('NodePanel formula rendering - integration', () => {
 
   it('renders prerequisites and enables lists when provided', () => {
     const node = nodes[0]
+    const onSelectEntity = vi.fn()
     const prerequisiteLinks = [
       { id: 'electric-field', title: 'Electric Field', type: 'foundational', weight: 0.9 },
     ]
@@ -100,6 +102,7 @@ describe('NodePanel formula rendering - integration', () => {
         selectedNode={node}
         prerequisiteLinks={prerequisiteLinks}
         enablesLinks={enablesLinks}
+        onSelectEntity={onSelectEntity}
         onClose={() => {}}
       />,
     )
@@ -112,6 +115,20 @@ describe('NodePanel formula rendering - integration', () => {
     expect(text).toContain('Enables')
     expect(text).toContain("Gauss's Law")
     expect(text).toContain('(0.70)')
+
+    const prerequisiteButton = Array.from(container.querySelectorAll('button')).find((button) =>
+      button.textContent?.includes('Electric Field'),
+    )
+    expect(prerequisiteButton).toBeDefined()
+    fireEvent.click(prerequisiteButton)
+    expect(onSelectEntity).toHaveBeenCalledWith('electric-field')
+
+    const enablesButton = Array.from(container.querySelectorAll('button')).find((button) =>
+      button.textContent?.includes("Gauss's Law"),
+    )
+    expect(enablesButton).toBeDefined()
+    fireEvent.click(enablesButton)
+    expect(onSelectEntity).toHaveBeenCalledWith('gausss-law')
   })
 
   it('renders empty state text when no prerequisite or enables links are present', () => {
@@ -145,6 +162,78 @@ describe('NodePanel formula rendering - integration', () => {
     expect(text).toContain('Historical Context')
     expect(text).toContain('Wrong model:')
     expect(text).toContain('Correction:')
+  })
+
+  it('navigates from concept variable row to linked variable entity', () => {
+    const onSelectEntity = vi.fn()
+    const node = nodes.find((candidate) => candidate.id === 'newtons-second-law')
+    expect(node).toBeDefined()
+
+    const panel = render(
+      <NodePanel selectedNode={node} onSelectEntity={onSelectEntity} onClose={() => {}} />,
+    )
+    fireEvent.click(panel.getByRole('button', { name: /Net force/i }))
+
+    expect(onSelectEntity).toHaveBeenCalledWith('force-net')
+  })
+
+  it('renders variable panel appears-in groups and navigates back to concept', () => {
+    const onSelectEntity = vi.fn()
+    const variableNode = variables.find((candidate) => candidate.id === 'force-net')
+    expect(variableNode).toBeDefined()
+
+    const panel = render(
+      <NodePanel
+        selectedNode={variableNode}
+        onSelectEntity={onSelectEntity}
+        conceptById={new Map(nodes.map((node) => [node.id, node]))}
+        appearsInByVariableId={{ 'force-net': ['newtons-second-law'] }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(panel.getByText('Appears In')).not.toBeNull()
+    fireEvent.click(panel.getByRole('button', { name: "Newton's Second Law" }))
+    expect(onSelectEntity).toHaveBeenCalledWith('newtons-second-law')
+  })
+
+  it('writes concept understanding state via segmented controls and reset', () => {
+    const node = nodes.find((candidate) => candidate.id === 'newtons-second-law')
+    const onUnderstandingStateChange = vi.fn()
+    expect(node).toBeDefined()
+
+    const panel = render(
+      <NodePanel
+        selectedNode={node}
+        understandingStatesById={{ 'newtons-second-law': 'seen' }}
+        onUnderstandingStateChange={onUnderstandingStateChange}
+        onClose={() => {}}
+      />,
+    )
+
+    fireEvent.click(panel.getByRole('button', { name: 'Apply' }))
+    expect(onUnderstandingStateChange).toHaveBeenCalledWith('newtons-second-law', 'apply')
+
+    fireEvent.click(panel.getByRole('button', { name: 'Reset' }))
+    expect(onUnderstandingStateChange).toHaveBeenCalledWith('newtons-second-law', 'unseen')
+  })
+
+  it('renders variable known indicator as read-only when linked concept is recognized', () => {
+    const variableNode = variables.find((candidate) => candidate.id === 'force-net')
+    expect(variableNode).toBeDefined()
+
+    const panel = render(
+      <NodePanel
+        selectedNode={variableNode}
+        appearsInByVariableId={{ 'force-net': ['newtons-second-law'] }}
+        understandingStatesById={{ 'newtons-second-law': 'recognize' }}
+        onClose={() => {}}
+      />,
+    )
+
+    expect(panel.container.textContent || '').toContain('Known')
+    expect(panel.queryByRole('button', { name: 'Reset' })).toBeNull()
+    expect(panel.queryByRole('button', { name: 'Seen' })).toBeNull()
   })
 
   it('omits optional Phase 3a section shells when data is absent', () => {

@@ -1,6 +1,12 @@
 import KatexText from '../KatexText'
-import { isUnderstood, setUnderstood } from '../../lib/understanding'
 import { getVariableTypeLabel } from './nodePanel.utils'
+
+const UNDERSTANDING_OPTIONS = [
+  { value: 'seen', label: 'Seen' },
+  { value: 'recognize', label: 'Recognize' },
+  { value: 'apply', label: 'Apply' },
+  { value: 'derive', label: 'Derive' },
+]
 
 function TypeBadge({ type }) {
   return (
@@ -10,16 +16,18 @@ function TypeBadge({ type }) {
   )
 }
 
-export default function NodePanelHeader({ selectedNode, onClose, onUnderstandingChange }) {
+export default function NodePanelHeader({
+  selectedNode,
+  onClose,
+  understandingState = 'unseen',
+  isVariableKnown = false,
+  onUnderstandingStateChange,
+}) {
   const title = selectedNode?.title ?? selectedNode?.name ?? ''
   const badgeLabel =
     selectedNode?.layer === 'variable'
       ? getVariableTypeLabel(selectedNode?.variable_type)
       : selectedNode?.type
-  const understandingLabel =
-    selectedNode?.layer === 'variable'
-      ? 'I understand this definition.'
-      : 'I understand this concept.'
   const formulaInTitle =
     selectedNode?.formula && title.includes(selectedNode.formula) ? selectedNode.formula : null
   const titleParts = formulaInTitle ? title.split(formulaInTitle) : [title]
@@ -42,20 +50,49 @@ export default function NodePanelHeader({ selectedNode, onClose, onUnderstanding
           {typeof selectedNode?.domain === 'string' ? (
             <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{selectedNode.domain}</p>
           ) : null}
-          <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-xs text-slate-300">
-            <input
-              type="checkbox"
-              checked={isUnderstood(selectedNode.id)}
-              onChange={(event) => {
-                setUnderstood(selectedNode.id, event.target.checked)
-                if (typeof onUnderstandingChange === 'function') {
-                  onUnderstandingChange()
-                }
-              }}
-              className="h-3.5 w-3.5 rounded border-slate-500 bg-slate-800 text-cyan-400 focus:ring-cyan-400/60"
-            />
-            <span>{understandingLabel}</span>
-          </label>
+          {selectedNode?.layer === 'concept' ? (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Understanding
+              </span>
+              <div
+                className="inline-flex overflow-hidden rounded-md border border-slate-600/70"
+                role="group"
+                aria-label="Concept understanding"
+              >
+                {UNDERSTANDING_OPTIONS.map((option) => {
+                  const selected = understandingState === option.value
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => onUnderstandingStateChange?.(selectedNode.id, option.value)}
+                      aria-pressed={selected}
+                      className={`px-2.5 py-1 text-[11px] font-semibold tracking-wide transition ${
+                        selected
+                          ? 'bg-cyan-500/25 text-cyan-100'
+                          : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700/90'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  )
+                })}
+              </div>
+              <button
+                type="button"
+                onClick={() => onUnderstandingStateChange?.(selectedNode.id, 'unseen')}
+                className="rounded border border-slate-600/70 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-300 transition hover:bg-slate-800/85"
+              >
+                Reset
+              </button>
+            </div>
+          ) : (
+            <p className="mt-3 text-xs text-slate-300">
+              <span className="font-semibold uppercase tracking-wider text-slate-400">Status: </span>
+              {isVariableKnown ? 'Known' : 'Unfamiliar'}
+            </p>
+          )}
         </div>
         <button
           type="button"

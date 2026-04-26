@@ -6,6 +6,7 @@ import {
   ReactFlow,
   useNodesState,
 } from 'reactflow'
+import { isStateAtLeast, isStateAtMost } from '../lib/understanding'
 import FloatingEdge from './FloatingEdge.jsx'
 import CameraController from './graph/CameraController.jsx'
 import LayoutControls from './graph/LayoutControls.jsx'
@@ -24,7 +25,8 @@ function toFlowNodes(
   focalNodeIds,
   neighborNodeIds,
   distantNodeIds,
-  understoodNodeIds,
+  understandingStatesById,
+  frontierConceptIds,
 ) {
   return nodes.map((node) => {
     const nodeX = typeof node.position?.x === 'number' ? node.position.x : 0
@@ -51,14 +53,44 @@ function toFlowNodes(
         canonicalSymbol: node.canonical_symbol,
         mass: node.mass,
         visualState,
-        isUnderstood: understoodNodeIds.has(node.id),
+        understandingState:
+          node.layer === 'concept' && typeof understandingStatesById?.[node.id] === 'string'
+            ? understandingStatesById[node.id]
+            : 'unseen',
+        isFrontierConcept: node.layer === 'concept' && frontierConceptIds.has(node.id),
         node,
       },
     }
   })
 }
 
-function toFlowEdges(edges, selectedNodeId, neighborNodeIds, understoodNodeIds) {
+function getFrontierConceptIds(edges, nodeById, understandingStatesById) {
+  const ids = new Set()
+  for (const edge of edges) {
+    if (edge.type !== 'foundational') {
+      continue
+    }
+    const sourceNode = nodeById.get(edge.source)
+    const targetNode = nodeById.get(edge.target)
+    if (sourceNode?.layer !== 'concept' || targetNode?.layer !== 'concept') {
+      continue
+    }
+    const sourceState = understandingStatesById?.[edge.source] ?? 'unseen'
+    const targetState = understandingStatesById?.[edge.target] ?? 'unseen'
+    if (isStateAtLeast(sourceState, 'apply') && isStateAtMost(targetState, 'seen')) {
+      ids.add(edge.target)
+    }
+  }
+  return ids
+}
+
+function toFlowEdges(
+  edges,
+  selectedNodeId,
+  neighborNodeIds,
+  understandingStatesById,
+  nodeById,
+) {
   return edges.map((edge) => ({
     id: edge.id,
     type: 'atlas',
@@ -75,15 +107,24 @@ function toFlowEdges(edges, selectedNodeId, neighborNodeIds, understoodNodeIds) 
             : neighborNodeIds.has(edge.source) && neighborNodeIds.has(edge.target)
               ? 'neighbor'
               : 'distant',
-      isFrontier:
-        edge.type === 'foundational' &&
-        understoodNodeIds.has(edge.source) &&
-        !understoodNodeIds.has(edge.target),
+      isFrontier: (() => {
+        if (edge.type !== 'foundational') {
+          return false
+        }
+        const sourceNode = nodeById.get(edge.source)
+        const targetNode = nodeById.get(edge.target)
+        if (sourceNode?.layer !== 'concept' || targetNode?.layer !== 'concept') {
+          return false
+        }
+        const sourceState = understandingStatesById?.[edge.source] ?? 'unseen'
+        const targetState = understandingStatesById?.[edge.target] ?? 'unseen'
+        return isStateAtLeast(sourceState, 'apply') && isStateAtMost(targetState, 'seen')
+      })(),
     },
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understoodNodeIds: Set<string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, isMobile?: boolean }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understandingStatesById?: Record<string, string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onResetToCanonical?: () => void, onResetSelected?: () => void, onExportLayout?: () => void, onImportLayout?: (file: File) => void | Promise<void>, isMobile?: boolean }} props */
 export default function GraphCanvas({
   nodes,
   edges,
@@ -95,7 +136,7 @@ export default function GraphCanvas({
   focalNodeIds,
   neighborNodeIds,
   distantNodeIds,
-  understoodNodeIds,
+  understandingStatesById = {},
   onNodeClick,
   onNodePositionCommit,
   onResetToCanonical,
@@ -133,9 +174,13 @@ export default function GraphCanvas({
     [nodes, selectedNodeId],
   )
   const emphasisSelectedNodeId = selectedNode?.layer === 'concept' ? selectedNodeId : null
+  const nodeById = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes])
+  const frontierConceptIds = useMemo(
+    () => getFrontierConceptIds(edges, nodeById, understandingStatesById),
+    [edges, nodeById, understandingStatesById],
+  )
 
   const flowNodes = useMemo(() => {
-    const nodeById = new Map(nodes.map((node) => [node.id, node]))
     const visibleConceptIds = new Set(
       nodes
         .filter(
@@ -186,7 +231,8 @@ export default function GraphCanvas({
       focalNodeIds,
       neighborNodeIds,
       distantNodeIds,
-      understoodNodeIds,
+      understandingStatesById,
+      frontierConceptIds,
     )
     return mapped
   }, [
@@ -196,9 +242,11 @@ export default function GraphCanvas({
     neighborNodeIds,
     nodes,
     edges,
-    understoodNodeIds,
+    understandingStatesById,
+    frontierConceptIds,
     activeDomains,
     activeLayers,
+    nodeById,
   ])
   const [interactiveNodes, setInteractiveNodes, onNodesChange] = useNodesState(flowNodes)
 
@@ -211,8 +259,21 @@ export default function GraphCanvas({
     const filtered = edges.filter(
       (edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
     )
-    return toFlowEdges(filtered, emphasisSelectedNodeId, neighborNodeIds, understoodNodeIds)
-  }, [edges, emphasisSelectedNodeId, interactiveNodes, neighborNodeIds, understoodNodeIds])
+    return toFlowEdges(
+      filtered,
+      emphasisSelectedNodeId,
+      neighborNodeIds,
+      understandingStatesById,
+      nodeById,
+    )
+  }, [
+    edges,
+    emphasisSelectedNodeId,
+    interactiveNodes,
+    neighborNodeIds,
+    understandingStatesById,
+    nodeById,
+  ])
 
   const handleNodeClick = useCallback(
     (_, rfNode) => {

@@ -5,13 +5,13 @@ import GraphCanvas from './components/GraphCanvas.jsx'
 import LayerToggleBar from './components/LayerToggleBar.jsx'
 import MobileControlsOverlay from './components/MobileControlsOverlay.jsx'
 import NodePanel from './components/NodePanel.jsx'
-import { getAllEntities } from './data'
+import { computeAppearsIn, getAllEntities } from './data'
 import { buildEdges, normalizePrerequisiteWeight } from './data/edges'
 import { LAYERS } from './data/layers'
 import useIsMobile, { MOBILE_BREAKPOINT_PX } from './hooks/useIsMobile'
 import { computeLayout, computeMass } from './lib/layout'
 import { resolveRenderPosition } from './lib/resolveRenderPosition'
-import { getUnderstood } from './lib/understanding'
+import { getAllStates, setState } from './lib/understanding'
 import {
   buildLayoutExportPayload,
   clearUserLayoutStore,
@@ -140,11 +140,23 @@ export default function App() {
     () => allEntities.filter((entity) => entity.layer === 'concept'),
     [allEntities],
   )
+  const variableEntities = useMemo(
+    () => allEntities.filter((entity) => entity.layer === 'variable'),
+    [allEntities],
+  )
   const edges = useMemo(() => {
     return buildEdges(allEntities)
   }, [allEntities])
   const nodeById = useMemo(() => new Map(allEntities.map((node) => [node.id, node])), [allEntities])
-  const understoodNodeIds = useMemo(() => getUnderstood(), [understandingVersion])
+  const conceptById = useMemo(
+    () => new Map(conceptEntities.map((concept) => [concept.id, concept])),
+    [conceptEntities],
+  )
+  const appearsInByVariableId = useMemo(
+    () => computeAppearsIn(variableEntities, conceptEntities),
+    [conceptEntities, variableEntities],
+  )
+  const understandingStatesById = useMemo(() => getAllStates(), [understandingVersion])
   const allDomains = useMemo(
     () =>
       [...new Set(allEntities.map((entity) => entity.domain).filter((domain) => typeof domain === 'string'))]
@@ -238,6 +250,9 @@ export default function App() {
   const handleNodeClick = useCallback((node) => {
     setSelectedNodeId(node?.id ?? null)
   }, [])
+  const handleSelectEntity = useCallback((entityId) => {
+    setSelectedNodeId(typeof entityId === 'string' ? entityId : null)
+  }, [])
 
   const toggleDomain = useCallback((domain) => {
     setVisibleDomains((current) => {
@@ -270,7 +285,11 @@ export default function App() {
     setSelectedNodeId(null)
   }, [])
 
-  const handleUnderstandingChange = useCallback(() => {
+  const handleUnderstandingStateChange = useCallback((entityId, nextState) => {
+    if (typeof entityId !== 'string' || entityId.length === 0) {
+      return
+    }
+    setState(entityId, nextState)
     setUnderstandingVersion((value) => value + 1)
   }, [])
 
@@ -530,7 +549,7 @@ export default function App() {
         focalNodeIds={focalNodeIds}
         neighborNodeIds={neighborNodeIds}
         distantNodeIds={distantNodeIds}
-        understoodNodeIds={understoodNodeIds}
+        understandingStatesById={understandingStatesById}
         onNodeClick={handleNodeClick}
         onNodePositionCommit={handleNodePositionCommit}
         onResetToCanonical={handleResetToCanonical}
@@ -547,7 +566,11 @@ export default function App() {
         prerequisiteLinks={prerequisiteLinks}
         enablesLinks={enablesLinks}
         onClose={handleClosePanel}
-        onUnderstandingChange={handleUnderstandingChange}
+        onUnderstandingStateChange={handleUnderstandingStateChange}
+        onSelectEntity={handleSelectEntity}
+        conceptById={conceptById}
+        appearsInByVariableId={appearsInByVariableId}
+        understandingStatesById={understandingStatesById}
       />
     </main>
   )
