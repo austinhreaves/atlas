@@ -4,6 +4,7 @@ import { validateConceptNode, validateEntity, validateVariableNode } from './sch
 const validConcept = {
   id: 'ohms-law',
   layer: 'concept',
+  subject: 'physics',
   title: "Ohm's Law",
   type: 'law',
   domain: 'electromagnetism',
@@ -19,7 +20,8 @@ const validConcept = {
   description: 'Linear relation between V and I with R constant.',
   prerequisites: [],
   visual: { type: 'none', url: null, caption: null },
-  tags: ['circuits'],
+  sub_domains: [],
+  tags: ['kw-electromagnetism'],
   author: 'austin',
   review_state: 'published',
 }
@@ -84,6 +86,55 @@ describe('schema v3 validators', () => {
     expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
   })
 
+  it('rejects concept subjects that are not in the subject registry', () => {
+    const errors = validateConceptNode({ ...validConcept }, {
+      subjectValidationContext: {
+        enforceMembership: true,
+        subjectIds: new Set(['physics']),
+      },
+    })
+    expect(errors).toEqual([])
+
+    const invalidErrors = validateConceptNode(
+      { ...validConcept, subject: 'chemistry' },
+      {
+        subjectValidationContext: {
+          enforceMembership: true,
+          subjectIds: new Set(['physics']),
+        },
+      },
+    )
+    expect(invalidErrors).toContain('subject references unknown subject id: chemistry')
+  })
+
+  it('rejects concept sub-domains not in the registry', () => {
+    const errors = validateConceptNode(
+      { ...validConcept, sub_domains: ['not-in-registry'] },
+      {
+        subdomainValidationContext: {
+          enforceMembership: true,
+          subdomainIds: new Set(['circuits']),
+          subdomainById: new Map([['circuits', { domains: ['electromagnetism'] }]]),
+        },
+      },
+    )
+    expect(errors).toContain('sub_domains[0] references unknown sub-domain id: not-in-registry')
+  })
+
+  it('rejects domain-incompatible sub-domains', () => {
+    const errors = validateConceptNode(
+      { ...validConcept, domain: 'mechanics', sub_domains: ['circuits'] },
+      {
+        subdomainValidationContext: {
+          enforceMembership: true,
+          subdomainIds: new Set(['circuits']),
+          subdomainById: new Map([['circuits', { domains: ['electromagnetism'] }]]),
+        },
+      },
+    )
+    expect(errors).toContain('sub_domains[0] is not allowed for domain "mechanics": circuits')
+  })
+
   it('accepts empty concept tags', () => {
     expect(validateConceptNode({ ...validConcept, tags: [] })).toEqual([])
   })
@@ -92,6 +143,13 @@ describe('schema v3 validators', () => {
     const conceptWithoutTags = { ...validConcept }
     delete conceptWithoutTags.tags
     expect(validateConceptNode(conceptWithoutTags)).toEqual([])
+  })
+
+  it('accepts concept nodes when sub_domains is empty or absent', () => {
+    expect(validateConceptNode({ ...validConcept, sub_domains: [] })).toEqual([])
+    const conceptWithoutSubdomains = { ...validConcept }
+    delete conceptWithoutSubdomains.sub_domains
+    expect(validateConceptNode(conceptWithoutSubdomains)).toEqual([])
   })
 
   it('accepts a valid variable entity', () => {

@@ -5,6 +5,7 @@ function createValidConcept(overrides = {}) {
   return {
     id: 'newtons-second-law',
     layer: 'concept',
+    subject: 'physics',
     title: "Newton's Second Law",
     type: 'law',
     domain: 'mechanics',
@@ -27,7 +28,8 @@ function createValidConcept(overrides = {}) {
     prerequisites: [{ id: 'kinematics-velocity-time', type: 'foundational', weight: 0.9 }],
     mass: null,
     visual: { type: 'none', url: null, caption: null },
-    tags: ['mechanics'],
+    sub_domains: [],
+    tags: ['kw-mechanics'],
     position: null,
     author: 'austin',
     review_state: 'published',
@@ -48,7 +50,7 @@ function createValidVariable(overrides = {}) {
     vector_or_scalar: 'vector',
     sign_convention: 'Positive along chosen axis.',
     common_aliases: [{ symbol: 'a_x', context: 'x-component in 1D projections' }],
-    tags: ['mechanics'],
+    tags: ['kw-mechanics'],
     author: 'austin',
     review_state: 'published',
     last_reviewed: '2026-04-25',
@@ -121,6 +123,53 @@ describe('validateConceptNode', () => {
   it('rejects concept tags that are not in the registry', () => {
     const errors = validateConceptNode(createValidConcept({ tags: ['not-in-registry'] }))
     expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
+  })
+
+  it('rejects concept subjects that are not in the subject registry', () => {
+    const errors = validateConceptNode(createValidConcept(), {
+      subjectValidationContext: {
+        enforceMembership: true,
+        subjectIds: new Set(['physics']),
+      },
+    })
+    expect(errors).toEqual([])
+
+    const invalidErrors = validateConceptNode(createValidConcept({ subject: 'chemistry' }), {
+      subjectValidationContext: {
+        enforceMembership: true,
+        subjectIds: new Set(['physics']),
+      },
+    })
+    expect(invalidErrors).toContain('subject references unknown subject id: chemistry')
+  })
+
+  it('rejects concept sub-domains that are not in the registry', () => {
+    const errors = validateConceptNode(createValidConcept({ sub_domains: ['not-in-registry'] }), {
+      subdomainValidationContext: {
+        enforceMembership: true,
+        subdomainIds: new Set(['kinematics']),
+        subdomainById: new Map([['kinematics', { domains: ['mechanics'] }]]),
+      },
+    })
+    expect(errors).toContain('sub_domains[0] references unknown sub-domain id: not-in-registry')
+  })
+
+  it('rejects sub-domains that are invalid for the concept domain', () => {
+    const errors = validateConceptNode(createValidConcept({ sub_domains: ['circuits'] }), {
+      subdomainValidationContext: {
+        enforceMembership: true,
+        subdomainIds: new Set(['circuits']),
+        subdomainById: new Map([['circuits', { domains: ['electromagnetism'] }]]),
+      },
+    })
+    expect(errors).toContain('sub_domains[0] is not allowed for domain "mechanics": circuits')
+  })
+
+  it('accepts empty sub_domains and missing sub_domains field', () => {
+    expect(validateConceptNode(createValidConcept({ sub_domains: [] }))).toEqual([])
+    const conceptWithoutSubdomains = createValidConcept()
+    delete conceptWithoutSubdomains.sub_domains
+    expect(validateConceptNode(conceptWithoutSubdomains)).toEqual([])
   })
 
   it('accepts concept tags as an empty array', () => {

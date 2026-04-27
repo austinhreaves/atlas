@@ -34,6 +34,8 @@ Each entity in Atlas includes a `layer` field and is validated by the schema val
 
 - Concepts: `src/data/concepts/*.json` (one file per domain)
 - Variables: `src/data/variables.json`
+- Subjects registry: `src/data/subjects.json`
+- Sub-domains registry: `src/data/sub-domains.json`
 - Tags registry: `src/data/tags.json`
 
 Runtime helpers in `src/data/index.js`:
@@ -44,10 +46,24 @@ Runtime helpers in `src/data/index.js`:
 
 `appears_in` is not authored directly in variable JSON. It is computed from concept variable references.
 
-### Tags Registry
+### Subject, Domain, and Sub-domain
 
-Tags are a shared, registry-controlled vocabulary used for filtering and panel labels. Tags do not alter
-domain color/shape encodings.
+Concept entities now carry:
+
+- `subject` (required): top-level corpus grouping (`physics` in the current dataset)
+- `domain` (required): canonical single domain used for graph color encoding
+- `sub_domains` (optional array): registry-backed topical buckets used for primary filtering
+
+Registry files and validators:
+
+- `src/data/subjects.json` + `src/data/subjects.js`
+- `src/data/sub-domains.json` + `src/data/subdomains.js`
+- Membership checks in `src/data/schema.js`
+
+### Tags Registry (Keywords)
+
+Tags are now keyword-oriented metadata used for search/discovery context and future problem-linking.
+Primary browse filtering is handled by subject/domain/sub-domain.
 
 - Registry file: `src/data/tags.json`
 - Registry validation: `src/data/tags.js`

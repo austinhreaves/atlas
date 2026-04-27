@@ -22,7 +22,9 @@ export default function NodePanelHeader({
   understandingState = 'unseen',
   isVariableKnown = false,
   onUnderstandingStateChange,
-  onTagClick,
+  onSubdomainClick,
+  subdomainLabelById = {},
+  subdomainDescriptionById = {},
   tagLabelById = {},
   tagDescriptionById = {},
 }) {
@@ -34,6 +36,10 @@ export default function NodePanelHeader({
   const formulaInTitle =
     selectedNode?.formula && title.includes(selectedNode.formula) ? selectedNode.formula : null
   const titleParts = formulaInTitle ? title.split(formulaInTitle) : [title]
+  const conceptSubdomains =
+    selectedNode?.layer === 'concept' && Array.isArray(selectedNode?.sub_domains)
+      ? selectedNode.sub_domains
+      : []
   const conceptTags =
     selectedNode?.layer === 'concept' && Array.isArray(selectedNode?.tags)
       ? selectedNode.tags
@@ -54,21 +60,36 @@ export default function NodePanelHeader({
               title
             )}
           </h2>
-          {typeof selectedNode?.domain === 'string' ? (
-            <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{selectedNode.domain}</p>
+          {typeof selectedNode?.domain === 'string' || typeof selectedNode?.subject === 'string' ? (
+            <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">
+              {[selectedNode?.subject, selectedNode?.domain].filter(Boolean).join(' / ')}
+            </p>
+          ) : null}
+          {conceptSubdomains.length > 0 ? (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              {conceptSubdomains.map((subdomainId) => (
+                <button
+                  key={subdomainId}
+                  type="button"
+                  onClick={() => onSubdomainClick?.(subdomainId)}
+                  title={subdomainDescriptionById[subdomainId] ?? ''}
+                  className="rounded border border-slate-600/70 bg-slate-800/85 px-2 py-0.5 text-[11px] font-medium capitalize tracking-wide text-slate-300 transition hover:bg-slate-700/90"
+                >
+                  {subdomainLabelById[subdomainId] ?? subdomainId}
+                </button>
+              ))}
+            </div>
           ) : null}
           {conceptTags.length > 0 ? (
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
               {conceptTags.map((tagId) => (
-                <button
+                <span
                   key={tagId}
-                  type="button"
-                  onClick={() => onTagClick?.(tagId)}
                   title={tagDescriptionById[tagId] ?? ''}
-                  className="rounded border border-slate-600/70 bg-slate-800/85 px-2 py-0.5 text-[11px] font-medium capitalize tracking-wide text-slate-300 transition hover:bg-slate-700/90"
+                  className="rounded border border-slate-700/80 bg-slate-900/70 px-2 py-0.5 text-[11px] font-medium tracking-wide text-slate-400"
                 >
                   {tagLabelById[tagId] ?? tagId}
-                </button>
+                </span>
               ))}
             </div>
           ) : null}

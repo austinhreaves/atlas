@@ -11,7 +11,7 @@ function Chevron({ expanded }) {
   )
 }
 
-/** @param {{ tags?: Array<{id: string, label: string, description: string, review_state: string}>, includeDraftContent?: boolean, activeTags: Set<string>, onToggleTag: (tagId: string) => void, onSelectAllTags: () => void, onClearAllTags: () => void }} props */
+/** @param {{ tags?: Array<{id: string, label: string, description: string, review_state: string}>, includeDraftContent?: boolean, activeTags: Set<string>, onToggleTag: (tagId: string) => void, onSelectAllTags: () => void, onClearAllTags: () => void, title?: string }} props */
 export default function TagFilterPanel({
   tags = [],
   includeDraftContent = false,
@@ -19,6 +19,7 @@ export default function TagFilterPanel({
   onToggleTag,
   onSelectAllTags,
   onClearAllTags,
+  title = 'Tags',
 }) {
   const [expanded, setExpanded] = useState(false)
   const visibleTags = useMemo(
@@ -50,7 +51,7 @@ export default function TagFilterPanel({
         aria-expanded={expanded}
       >
         <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-          Tags ({activeCount}/{totalCount})
+          {title} ({activeCount}/{totalCount})
         </span>
         <Chevron expanded={expanded} />
       </button>

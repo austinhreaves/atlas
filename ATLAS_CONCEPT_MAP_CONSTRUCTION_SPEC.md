@@ -1,142 +1,625 @@
-# Atlas — Concept Map Construction Mode (Pedagogical Primitive)
+# Atlas — Concept Map Construction Mode (v2)
 
-> This is a phase-agnostic addendum. Requirements are self-contained.
+> **This document supersedes** the original `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md`.
+> It also retires **Author Mode** (Move 2) from `ATLAS_LAYOUT_AUTHORING_SPEC.md`.
+> See "What this retires / what it retains" below.
+>
 > Cursor: read this document in full before implementing any part of it.
-> Phase placement: MVP lands in Phase 3b, after
-> `ATLAS_LAYOUT_AUTHORING_SPEC.md` is implemented. This spec depends on
-> that one for layout state, file format, and serialization plumbing.
+> Phase placement: Phase 3b, sequenced after `ATLAS_LAYOUT_AUTHORING_SPEC.md`
+> Move 1 is implemented.
+
+---
+
+## What this retires / what it retains
+
+### Retained
+
+**`ATLAS_LAYOUT_AUTHORING_SPEC.md` Move 1** — drag interaction, position
+persistence (`atlas_user_layout_v1`), resolution order, export/import
+plumbing, and the `.atlas-layout.json` file format scaffold. Construction
+mode inherits all of this directly. No re-implementation needed.
+
+### Retired
+
+**`ATLAS_LAYOUT_AUTHORING_SPEC.md` Move 2** — Author Mode (`?edit=layout`),
+the two-store discipline, and canonical-patch export. The live UI pathway
+for promoting dragged positions to canonical pins is no longer planned.
+
+**Why:** Canonical graph management returns to a direct backend workflow.
+Austin builds maps in Atlas, exports them, and hands the resulting files
+to Cursor for repo inclusion via standard PR review. The layout-authoring
+UI was engineering overhead solving a problem that a one-person authoring
+workflow doesn't actually have. The file format and drag infrastructure
+from Move 1 survive intact; only the live editor interface is cut.
+
+**`ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` (original)** — the node-bank-
+only construction model, the four rigid exercise variants (A–D), and the
+assignment-scoped node set. These are replaced by the more open model
+below.
 
 ---
 
 ## Problem statement
 
-Atlas's reference and exploration modes treat the canonical graph as the
-artifact a student consumes. Concept-map research from physics education
-(Novak; Mintzes, Wandersee, Novak; PER concept-mapping literature)
-establishes that the *act of constructing* a map of conceptual
-relationships is itself a high-leverage learning activity — students who
-build their own maps and then compare them to canonical references retain
-structural understanding measurably better than students who only read
-canonical maps.
+The original construction mode treated the Atlas corpus as the *only*
+source of building blocks: students placed canonical nodes and drew edges
+between them. That model is appropriate for exercises where the goal is
+to recover known relational structure. It is too narrow for the full
+range of learning activities we want to support.
 
-Atlas is uniquely positioned to operationalize this. Phase 3a's
-multi-layer corpus, Phase 3b's curriculum-scale concept set, and the
-layout-authoring infrastructure from
-`ATLAS_LAYOUT_AUTHORING_SPEC.md` together provide the substrate for a
-*construction mode*: students drag a curated set of concepts into a
-spatial arrangement that makes sense to them, draw the connections they
-believe exist, and submit the resulting map as evidence of their
-conceptual organization. Peer and TA review of the submission — with
-inline annotations — is where the most important learning happens.
+Two gaps:
 
-This spec defines that mode.
+1. **Students can't externalize synthesis.** A student who genuinely
+   understands RC circuits may draw a connection between "exponential
+   decay" and "time constant" using their own framing — framing that may
+   not map cleanly onto any edge type in the canonical graph. Forcing
+   them into canonical vocabulary suppresses the most interesting
+   diagnostic signal.
+
+2. **Instructors can't scaffold partial structures.** An instructor may
+   want to hand students a partial map — a few nodes pre-placed, no
+   edges drawn — and ask them to complete it. The old model had no
+   mechanism for an instructor to produce and share such a scaffold.
+
+This redesign addresses both:
+
+- Students can build maps using **canonical nodes** (from the Atlas
+  corpus), **student-created nodes** (named and populated from scratch),
+  or any mix.
+- Instructors author maps externally (building and exporting from Atlas
+  directly) and deposit them in a **library** that students load from a
+  landing page.
+- The canonical graph remains accessible as a **reference** (separate
+  tab), never a constraint.
+- Every edge the student draws prompts them to **explain the
+  connection** — the reflective step that is the pedagogical core of
+  the whole activity.
 
 ---
 
 ## Pedagogical thesis
 
-Construction mode operationalizes three claims:
+Three claims, updated:
 
-1. **Mental models are spatial.** Students who can produce a coherent
-   spatial arrangement of related concepts have a more durable grasp of
-   the conceptual structure than students who only recognize one when
-   shown.
-2. **Drawing the edges is harder than recognizing them.** A student who
-   can identify a prerequisite relationship in canonical content may
-   still fail to draw it from scratch. The asymmetry is diagnostic.
+1. **Mental models are spatial and relational.** Students who can produce
+   a coherent spatial arrangement of related concepts *and* articulate
+   why each connection exists have a more durable grasp of conceptual
+   structure than students who only recognize one when shown.
+
+2. **Drawing the edges — and explaining them — is harder than recognizing
+   them.** A student who can identify a prerequisite relationship in
+   canonical content may still fail to draw it from scratch and fail
+   harder to articulate *why* it holds. The explanation prompt surfaces
+   the second failure mode, which is the more diagnostic one.
+
 3. **The discussion is the learning.** Comparing maps — student-to-
    canonical, student-to-peer, student-to-TA-annotation — surfaces
-   misconceptions and structural gaps in a way no closed-form quiz
-   does. The submission is a discussion artifact, not a final answer.
+   misconceptions and structural gaps in a way no closed-form quiz does.
+   The submission is a discussion artifact, not a final answer.
 
-Construction mode is engineered around these claims. Every design
-decision below is downstream of them.
-
----
-
-## Design constraints inherited from the corpus
-
-- **Depends on `ATLAS_LAYOUT_AUTHORING_SPEC.md`** for: drag interaction,
-  position resolution order, file-format scaffold (`format:
-  "atlas-layout"` versioning), import/export plumbing, localStorage
-  conventions. This spec extends those primitives; it does not redefine
-  them.
-- **Layer = shape, domain = color**
-  (`ATLAS_MAIN_SPEC.md` §"Visual encoding budget"). Construction mode
-  operates on existing concept and variable nodes; it does not add new
-  shapes, layers, or colors.
-- **Layout is computed once per session and cached**
-  (`ATLAS_PHASE3A_SPEC.md`). Construction mode does NOT run the force
-  simulation against student-drawn edges; the edges are pure overlays.
-  Node positions are student-authored from initial node-bank state, not
-  force-computed.
-- **The canonical graph is never mutated by student activity.**
-  (`ATLAS_VISION.md`, `ATLAS_AUTHORING_SPEC.md`.) Construction mode is
-  read-only against canonical entity JSON. Student-drawn edges, student
-  positions, and student annotations live entirely in
-  construction-mode files and stores; canonical never reads from them.
-- **The graph is for students, not for the LLM**
-  (`ATLAS_AUTHORING_SPEC.md`). The eventual AI tutor RAG-grounds on
-  canonical content only. Construction-mode submissions are NOT
-  ingested as content, ever.
-- **Public-tool ethos** (`ATLAS_VISION.md`). A user without an
-  assignment can still enter construction mode for self-study. No
-  account or institutional gate.
-- **Hover ≠ select; selection is sacred**
-  (`ATLAS_REVEAL_NEIGHBORS_SPEC.md`,
-  `ATLAS_NODE_AFFORDANCES_SPEC.md`). Construction-mode interaction
-  preserves these invariants.
-- **No backend, no accounts, no LTI** (Phase 3b out-of-scope per
-  `ATLAS_PHASE3B_SPEC.md`). Submissions are files; Canvas is the
-  delivery channel via standard file submission.
+4. **Student-created nodes are evidence of synthesis.** A student who
+   creates a node called "RC time constant" and connects it to
+   "exponential decay" with the explanation "τ = RC sets the decay rate"
+   has demonstrated understanding that no node-bank-only exercise could
+   capture. Student-created nodes are first-class evidence, not a
+   workaround.
 
 ---
 
-## The three modes of Atlas
+## Design constraints
 
-This spec formalizes Atlas as having three distinct modes, with explicit
-URL gates and visible mode banners:
+- **Canonical graph is never mutated by student activity.** Student-drawn
+  edges, student positions, student-created nodes, and student
+  annotations live entirely in construction-mode files and stores.
+  Canonical entity JSON is read-only from within construction mode.
+
+- **Canonical graph is reference, not scaffold.** Students can open the
+  canonical graph in a separate tab at any time. It does not pre-populate
+  edges on their canvas.
+
+- **No backend, no accounts, no LTI (Phase 3b).** Submissions are files.
+  Canvas is the delivery channel for graded assignments via standard file
+  upload.
+
+- **Layer = shape, domain = color** (`ATLAS_MAIN_SPEC.md` visual encoding
+  budget). Canonical nodes in construction mode retain their canonical
+  visual encoding. Student-created nodes use a distinct visual treatment
+  (see "Node types" below).
+
+- **Layout infrastructure from Move 1.** Construction mode reuses drag
+  interaction, position persistence, and file-format patterns from
+  `ATLAS_LAYOUT_AUTHORING_SPEC.md` Move 1. Positions for both canonical
+  and student-created nodes live in the construction store, which uses
+  the same shape as the user-layout store but at a distinct localStorage
+  key.
+
+- **Hover ≠ select; selection is sacred** (`ATLAS_NODE_AFFORDANCES_SPEC.md`).
+  Construction-mode interaction preserves these invariants.
+
+- **Public-tool ethos** (`ATLAS_VISION.md`). A user without an assignment
+  can enter construction mode for self-study. No account or institutional
+  gate.
+
+---
+
+## The two modes of Atlas (revised)
+
+Author Mode is retired. Atlas now has two modes:
 
 | Mode | Gate | Banner | Purpose |
 |---|---|---|---|
-| Reference | default | none | Browse the canonical graph (current Atlas) |
-| Author | `?edit=layout` | "Author mode" | Edit canonical layout (per layout-authoring spec) |
-| Construction | `?mode=construct[&assignment=<id>]` | "Construction mode — your work, not the canonical graph" | Build a personal/assignment concept map |
+| Reference | default | none | Browse the canonical graph |
+| Construction | `?mode=construct` | "Construction mode — your work, not the canonical graph" | Build a personal or assignment concept map |
 
 Modes are mutually exclusive within a session. Entering construction
-mode hides canonical edges, swaps to the construction UI, and switches
+mode hides canonical edges, loads the construction UI, and switches
 the persistence target. Exiting (clearing the URL param + reload)
-restores canonical view. The user's construction-mode work persists in
-localStorage across mode switches.
+restores the canonical reference view.
 
 ---
 
-## Conceptual model: the construction file
+## The landing page
 
-A construction-mode session produces a single artifact — a
-`.atlas-map.json` file (extension TBD; see Open Questions). The file is
-a superset of the layout-authoring file format:
+When a user navigates to `?mode=construct`, before any canvas is shown,
+they land on the **construction landing page** — a clean, full-screen
+selection UI with three entry paths.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ATLAS  ·  Construction Mode                                │
+│  Build your own concept map.                                │
+│                                                             │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────┐  │
+│  │  Load from       │  │  Start from      │  │  Import  │  │
+│  │  library         │  │  scratch         │  │  a map   │  │
+│  │                  │  │                  │  │          │  │
+│  │  Instructor maps │  │  Blank canvas.   │  │  Open a  │  │
+│  │  topic subgraphs │  │  All nodes       │  │  .atlas- │  │
+│  │  blank templates │  │  available.      │  │  map.json│  │
+│  └──────────────────┘  └──────────────────┘  └──────────┘  │
+│                                                             │
+│  My maps  (2 in progress)                                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+A **"My maps"** row at the bottom lists any in-progress construction
+sessions stored in localStorage, with title, last-modified timestamp,
+and a "Continue" button for each. This is visible immediately so
+returning students do not hunt for their work.
+
+### Landing page: Load from library
+
+Opens a library browser panel with three tabs:
+
+**Instructor maps** — `.atlas-map.json` files authored by instructors
+and deposited in the Atlas repo at `/library/instructor/`. Each entry
+shows: title, author, topic tags, short description, and a node/edge
+count badge. Loaded as a starting state that the student can freely
+edit. The instructor's node positions, student-created nodes (if any),
+and edges are all present; the student extends or modifies from there.
+
+**Topic subgraphs** — Auto-generated at runtime from canonical data.
+A topic subgraph for "RC Circuits" collects all canonical nodes tagged
+with that topic and places them at their canonical positions. **No
+canonical edges are rendered.** The student sees the nodes arranged
+spatially (a useful starting scaffold) but must draw every connection
+themselves. This is the equivalent of "here are the pieces — now
+assemble them." Topic subgraphs are listed by domain and topic tag;
+search is available.
+
+**Blank topic templates** — A named blank canvas. The associated topic's
+canonical nodes are loaded into the node bank (available to place) but
+none are placed. The canvas is empty. Students must place nodes and
+draw all edges. This is the most demanding variant — closest to a
+blank-sheet recall exercise.
+
+All three library types load into the same construction canvas. The
+source is recorded in the file's `library_source` field.
+
+### Landing page: Start from scratch
+
+Navigates directly to the construction canvas with:
+- Empty canvas (no nodes placed).
+- Full canonical node bank available (all published canonical nodes,
+  searchable and filterable by domain and topic tag).
+- Student-node creation available immediately.
+
+### Landing page: Import a map
+
+Opens a file picker for `.atlas-map.json`. Validates the file, then
+loads it into the construction canvas. The imported state is fully
+editable — the student can add nodes, add edges, modify explanations.
+This is the mechanism for:
+- Opening a peer's submitted map for review.
+- Opening an annotated submission returned by a TA.
+- Resuming work from a file backup.
+
+---
+
+## Construction canvas
+
+The canvas is the main working surface once an entry path is chosen.
+
+### Persistent elements
+
+- **Mode banner** (top, always visible): "Construction mode — your work,
+  not the canonical graph." Includes a "View canonical reference →"
+  button that opens the reference graph in a new browser tab.
+- **Node bank panel** (left edge, collapsible): canonical nodes available
+  to place, filtered/searched. A "+ New node" button opens the
+  student-node creation panel.
+- **Toolbar** (top-right): Save / Export / Submit, My Maps, author
+  widget, undo/redo.
+- **Edge explanation indicator**: a small count badge on the toolbar
+  showing "N edges without explanations" when any unfilled edges exist.
+
+### Canvas behaviors
+
+- Drag a node from the bank onto the canvas → it becomes placed.
+- Drag a placed node off the canvas (to a "remove" zone at the edge)
+  or right-click → remove → confirmation prompt → unplaces it and
+  removes touching edges.
+- Drag placed nodes to reposition them. Positions persist to the
+  construction store (not the user-layout store) on drag stop.
+- Canonical edges are hidden. Student-drawn edges are the only edges
+  rendered.
+- The force simulation is not run in construction mode. Node positions
+  are entirely student-authored from placement.
+
+---
+
+## Node types
+
+### 1 — Canonical nodes
+
+Nodes from the Atlas corpus. In construction mode they behave as
+follows:
+
+- **Source:** the canonical entity JSON. All published canonical concept
+  and variable nodes are available in the node bank.
+- **Visual encoding:** identical to reference mode — canonical shape
+  (circle for concept, diamond for variable), domain color, mass-based
+  size.
+- **Content:** read-only. The student can open a canonical node's panel
+  to read its definition, formula, applicability conditions, etc. They
+  cannot edit any of those fields from within construction mode.
+- **Placement:** drag from the bank to place; drag from the canvas to
+  reposition.
+
+Canonical nodes in the student's map are referenced by entity ID. They
+carry no construction-mode content of their own; all construction-mode
+annotations and edge explanations reference the canonical entity ID.
+
+### 2 — Student-created nodes
+
+Nodes the student names and populates from scratch.
+
+- **Source:** the student. Created via the "+ New node" button in the
+  node bank or via a keyboard shortcut on the canvas (double-click on
+  empty canvas area).
+- **Visual encoding:** distinct from all canonical shapes. Student nodes
+  render as **rounded rectangles** with a **dashed border** and a small
+  "student" badge (pencil glyph). Default fill is neutral gray; the
+  student can optionally assign a domain color from the canonical domain
+  palette (this does not declare the node "part of" that domain in any
+  formal sense — it is a visual organizational aid only).
+- **Content:** flexible. See "Student-created node panel" below.
+- **Placement:** created directly onto the canvas at the click point
+  (double-click) or placed from the bank after creation. Repositionable
+  by drag.
+- **Editability:** always editable. Click the node → opens the edit
+  panel.
+
+Student-created nodes are identified by `"id": "student-<uuid>"`.
+Their IDs never collide with canonical entity IDs.
+
+### Student-created node panel
+
+The panel for a student-created node has one default field and a set
+of optional fields the student can add.
+
+**Default (always present):**
+
+- **Title** — the node's name. Required; cannot be blank. Displayed on
+  the canvas.
+- **Notes** — a free-text area. Markdown supported; KaTeX permitted for
+  inline math. This is the catch-all field. No minimum length.
+
+**Optional fields (student adds any combination):**
+
+- **Formula** — a LaTeX-rendered expression. Useful for variable-like
+  or equation-like nodes.
+- **Description** — a more structured prose description, separate from
+  notes. Intended for "what this concept means" writing.
+- **Simplifying assumption** — "this node assumes…" Useful for
+  capturing regime-specific thinking.
+- **Applicability** — "this applies when…" Mirrors the canonical
+  applicability condition field.
+- **Misconception** — "students often think…" or "I used to think…"
+  High-signal reflection field.
+
+Optional fields are added via an "+ Add field" affordance at the bottom
+of the panel. Each added field is removable. The order is student-
+controlled (drag to reorder).
+
+**Design rationale:** Not every node deserves a formula. Not every
+node deserves an applicability condition. The default text box captures
+90% of what students actually need; the optional fields support the
+students who are thinking structurally enough to use them. Forcing the
+full canonical content schema onto student-created nodes would add
+friction and produce mostly empty fields.
+
+---
+
+## Edge drawing and "Explain the connection"
+
+### Drawing an edge
+
+1. Hover near a placed node's border → a connection handle appears.
+2. Click and drag from the handle → an in-progress edge follows the
+   cursor.
+3. Drop on another placed node's border → the edge is committed.
+
+Edges can connect canonical-to-canonical, canonical-to-student,
+student-to-canonical, or student-to-student nodes. There are no
+restrictions based on node type.
+
+Edges are **undirected by default** in the MVP. The student draws a
+line between two concepts; direction is expressed through the
+explanation text, not through an arrowhead. (Directed edge variant
+is post-MVP — see "Post-MVP" in Sequencing.)
+
+Edges are deletable: click an edge → keyboard delete, or right-click
+→ delete.
+
+### "Explain the connection" prompt
+
+When an edge is committed, it is saved immediately. Simultaneously, the
+**explanation popover** opens inline, anchored to the edge midpoint:
+
+```
+┌────────────────────────────────────────────┐
+│  Explain the connection                    │
+│  Ohm's Law ──── RC Circuits                │
+│                                            │
+│  ┌──────────────────────────────────────┐  │
+│  │  type your explanation here...       │  │
+│  └──────────────────────────────────────┘  │
+│                                            │
+│  [Save]  [Skip for now]                    │
+└────────────────────────────────────────────┘
+```
+
+- **"Save"** — writes the explanation to the edge. Popover closes.
+- **"Skip for now"** — closes the popover without writing an
+  explanation. The edge is saved with `explanation: null`.
+
+### Unfilled edge indicator
+
+Edges with `explanation: null` render with a **dashed stroke** instead
+of a solid stroke. This is the visual nudge. The dashed style persists
+until an explanation is written — there is no automatic expiration or
+penalty, but the visual signal is always present.
+
+The toolbar badge "N edges without explanations" provides a count and,
+when clicked, cycles through unfilled edges (pan/zoom to each in turn),
+opening the explanation popover for the student to fill in.
+
+### Editing an explanation
+
+Click any edge (filled or unfilled) → opens the edge detail panel,
+which shows the explanation text (or a prompt to add one if empty) plus
+an edit button. Explanations are editable at any time before submission.
+
+### Explanation semantics
+
+Explanations are free text. There is no enforced vocabulary, no type
+picker, no direction requirement in the MVP. The student writes whatever
+they think the connection is. This is deliberate: the open-ended
+explanation is the pedagogical artifact. A rubric-based review by a TA
+or peer is the appropriate evaluation mechanism, not an automated
+vocabulary check.
+
+---
+
+## Canonical reference tab
+
+The **"View canonical reference →"** button in the mode banner opens
+the Atlas canonical reference graph in a new browser tab.
+
+This is the standard Atlas reference mode, unmodified. The student can:
+- Browse the full canonical graph.
+- Open any node's detail panel to read its definition, formula,
+  applicability conditions, etc.
+- Follow edges to understand canonical relational structure.
+- Use search, filters, and the reveal-neighbors affordance.
+
+The canonical reference tab has no connection to the student's
+construction canvas. It does not highlight nodes the student has placed
+or show the student's edges. It is purely a reference lookup tool.
+
+**Why separate tab, not side panel:** A side panel showing the full
+canonical graph alongside a construction canvas creates a layout cramped
+enough to be unusable at typical screen sizes. More importantly,
+having the canonical graph immediately visible creates a strong temptation
+to copy rather than construct — the separate-tab interaction adds just
+enough friction to preserve the generative intent of the exercise. The
+student can still look things up; they just can't stare at the answer
+while drawing.
+
+---
+
+## Saving and persistence
+
+Construction-mode work persists continuously to localStorage. The key
+is `atlas_construction_<session_id>_v1`, where `<session_id>` is a
+short UUID assigned at canvas entry and stored in the file's `id` field.
+
+Auto-save fires on every state change (node placed, node moved, edge
+created, edge deleted, explanation saved, node content edited).
+
+Multiple sessions can be in progress simultaneously, each at its own
+localStorage key. The landing page's "My maps" row lists all active
+sessions, sorted by last-modified, with title and last-modified
+timestamp.
+
+**Session identity and title:** The session title defaults to
+"Untitled map — [date]" and can be edited via an inline rename in the
+toolbar. For library-loaded sessions, the title defaults to the
+library item's title.
+
+---
+
+## Authors and collaborators
+
+The author widget is visible in the toolbar. On first construction-
+mode entry, a one-time prompt captures the student's name, stored in
+localStorage at `atlas_user_identity_v1` as `{ name }`.
+
+The primary author is auto-populated from this identity. An "Add
+Collaborator" button prompts for a name and adds an entry with
+`role: "collaborator"`.
+
+Collaborators are file metadata only. There is no real-time co-editing
+and no per-author tracking of which nodes or edges belong to which
+collaborator.
+
+---
+
+## Export and sharing
+
+### Export as file
+
+"Export map" (available at any time, not just at submission) downloads
+the current construction state as a `.atlas-map.json` file. The file
+is a complete snapshot of the session, including all nodes, positions,
+edges, explanations, and annotations.
+
+This is the mechanism for:
+- Sharing a map with a peer for review.
+- Submitting to Canvas via standard file upload.
+- Handing a map to an instructor or TA.
+
+### Submission flow
+
+"Submit" (or "Export submission" — aliases) runs a pre-export checklist:
+
+1. **Validator** — runs `validateConstructionFile()`. Surfaces errors
+   (blocking) and warnings (non-blocking, must acknowledge).
+2. **Unfilled edges warning** — if any edges have `explanation: null`,
+   a non-blocking warning surfaces: "N edges are missing explanations.
+   Your reviewer will see them as dashed. Submit anyway?"
+3. **Author confirmation** — prompt to verify authors are correct.
+4. **Marks submitted** — sets `submission.submitted: true` and
+   `submission.submitted_at: <now>`.
+5. **Downloads file** — triggers browser download of the
+   `.atlas-map.json` file.
+
+**Post-submission session behavior:** After submission, the local session
+is flagged as `submission.submitted: true` in localStorage. In the "My
+Maps" landing page row, a submitted session renders with a lock icon and
+a "Submitted" badge. "Continue" on a submitted session does not reopen
+the session for editing; instead, a dialog presents two options:
+
+- **"Start a new revision"** — creates a new session (new UUID) with
+  the submitted session's full state as the starting point, minus the
+  submission flag and timestamp. The new session is independent; it
+  does not modify the submitted record.
+- **"Cancel"** — returns to the landing page.
+
+The submitted session itself is never modified after the fact. Its
+localStorage entry is retained as an immutable local record. A "Clear
+completed maps" button on the My Maps panel allows bulk deletion of
+submitted sessions when storage cleanup is desired.
+
+### Instructor map authoring (canonical workflow)
+
+Instructors author maps by working in Atlas directly (building the
+arrangement they want, placing canonical nodes, creating student-created
+nodes as needed), then exporting the result as `.atlas-map.json`.
+The exported file is deposited in the repo at `/library/instructor/`
+via standard PR, where it becomes available in the landing-page library.
+
+This is a file-in-repo workflow — no live authoring UI, no special
+author mode gate. The export format is identical to a student
+submission; the only distinction is the `exporter.role: "instructor"`
+field and the presence in the library path.
+
+### Library manifest schema
+
+The landing-page library is driven by a manifest file at
+`/library/instructor/manifest.json`. The application fetches this file
+at library-browser open time. The manifest lists all instructor maps;
+the actual `.atlas-map.json` files are co-located in the same
+directory.
+
+```json
+{
+  "manifest_version": 1,
+  "updated_at": "2026-04-26T00:00:00.000Z",
+  "entries": [
+    {
+      "id": "rc-circuits-week4",
+      "title": "RC Circuits — Week 4 Scaffold",
+      "description": "Nodes pre-placed. Draw the connections you believe exist between charging behavior, the time constant, and the underlying circuit laws.",
+      "author": "austin",
+      "topic_tags": ["rc-circuits", "dc-circuits", "capacitance"],
+      "domain_tags": ["E&M"],
+      "file": "rc-circuits-week4.atlas-map.json",
+      "format_version": 2,
+      "node_count": 6,
+      "edge_count": 0,
+      "library_type": "instructor-map"
+    }
+  ]
+}
+```
+
+**Required fields per entry:** `id` (unique slug), `title`, `file`
+(filename relative to `/library/instructor/`), `format_version`,
+`library_type` (`"instructor-map"`).
+
+**Optional fields:** `description`, `author`, `topic_tags`,
+`domain_tags`, `node_count`, `edge_count`. These populate the library
+browser card UI; missing optional fields render as absent (not as
+errors).
+
+**Sorting:** entries render in manifest order. Instructors control sort
+by ordering entries in the manifest file.
+
+**Fallback for malformed entries:** if a manifest entry fails to parse
+or its referenced file is missing/invalid, that entry is silently
+skipped in the library browser. A dev-console warning is emitted. The
+rest of the library loads normally.
+
+Topic subgraphs and blank templates are not listed in `manifest.json`;
+they are generated dynamically at runtime from the canonical corpus
+using topic/domain tag queries (same tag system as the domain filter
+bar in reference mode). No manifest entry is needed for them.
+
+---
+
+## Construction file format
+
+A `.atlas-map.json` file captures the complete construction session.
 
 ```json
 {
   "format": "atlas-concept-map",
-  "format_version": 1,
-  "extends": "atlas-layout/1",
-  "exported_at": "2026-04-25T12:34:56.000Z",
+  "format_version": 2,
+  "id": "session-<uuid>",
+  "title": "RC Circuits — Week 4",
+  "created_at": "2026-04-26T09:00:00.000Z",
+  "modified_at": "2026-04-26T14:22:00.000Z",
+  "exported_at": null,
+
   "atlas_corpus_hash": "sha256:abcd1234...",
   "atlas_corpus_version": "v3.0.0",
 
-  "exercise_variant": "recover-prerequisites-untyped",
-
-  "assignment": {
-    "id": "phy132-w04-rc-circuits",
-    "title": "PHY 132 Week 4 — RC Circuit Concept Map",
-    "instructor": "austin",
-    "due_at": "2026-05-01T23:59:00.000Z",
-    "node_set": ["ohms-law", "rc-circuits", "exponential-decay", "..."],
-    "rubric_url": null,
-    "instructions": "Free-text instructions authored with the assignment.",
-    "context_hash": "sha256:efgh5678..."
+  "library_source": {
+    "type": "topic-subgraph",
+    "topic": "rc-circuits",
+    "loaded_at": "2026-04-26T09:00:00.000Z"
   },
 
   "authors": [
@@ -144,36 +627,67 @@ a superset of the layout-authoring file format:
     { "name": "Student B", "role": "collaborator" }
   ],
 
-  "node_bank": {
-    "available": ["ohms-law", "rc-circuits", "..."],
-    "placed":    ["ohms-law", "rc-circuits"]
+  "exporter": {
+    "role": "student"
   },
 
+  "canonical_nodes": ["ohms-law", "rc-circuits", "capacitance", "resistance"],
+
+  "student_nodes": [
+    {
+      "id": "student-a1b2c3d4",
+      "title": "RC Time Constant",
+      "created_at": "2026-04-26T10:15:00.000Z",
+      "modified_at": "2026-04-26T11:00:00.000Z",
+      "content": {
+        "notes": "τ = RC. This is how long it takes the circuit to charge to ~63% of V_max.",
+        "formula": "\\tau = RC",
+        "description": null,
+        "simplifying_assumption": null,
+        "applicability": "Only valid when R and C are constant (linear circuit).",
+        "misconception": null
+      },
+      "color": null
+    }
+  ],
+
   "positions": {
-    "ohms-law":     { "x": 100, "y": 200 },
-    "rc-circuits":  { "x": 280, "y": 200 }
+    "ohms-law":         { "x": 100, "y": 200 },
+    "rc-circuits":      { "x": 280, "y": 200 },
+    "capacitance":      { "x": 180, "y": 320 },
+    "resistance":       { "x": 360, "y": 320 },
+    "student-a1b2c3d4": { "x": 220, "y": 80 }
   },
 
   "edges": [
     {
-      "id": "user-edge-1",
+      "id": "edge-<uuid>",
       "source": "ohms-law",
       "target": "rc-circuits",
-      "type": "foundational",
-      "label": null,
-      "confidence": null
+      "explanation": "Ohm's Law defines the voltage–current relationship that governs how the resistor limits current during RC charging.",
+      "explanation_filled": true,
+      "created_at": "2026-04-26T10:05:00.000Z"
+    },
+    {
+      "id": "edge-<uuid>",
+      "source": "capacitance",
+      "target": "student-a1b2c3d4",
+      "explanation": null,
+      "explanation_filled": false,
+      "created_at": "2026-04-26T10:20:00.000Z"
     }
   ],
 
   "annotations": [
     {
-      "id": "ann-1",
-      "target": { "kind": "edge", "id": "user-edge-1" },
+      "id": "ann-<uuid>",
+      "target": { "kind": "edge", "id": "edge-<uuid>" },
       "author": "ta-jane",
       "role": "ta",
-      "created_at": "2026-04-26T10:00:00.000Z",
-      "body": "Why foundational and not lateral? What does RC require that Ohm's Law provides?",
-      "resolved": false
+      "created_at": "2026-04-26T18:00:00.000Z",
+      "body": "Good — but can you be more specific about *what* V–I relationship matters here? Is it the linearity? The instantaneous response?",
+      "resolved": false,
+      "parent_id": null
     }
   ],
 
@@ -182,263 +696,148 @@ a superset of the layout-authoring file format:
     "submitted_at": null,
     "self_review_complete": false,
     "peer_reviews": []
-  },
-
-  "exporter": {
-    "type": "student-construction",
-    "user_id": null
   }
 }
 ```
 
-The shape above is the full file at submission time. Earlier
-construction states (mid-edit, no annotations yet) include only the
-fields populated so far; the file is forward-compatible with empty
-arrays / null fields.
-
 ### Field semantics
 
-- **`exercise_variant`** — one of:
-  - `recover-prerequisites-untyped` (MVP)
-  - `recover-prerequisites-typed`
-  - `recover-prerequisites-typed-directed`
-  - `build-novel-connections`
+- **`canonical_nodes`** — array of canonical entity IDs placed on the
+  canvas. **This field is derived, not independently authored.** At
+  serialization time, `canonical_nodes` is computed as the subset of
+  `positions` keys that do *not* start with `"student-"`. It is
+  written to the file as a convenience for readers and validators;
+  it is never an independent source of truth. On import, the validator
+  enforces that every entry in `canonical_nodes` has a corresponding
+  key in `positions`. If the two are out of sync (e.g., a corrupted
+  file), `positions` wins and `canonical_nodes` is recomputed.
+  Canonical content is not duplicated in the file; IDs not present
+  in the current corpus trigger the orphan policy (see below).
 
-  Defines validation rules, comparison semantics, and grading metrics.
-  See "Exercise variants" below.
+- **`student_nodes`** — array of student-created node objects. Each
+  carries the full content snapshot. `id` is `"student-<uuid>"`, never
+  colliding with canonical IDs.
 
-- **`assignment`** — present when entered via `?assignment=<id>`;
-  absent (or null) for unscoped self-study sessions. `node_set` is
-  the active-node list; `context_hash` covers the assignment's
-  authored content so submissions can be matched to the assignment
-  version they were drafted against.
+- **`student_nodes[].content`** — all content fields. `notes` is always
+  present (may be an empty string). All other fields are `null` if not
+  populated.
 
-- **`authors`** — at least one entry; first entry is `role: "primary"`.
-  Additional collaborators added via the "Add Collaborator" button
-  carry `role: "collaborator"`. Names are free-text strings, no
-  account binding. All names appear in the export.
+- **`positions`** — entity ID → `{x, y}` for every placed node (both
+  canonical and student-created).
 
-- **`node_bank.available`** — entity IDs the student can place.
-  **`node_bank.placed`** — entity IDs the student has dragged onto
-  the workspace (subset of `available`). Entities in `available`
-  but not `placed` render in the bank UI; entities in `placed` render
-  on the canvas.
+- **`edges[].explanation`** — free-text string or `null`. No minimum
+  length. `explanation_filled` mirrors whether `explanation` is non-null;
+  it is a denormalized convenience flag for fast UI rendering.
 
-- **`positions`** — entity ID → coordinates. Same shape as
-  layout-authoring spec. Only placed entities appear here.
+- **`edges[].source` / `edges[].target`** — node IDs from either
+  `canonical_nodes` or `student_nodes[].id`.
 
-- **`edges`** — student-drawn edges. `type` is constrained per
-  `exercise_variant`: untyped variant emits `type: "untyped"`; typed
-  variants accept the canonical edge-type vocabulary (`foundational |
-  supporting | lateral | definitional`); novel-connections variant
-  accepts arbitrary string types and a `label` field.
+- **`annotations`** — same shape as the original spec. `target.kind`
+  is `"edge" | "node" | "map"`. `role` is `"self" | "peer" | "ta" |
+  "instructor"`. `parent_id` links replies to their parent annotation
+  (null for top-level).
 
-- **`annotations`** — comments on nodes or edges, authored during
-  review. `target.kind` is `"edge" | "node" | "map"` (map-level for
-  global comments). `role` is `"self" | "peer" | "ta" |
-  "instructor"`. `resolved` allows back-and-forth without losing
-  history.
+- **`library_source`** — present when loaded from the library; null
+  for scratch-started or imported sessions. `type` is one of
+  `"instructor-map" | "topic-subgraph" | "blank-template"`.
 
-- **`submission`** — submission lifecycle metadata. `submitted: true`
-  freezes the file as the official submission; further edits produce
-  a *new* file with `parent_id` (deferred to a later version of this
-  spec). `peer_reviews` is an array of imported peer-review files
-  that have been merged into this submission's annotations.
+- **`exporter.role`** — `"student"` for student submissions,
+  `"instructor"` for library maps.
 
 ### Validator rules
 
-A `validateConstructionFile(file)` validator covers:
+`validateConstructionFile(file)` covers:
 
-- Format / version fields present and recognized.
-- `atlas_corpus_hash` is a valid SHA-256 string; mismatch with current
-  corpus is a warning, not an error.
-- `exercise_variant` is one of the four enumerated values.
-- If `assignment` is present, every `node_bank.available` entry
-  matches the assignment's `node_set`.
-- Every `node_bank.placed` entry is in `node_bank.available`.
-- Every `positions` key is in `node_bank.placed`.
-- Every `edges[].source` and `edges[].target` is in `node_bank.placed`.
-- `edges[].type` matches the exercise variant's allowed types.
-- `annotations[].target.id` resolves to an edge or node in the file
-  (or, for `kind: "map"`, no resolution required).
+- `format` is `"atlas-concept-map"`, `format_version` is 2.
+- `atlas_corpus_hash` is a valid SHA-256 string; mismatch is a warning,
+  not a block.
 - `authors` is non-empty; exactly one entry has `role: "primary"`.
+- `canonical_nodes` matches the subset of `positions` keys that do not
+  start with `"student-"`. If they diverge, recompute `canonical_nodes`
+  from `positions` and emit a warning (never a hard error).
+- Every `student_nodes[].id` starts with `"student-"` and is unique
+  within the file.
+- `student_nodes[].title` is non-empty.
+- Every key in `positions` exists in `canonical_nodes` or
+  `student_nodes[].id` (i.e., no position orphans).
+- Every `edges[].source` and `edges[].target` exists in `canonical_nodes`
+  or `student_nodes[].id`.
+- **No self-loops:** `edges[].source !== edges[].target`. A self-loop
+  is a hard error; the edge is rejected at creation time in the UI and
+  flagged by the validator on import.
+- **No duplicate edges:** for any unordered pair `{source, target}`,
+  at most one edge may exist. "A–B" and "B–A" are treated as the same
+  pair (edges are undirected in MVP). A second edge between the same
+  two nodes is rejected at creation time and flagged on import.
+- `edges[].explanation_filled` matches whether `edges[].explanation` is
+  non-null (consistency check; auto-corrected on import, not hard
+  error).
+- `annotations[].target.id` resolves to a known edge or node (or, for
+  `kind: "map"`, no resolution required).
+- `submission.submitted` is boolean; if `true`,
+  `submission.submitted_at` is a valid ISO 8601 timestamp.
 
-Validator runs at import time, at export time, and when files cross the
-review boundary (TA imports a student file → validate before
+### Validator severity table
+
+Every validator rule has one of two severities. This table is
+exhaustive and authoritative; it governs both the import UI and the
+test assertions in T2.
+
+| Rule | Severity | Effect |
+|---|---|---|
+| `format` / `format_version` unrecognized | **Error** | Blocks import |
+| `authors` empty or no primary | **Error** | Blocks import |
+| `student_nodes[].id` not unique or wrong prefix | **Error** | Blocks import |
+| `student_nodes[].title` empty | **Error** | Blocks import |
+| `edges[].source` or `edges[].target` not in node set | **Error** | Blocks import |
+| Self-loop edge (`source === target`) | **Error** | Blocks import |
+| Duplicate edge (same unordered node pair) | **Error** | Blocks import |
+| `annotations[].target.id` does not resolve | **Error** | Blocks import |
+| `submission.submitted: true` without valid timestamp | **Error** | Blocks import |
+| `atlas_corpus_hash` mismatch | **Warning** | Import proceeds; user must acknowledge |
+| Orphaned canonical node ID (not in current corpus) | **Warning** | Import proceeds; orphan policy applies |
+| `canonical_nodes` diverges from `positions` keys | **Warning** | Auto-corrected silently; no user prompt |
+| `explanation_filled` inconsistent with `explanation` | **Warning** | Auto-corrected silently; no user prompt |
+
+**Errors** block import entirely. The user sees a modal listing all
+errors with the option to cancel or (for edge-policy violations) view
+which edges are problematic. There is no "import anyway" path for
+errors.
+
+**Warnings** allow import to proceed. Warnings that require
+acknowledgment surface in a pre-import dialog ("This file has N
+issues — review before continuing"). Auto-corrected warnings are
+applied silently and logged to the dev console.
+
+Validator runs at import, export, and when a file crosses the review
+boundary (TA or peer imports a student file → validate before
 annotating).
 
----
+### Orphaned canonical node policy
 
-## Exercise variants
+An orphaned canonical node is a node ID in `canonical_nodes` (and
+therefore `positions`) that does not match any entity in the current
+Atlas corpus (corpus has changed since the file was saved).
 
-Four variants, sharing the same infrastructure. Each is a parameter on
-the construction-mode UI and the validator; they are not separate code
-paths.
+On import, orphaned nodes:
 
-### A — Recover prerequisites, untyped (MVP)
+- **Render as placeholder nodes** on the canvas — same position and
+  approximate size as the original, but styled with a gray fill, dashed
+  border, and a warning glyph (⚠) plus the bare ID as a label.
+- **Retain their edges.** Edges touching an orphaned node are preserved
+  and rendered normally (still dashed if unfilled, still solid if
+  filled). The student can still read and edit explanations on those
+  edges.
+- **Are not automatically removed.** The student sees the warning and
+  decides what to do. A "Clean up orphans" button in the toolbar
+  (only visible when orphans exist) removes all orphaned nodes and
+  their touching edges after confirmation.
+- **Do not block export or submission.** Orphaned nodes produce a
+  non-blocking warning in the submission pre-flight checklist.
 
-Student is given a node bank. They place nodes and draw edges
-indicating "this concept is a prerequisite of that one." Edge type
-is uniform (`untyped`); direction may or may not be expected
-(implementation chooses one — this MVP requires direction, with the
-expected rendering being source → target as "is prerequisite of").
-
-**Comparison:** student edges are matched against canonical
-prerequisite edges among the same node set, ignoring canonical edge
-type. Metrics: recall, precision, F1.
-
-**Why MVP:** simplest validator rules, cleanest auto-metrics, exercises
-every piece of the infrastructure (node bank, drag, edge drawing,
-review annotations) without the cognitive overhead of typing or the
-interpretive complexity of novel connections. Maps cleanly onto a
-weekly assignment.
-
-### B — Recover prerequisites, typed
-
-As variant A, but student must also assign each edge a type from the
-canonical vocabulary (`foundational | supporting | lateral |
-definitional`). Edge direction still required.
-
-**Comparison:** matched edges are scored on type accuracy in addition
-to presence. Metrics gain per-type recall/precision and a
-type-confusion matrix.
-
-### C — Recover prerequisites, typed and directed
-
-As variant B, but direction is explicitly graded. Student must commit
-to direction before the edge is registered. Reverse-direction edges
-score zero on canonical match (not a partial credit case — getting
-direction wrong on a foundational relationship is a real
-misunderstanding worth detecting).
-
-**Comparison:** strict canonical match required. Reverse-direction
-edges are flagged in the diff as "direction-inverted" rather than
-"missing."
-
-### D — Build novel connections
-
-No canonical comparison. Student places nodes, draws edges, and labels
-each edge with their own description of the relationship. Optional
-type from a free-text or controlled list.
-
-**Comparison:** no automated grading. Self/peer/TA annotation is the
-entire signal. Metrics are descriptive only (edge count, average
-degree, clustering coefficient — for instructor cohort views in
-Phase 4, not for individual grading).
-
-**Pedagogical use:** advanced or open-ended assignments;
-in-class brainstorming; pre-instruction concept inventories.
-
----
-
-## Construction-mode UI
-
-### Entry
-
-Student visits a URL with `?mode=construct&assignment=<id>` (assignment
-mode) or `?mode=construct` (unscoped self-study). On entry:
-
-- The construction-mode banner renders at the top of the canvas: "You
-  are working on your own concept map. The canonical graph is hidden."
-- Canonical edges are hidden.
-- Canonical positions are ignored — the canvas starts empty (no node
-  is "placed" until the student drags it).
-- The node bank panel opens on the left side of the canvas (or a
-  drawer at narrow widths).
-- An assignment-context panel renders at the top (collapsed by
-  default after first read) showing title, instructions, due date.
-- An author/collaborator widget is visible: shows current authors,
-  with "Add Collaborator" button.
-
-### Node bank
-
-A vertical scrollable list along the canvas's left edge. Each row:
-
-- Layer shape glyph (concept circle, variable diamond) + entity title.
-- A small drag handle / "Place" affordance.
-- Domain color swatch (per `ATLAS_NODE_AFFORDANCES_SPEC.md` Move 1's
-  legend pattern).
-- Entities already placed render as dimmed in the bank.
-
-The bank's contents:
-
-- Assignment-scoped: exactly the entities listed in
-  `assignment.node_set`.
-- Unscoped self-study: entities determined by the user's filter
-  selections (domain toggles + tag filters + manual entity-picker).
-  This filter UI is a small extension of the existing domain filter
-  bar.
-
-Drag a row from the bank onto the canvas → entity becomes "placed,"
-appears at the drop position, removed from the active bank list (or
-shown dimmed).
-
-Drag a placed entity off the canvas back to the bank (or click an
-"unplace" affordance on the node) → removes from `placed` and
-removes any edges touching it (with confirmation prompt).
-
-### Edge drawing
-
-Click-and-drag from the border of one placed node to the border of
-another draws an edge. React Flow supports edge-creation natively;
-construction mode enables it (it is disabled in reference and author
-modes).
-
-The interaction:
-
-1. Hover near a node's border → a small handle appears.
-2. Click and drag from the handle → an in-progress edge follows the
-   cursor.
-3. Drop on another node's border → an edge is created.
-
-For typed/directed variants, an edge-properties popover appears on
-edge creation: type picker, direction confirmation (default = drag
-direction). For untyped MVP, no popover; edges are created as
-`type: "untyped"` with direction = drag direction.
-
-Edges are deletable (click an edge → keyboard delete, or right-click →
-delete).
-
-### Saving
-
-Construction-mode work persists continuously to localStorage, key
-`atlas_construction_<assignment_id_or_unscoped>_v1`. Format matches
-the file format above. Auto-save on every state change.
-
-The user can have multiple assignments in progress simultaneously;
-each lives at its own localStorage key. A "My Maps" panel lists all
-in-progress maps with title, last-modified, and a switch-to button.
-
-### Submitting
-
-Clicking "Submit" (or "Export submission" — they are aliases):
-
-1. Runs the validator. If errors, surfaces them and blocks submission.
-2. Prompts the student to confirm authors are correct.
-3. Marks the file `submission.submitted: true`,
-   `submission.submitted_at: <now>`.
-4. Triggers download of the `.atlas-map.json` file.
-
-The student uploads the file to Canvas via the standard file-submission
-mechanism. Atlas does not communicate with Canvas in 3b. (Phase 4 LTI
-work owns automation.)
-
-The local store is preserved after submission so the student retains a
-working copy. A submitted file is not editable in-place — re-opening
-and editing produces a new file with no submission flag.
-
-### Adding collaborators
-
-The author widget shows the primary author by default (auto-populated
-from a one-time prompt at first construction-mode entry, stored in
-localStorage at `atlas_user_identity_v1` as `{ name }`). An "Add
-Collaborator" button prompts for a name and adds an entry with
-`role: "collaborator"`.
-
-Collaborators are file metadata only; there is no permissions model,
-no real-time collab, no per-author tracking of which edges or
-annotations belong to which collaborator. (That last would be useful
-and is deferred to a future spec extension; flagged in Open Questions.)
+Rationale: silently stripping orphaned nodes would destroy student work
+without warning. Preserving them as visible placeholders lets the
+student understand what happened and act deliberately.
 
 ---
 
@@ -447,142 +846,260 @@ and is deferred to a future spec extension; flagged in Open Questions.)
 ### Importing for review
 
 A reviewer (peer, TA, instructor) imports a student's `.atlas-map.json`
-via the existing import affordance from `ATLAS_LAYOUT_AUTHORING_SPEC.md`
-Move 1, plus a "Open as review" mode flag. The construction-mode UI
-opens with the imported file's state, plus a review-mode banner: "You
-are reviewing [Student A]'s submission. Your edits will be saved as
-annotations."
+via the landing-page "Import a map" path. The construction canvas opens
+with a **review-mode banner**: "You are reviewing [Student A]'s map.
+Your edits will be saved as annotations."
 
 In review mode:
 
-- Node bank is read-only (cannot place/unplace).
-- Existing edges are read-only (cannot create/delete).
-- Existing positions are read-only (cannot drag).
-- Annotation tools are enabled: clicking any node, edge, or empty
-  canvas area opens an annotation composer.
+- Node placement, positions, and node content are **read-only**.
+- Student-created nodes are readable but not editable.
+- Existing edges are **read-only** (cannot create or delete edges).
+- **Annotation tools are enabled**: clicking any node, edge, or empty
+  canvas area opens the annotation composer.
 
-The reviewer's name is captured at the start of the review (default
-from `atlas_user_identity_v1`, prompt to confirm).
+**Review lock contract — exhaustive list of mutable surfaces:**
+The *only* fields a reviewer may write in review mode are:
+
+1. `annotations[]` — creating, replying to, resolving, and editing
+   own annotations.
+2. `reviewer_identity` — the one-time name/role capture at review start.
+   Stored in localStorage at `atlas_review_identity_v1` with shape
+   `{ "name": "Jane", "role": "ta" }` (same session as `atlas_user_identity_v1`
+   but a distinct key, since a user may be both a student author in one
+   session and a TA reviewer in another). Not written into the
+   `.atlas-map.json` file directly; instead it is used to populate
+   `annotations[].author` and `annotations[].role` when the first
+   annotation is saved.
+
+Everything else — `title`, `authors`, `canonical_nodes`,
+`student_nodes`, `positions`, `edges`, `submission`, `library_source`,
+`exporter` — is immutable for the reviewer. The UI must enforce this
+at every touchpoint; the validator enforces it on re-import by the
+student (any non-annotation diff between the reviewer's export and the
+student's local store triggers a warning "This file was modified outside
+of annotations").
+
+The reviewer's identity is captured at the start of review (defaults
+from `atlas_user_identity_v1`, prompt to confirm). Their `role`
+(peer / ta / instructor) is selected from a dropdown.
 
 ### Annotation composer
 
-A small inline panel anchored to the annotation target:
+Anchored to the annotation target:
 
-- Free-text body (markdown supported, KaTeX permitted).
+- Free-text body. Markdown supported; KaTeX permitted.
 - Save / Cancel.
-- For existing annotations: Reply (creates a child annotation linked
-  to the parent), Resolve (sets `resolved: true`), Edit (own
-  annotations only).
+- For existing annotations: Reply (creates a child with `parent_id` set),
+  Resolve (sets `resolved: true`), Edit (own annotations only).
 
-Annotations render as small numbered pins on their target. Hovering
-shows a count badge; clicking opens a thread panel with the full
-annotation conversation.
+Annotations render as numbered pins on their target. Hovering shows a
+count badge; clicking opens the full thread panel.
 
 ### Exporting after review
 
-The reviewer clicks "Export annotated submission" → downloads a new
-`.atlas-map.json` with `annotations[]` populated. The reviewer sends
-this file back to the student through whatever channel the assignment
-uses (Canvas message, email, in-class file share).
+"Export annotated map" downloads a new `.atlas-map.json` with
+`annotations[]` populated. The reviewer returns this file to the
+student via whatever channel the assignment uses.
 
 ### Returning a review to the student
 
-The student imports the annotated file. Atlas detects new annotations
-(comparing to the local store's annotation set) and surfaces a
-notification: "3 new annotations from ta-jane." The student can:
-
-- View each annotation.
-- Reply to annotations (adds a new annotation with the reply body).
-- Resolve annotations.
-- Re-export the file with their replies, sending it back.
-
-This is the back-and-forth review loop. Each round produces a new file
-with growing `annotations[]`. The assignment can require N rounds, M
-annotations resolved, etc. — that is rubric design, not Atlas spec.
-
-### Self-review
-
-Self-review is structurally identical to peer/TA review: the student
-imports their own submitted file in review mode and adds annotations
-with `role: "self"`. The pedagogical purpose is the cooling-off pass
-— rereading their own work after time has passed and questioning
-their own choices.
-
-### Peer review
-
-Two students exchange `.atlas-map.json` files. Each opens the other's
-in review mode, annotates, and sends back. Same machinery; only the
-annotation `role` differs.
-
-For in-class small-group activities, the most efficient pattern is one
-device with multiple authors collaborating on a single map (no
-exchange needed); peer review is the homework / between-class pattern.
+The student imports the annotated file via "Import a map." Atlas detects
+new annotations (comparing to the local session's annotation set) and
+surfaces a notification: "N new annotations from [reviewer]." The
+student can view, reply to, and resolve annotations, then re-export and
+return.
 
 ---
 
 ## Automated metrics
 
-For variants A, B, and C, Atlas computes objective metrics on demand
-when a submission file is loaded in review mode. Metrics surface in a
-"Diff vs. canonical" panel, accessible to TAs and instructors during
-review.
+Automated metrics apply when a student's map contains canonical nodes
+and an instructor or TA wants to compare student edges to canonical
+relational structure. They are advisory — rubric design belongs to the
+instructor.
 
-### Variant A metrics (untyped)
+The diff panel is available in review mode to TAs and instructors.
 
-- **Canonical edges in scope** — count of canonical prerequisite
-  edges among `node_bank.available`.
-- **Recovered** — count of student edges matching a canonical edge
-  (regardless of type).
-- **Missed** — count of canonical edges with no student match.
-- **Invented** — count of student edges with no canonical match.
+### Canonical edge recovery
+
+For edges between two canonical nodes: compare the student's drawn edges
+(ignoring explanation text) against the canonical prerequisite edges
+among those same nodes.
+
+- **Recovered** — student drew an edge matching a canonical edge.
+- **Missed** — canonical edge exists; student drew nothing.
+- **Invented** — student drew an edge with no canonical match.
 - **Recall** = Recovered / Canonical-in-scope.
 - **Precision** = Recovered / (Recovered + Invented).
-- **F1** = harmonic mean of recall and precision.
-- **Direction-inverted** — count of student edges matching a canonical
-  edge in reverse direction (informational; not penalized in untyped
-  MVP but flagged for discussion).
+- **F1** = harmonic mean.
 
-### Variant B metrics (typed)
+### Student-created node edges
 
-All variant A metrics, plus:
-
-- **Type accuracy** = (count of recovered edges with correct type) /
-  Recovered.
-- **Type-confusion matrix** — 4×4 matrix of canonical type vs. student
-  type for recovered edges.
-
-### Variant C metrics (typed + directed)
-
-All variant B metrics, computed against strict directional match.
-Direction-inverted edges count as "Missed" for the canonical edge and
-"Invented" for the student edge — they are real errors, not partials.
-
-### Variant D
-
-No automated comparison metrics. Descriptive metrics only:
-
-- Edge count, node count.
-- Average node degree.
-- Clustering coefficient.
-- Largest connected component size.
-
-These are useful for instructors comparing across cohorts, not for
-grading individuals.
+No canonical comparison is possible. These edges are surfaced in the
+diff panel with their explanations for qualitative review only.
 
 ### Metrics rendering
 
-The Diff panel shows:
+The diff panel shows:
+- Canonical-edge recovery metrics at top.
+- Edge list tagged ✔ Recovered / ✗ Missed / ⚠ Invented.
+- "Highlight differences" toggle: missed canonical edges render as
+  faint ghost edges on the canvas; invented edges highlight in a
+  distinct color.
+- All student-created-node edges listed separately with their
+  explanation text.
 
-- Numerical metrics at the top.
-- A list of edges, each tagged ✔ Recovered / ✗ Missed / ⚠ Invented /
-  ↺ Inverted, with click-to-highlight on the canvas.
-- A "Highlight differences" toggle on the canvas: missed edges render
-  as faint ghost edges (canonical, not in submission); invented edges
-  highlight in a distinct color.
+---
 
-Metrics are advisory — the rubric is owned by the instructor, who
-combines metrics with annotation-based qualitative review. Atlas does
-NOT auto-assign grades.
+## Markdown, KaTeX, and content sanitization
+
+User-generated text appears in: student node `notes`, `description`,
+`simplifying_assumption`, `applicability`, and `misconception` fields;
+edge `explanation`; annotation `body` fields. All of these are rendered
+with Markdown and optional KaTeX support.
+
+### Allowed syntax
+
+- **Markdown:** standard CommonMark subset. Allowed: headings (h1–h3),
+  bold, italic, inline code, code blocks, blockquotes, unordered and
+  ordered lists, horizontal rules, links (href only, no event handlers).
+  **Disallowed:** raw HTML tags. Any `<tag>` content in user input is
+  stripped before render, not escaped — the spec intentionally does not
+  render user HTML.
+- **KaTeX:** inline math via `$...$` and display math via `$$...$$`.
+  KaTeX renders in a sandboxed context; its output is already safe by
+  construction (KaTeX does not execute arbitrary code). No additional
+  restriction on KaTeX syntax beyond KaTeX's own parser.
+
+### Sanitization policy
+
+All user text passes through **DOMPurify** before being injected into
+the DOM. Configuration:
+
+```js
+DOMPurify.sanitize(rendered_html, {
+  ALLOWED_TAGS: ['p','br','strong','em','code','pre','blockquote',
+                 'ul','ol','li','h1','h2','h3','hr','a',
+                 'span','div'],  // span/div required: KaTeX emits these
+  ALLOWED_ATTR: ['href','class','style'],  // see note below
+  FORBID_TAGS: ['script','iframe','object','embed','form','input'],
+  FORBID_ATTR: ['onerror','onclick','onload','onmouseover'],
+  FORCE_BODY: true
+});
+```
+
+**Why `style` is allowed:** KaTeX renders math by emitting inline
+`style` attributes on `span` elements (e.g., `style="margin-left:
+0.278em"`) to position glyphs and apply spacing. Removing `style`
+from the allowlist breaks KaTeX layout. `style` is not narrowed to
+specific properties because KaTeX's output vocabulary changes between
+versions and maintaining a property allowlist would become a
+maintenance liability.
+
+**Why this is safe despite `style` being broad:** the `style`
+attribute cannot execute code — it controls presentation only.
+The actual XSS vectors (event handlers, `expression()`, `url()`
+with `javascript:`) are blocked by `FORBID_ATTR` and DOMPurify's
+built-in CSS sanitizer, which strips `javascript:` and `expression()`
+from `style` values automatically. The residual risk is cosmetic (a
+malicious `style` value could distort layout) rather than security-
+critical. This is an acceptable trade-off for KaTeX support in a
+local-render context with no server-side persistence of rendered HTML.
+
+This policy is applied at render time, not at save time. The raw
+user text is stored unmodified in localStorage and in the `.atlas-map.json`
+file; sanitization happens on every render pass. This is the standard
+pattern for content that must survive round-trips.
+
+`href` values on links are additionally validated: only `https://` and
+`http://` schemes are permitted; `javascript:` and `data:` hrefs are
+stripped.
+
+---
+
+## Accessibility baseline
+
+Construction mode is an interaction-heavy canvas UI. Full WCAG 2.1 AA
+compliance is a long-term goal; the following are the minimum
+acceptance criteria for the Phase 3b MVP.
+
+### Keyboard: node operations
+
+- **Tab** cycles focus through all placed nodes on the canvas.
+- **Enter** on a focused placed node opens its detail/edit panel.
+- **Delete** or **Backspace** on a focused placed node triggers the
+  unplace confirmation dialog (same as right-click → remove).
+- **Escape** closes any open panel or dialog and returns focus to the
+  canvas.
+- Node bank is keyboard-navigable: **Tab** moves through bank entries;
+  **Enter** places the focused bank node at a default canvas position
+  (center of current viewport).
+
+### Keyboard: edge creation
+
+- With a node focused, **E** (or a documented shortcut) enters
+  "edge-drawing mode" for that node.
+- In edge-drawing mode, **Tab** cycles through other placed nodes as
+  potential targets; **Enter** commits the edge to the focused target.
+- **Escape** cancels edge-drawing mode.
+
+### Popovers and dialogs
+
+- All popovers and dialogs must trap focus while open (focus cannot
+  leave the popover via Tab).
+- All popovers and dialogs must return focus to the triggering element
+  on close.
+- The explanation popover's textarea receives focus automatically on
+  open.
+
+### Screen-reader labels
+
+- Every placed node has an `aria-label` of the form
+  `"[Node title], [canonical/student-created], [N edges]"`.
+- Every edge has an `aria-label` of the form
+  `"Connection from [source] to [target], [filled/unfilled explanation]"`.
+- Mode banner is a `role="status"` live region.
+- Unfilled edge count badge is an `aria-live="polite"` region.
+
+These are minimum criteria. They do not preclude richer keyboard flows
+or screen-reader support added during implementation.
+
+---
+
+## Performance targets
+
+The following are design-time targets, not hard guarantees. They define
+the scale at which the construction canvas must remain fluid and at
+which the test suite's fixture data should be sized.
+
+| Dimension | Target |
+|---|---|
+| Placed nodes (canonical + student) | Up to 60 |
+| Edges | Up to 150 |
+| Annotations | Up to 200 |
+| Student nodes | Up to 30 |
+| My Maps sessions in localStorage | Up to 20 |
+| Library entries (manifest) | Up to 50 |
+
+These targets define two distinct performance tiers:
+
+- **Initial render** (cold load of a saved session): canvas must be
+  fully painted and interactive within **500ms** for maps at target
+  scale. This is a startup budget, not a per-interaction budget.
+- **Interaction fluency** (drag, edge creation, popover open): each
+  discrete user action must complete within **one animation frame
+  (~16ms)**. This is the per-frame budget for maintaining 60fps feel
+  on interactions after the canvas is loaded.
+
+**Test fixture scale:** T1–T14 integration test fixtures should include
+at least one "large" fixture at the target scale (60 nodes, 150 edges,
+200 annotations) to catch O(n²) regressions early.
+
+**No virtualization required in MVP** for the canvas itself (React Flow
+handles this natively). The My Maps list and library browser should use
+windowed rendering if either exceeds ~50 items, but are unlikely to
+at Phase 3b scale.
 
 ---
 
@@ -590,157 +1107,256 @@ NOT auto-assign grades.
 
 ### T1 — Construction file format round-trip
 
-Unit test: create a fixture construction state programmatically, export
-to JSON, validate against schema, re-import, assert state matches.
+Unit test: create a fixture construction state with both canonical and
+student-created nodes and multiple edges (some filled, some not).
+Export to JSON, validate against schema, re-import, assert state
+matches.
 
 ### T2 — Validator rules
 
-Unit tests covering each rule in "Validator rules" above. Each rule
-gets a positive and negative case (file passing / failing).
+Unit tests for each validator rule above. Each rule gets a positive and
+negative case.
 
 ### T3 — Node bank state transitions
 
-Integration test: assignment-scoped node bank renders the correct
-entities; placing moves an entity from available-only to placed;
-unplacing moves it back and removes touching edges (with confirmation
-mocked to accept).
+Integration test:
+- Node bank shows all published canonical nodes by default.
+- Dragging a node to canvas moves it to placed; bank shows it dimmed.
+- Unplacing removes it from canvas and removes touching edges (with
+  confirmation mocked to accept).
+- Bank remains accessible (can place a second node from bank).
 
-### T4 — Edge creation per variant
+### T4 — Student node creation
 
-Integration tests, one per variant:
+Integration tests:
+- Double-click on empty canvas → student-node creation panel opens.
+- Enter a title, add notes → node appears on canvas at click position.
+- Student node panel: "+ Add field" adds optional fields; fields are
+  removable; content persists after close/reopen.
+- Student node ID starts with `"student-"` in the serialized file.
 
-- A: edge created with `type: "untyped"`, no popover.
-- B: edge creation opens type popover; selecting "foundational"
-  records type.
-- C: as B, plus direction confirmation.
-- D: edge creation prompts for free-text label.
-
-### T5 — Auto-save and restore
-
-Integration test: make changes, simulate page reload, assert state
-restored from localStorage.
-
-### T6 — Submission lifecycle
-
-Integration test: fill a fixture map, click submit, assert validator
-runs, assert downloaded file has `submission.submitted: true` and
-proper timestamp, assert local store retains a working copy.
-
-### T7 — Authors and collaborators
-
-Integration test: default identity prompt populates primary author;
-"Add Collaborator" appends a collaborator entry; export contains both
-in `authors[]`.
-
-### T8 — Review-mode import
-
-Integration test: import a fixture submission file in review mode,
-assert read-only locks (cannot place/unplace, cannot drag, cannot
-draw edges), assert annotation composer opens on click.
-
-### T9 — Annotation lifecycle
+### T4b — Edge policy enforcement
 
 Integration tests:
 
-- Create an annotation on a node, edge, and the map; assert each
-  serializes with correct `target.kind`.
-- Reply to an annotation; assert child annotation links to parent.
-- Resolve an annotation; assert `resolved: true`.
-- Export annotated file; re-import as student; assert new annotations
-  detected and surfaced.
+- Attempt to create a self-loop (drag from a node back to itself) →
+  edge is rejected; no entry in `edges[]`; UI shows brief inline error
+  "A node cannot connect to itself."
+- Place two nodes, draw an edge A→B, attempt to draw a second edge A→B
+  (or B→A) → second edge is rejected; UI shows "A connection between
+  these nodes already exists."
+- Import a file containing a self-loop or duplicate edge → validator
+  flags it; UI surfaces the error; import is blocked.
 
-### T10 — Metrics correctness (variants A, B, C)
+### T5 — Edge drawing and explanation
 
-Unit tests with hand-crafted fixtures:
+Integration tests:
+- Drag from node A border to node B border → edge created with
+  `explanation: null`, `explanation_filled: false`.
+- Explanation popover opens automatically on edge creation.
+- "Save" with text → edge updated with explanation and
+  `explanation_filled: true`.
+- "Skip for now" → edge stays with `explanation: null`.
+- Unfilled edge renders with dashed stroke; filled edge renders solid.
+- Toolbar badge reflects unfilled edge count.
+- Badge click cycles to each unfilled edge and opens popover.
 
+### T6 — Edge types (node combinations)
+
+Integration tests: create edges for each combination:
+- Canonical → canonical
+- Canonical → student
+- Student → canonical
+- Student → student
+
+Assert all four serialize correctly with proper source/target IDs.
+
+### T7 — Auto-save and restore
+
+Integration test: make changes (place nodes, draw edges, write
+explanations), simulate page reload, assert state fully restored from
+localStorage.
+
+### T8 — Submission lifecycle
+
+Integration test: fill a fixture map, click Submit, assert:
+- Validator runs.
+- Unfilled-edge warning appears if applicable.
+- Downloaded file has `submission.submitted: true` and valid timestamp.
+- Local store retains a working copy.
+
+### T9 — Review-mode import
+
+Integration test: import a fixture submission in review mode, assert:
+- Node bank is read-only (no place/unplace).
+- Existing edges are read-only (no create/delete).
+- Node positions are read-only (no drag).
+- Annotation composer opens on node click, edge click, and canvas click.
+
+### T10 — Annotation lifecycle
+
+Integration tests:
+- Create annotation on a node, edge, and map. Assert correct
+  `target.kind` for each.
+- Reply creates a child annotation with correct `parent_id`.
+- Resolve sets `resolved: true`.
+- Export and re-import: student receives new annotations, notification
+  fires, student can reply, re-export contains replies.
+
+### T11 — Metrics correctness
+
+Unit tests with hand-crafted fixtures (canonical nodes only):
 - Perfect recovery: recall = precision = F1 = 1.0.
-- All inverted: zero correct in C; informational only in A.
-- Half recovered, no invented: recall = 0.5, precision = 1.0.
+- All missed: recall = 0, precision = undefined (0 by convention), F1 = 0.
 - All invented: recall = 0, precision = 0.
-- Type-accuracy edge cases for B.
-- Type-confusion matrix correctness.
+- Half recovered, no invented: recall = 0.5, precision = 1.0, F1 = 0.67.
 
-### T11 — Mode isolation
+### T12 — Landing page navigation
 
 Integration tests:
+- "Start from scratch" navigates to empty canvas with full node bank.
+- "Load from library → topic subgraph" loads canonical nodes at
+  canonical positions with no edges.
+- "Load from library → blank template" loads empty canvas with topic
+  node bank.
+- "Import a map" accepts a valid `.atlas-map.json` and loads its state.
+- "My maps" row shows in-progress sessions from localStorage; "Continue"
+  loads the correct session.
 
-- Author mode (`?edit=layout`) and construction mode
-  (`?mode=construct`) cannot be active simultaneously; the URL
-  param parser resolves to one mode (construction wins if both are
-  present, with a warning).
-- Construction-mode store does not write to layout-authoring stores.
-- Exiting construction mode (clear URL, reload) restores reference
-  view; reentering restores construction state.
+### T13 — Mode isolation
 
-### T12 — Cross-spec invariants
+Integration tests:
+- `?mode=construct` loads construction landing page; reference mode
+  does not.
+- Clearing `?mode=construct` and reloading restores reference view;
+  construction localStorage is not cleared.
+- Construction store does not write to user-layout store
+  (`atlas_user_layout_v1`).
 
-Integration tests asserting:
+### T13b — Orphan policy
 
-- Hover-card from `ATLAS_NODE_AFFORDANCES_SPEC.md` works in
-  construction mode (peek without commit) and is suppressed during
+Integration test: import a fixture file containing a canonical node ID
+not present in the current corpus fixture. Assert:
+
+- Orphaned node renders as a placeholder with warning glyph.
+- Edges touching the orphaned node are preserved and rendered.
+- "Clean up orphans" button appears in the toolbar.
+- Confirming cleanup removes the orphaned node and its edges.
+- Validator emits a non-blocking warning (not an error) for the orphan.
+
+### T13c — Submission locked-state
+
+Integration test:
+- Submit a fixture session (marks `submitted: true` in store).
+- Return to landing page; assert "Submitted" badge renders on session.
+- Click "Continue" → assert dialog appears with "Start a new revision"
+  and "Cancel" options.
+- Select "Start a new revision" → assert new session created with new
+  UUID, `submitted: false`, same content otherwise.
+- Assert original submitted session is unchanged in localStorage.
+
+### T13d — Sanitization
+
+Unit tests:
+- Render a node `notes` field containing `<script>alert(1)</script>`;
+  assert script tag is stripped, no alert fires.
+- Render a node `notes` field containing a `javascript:` href; assert
+  href is stripped.
+- Render a valid KaTeX expression `$\tau = RC$`; assert it renders
+  without error.
+- Render a Markdown-only note with headings, bold, and a list; assert
+  correct HTML output with no raw tag injection.
+
+### T13e — Accessibility baseline
+
+Integration tests:
+- Tab through placed nodes; assert each receives focus in DOM order.
+- With a node focused, press Enter; assert detail panel opens.
+- With a node focused, press Delete; assert confirmation dialog opens.
+- Open explanation popover; assert focus is trapped within it.
+- Close explanation popover; assert focus returns to the edge element.
+- Assert mode banner has `role="status"`.
+- Assert unfilled edge count badge has `aria-live="polite"`.
+
+### T13f — Performance regression
+
+Integration test with large fixture (60 nodes, 150 edges):
+- Render large fixture; assert canvas renders within 500ms.
+- Simulate drag on one node; assert drag-stop handler completes within
+  16ms (one frame budget).
+- Open explanation popover; assert popover renders within 16ms.
+
+### T14 — Cross-spec invariants
+
+Integration tests:
+- Hover-card from `ATLAS_NODE_AFFORDANCES_SPEC.md` works for canonical
+  nodes in construction mode (read-only peek); suppressed during
   edge-drawing drag.
-- Drag from `ATLAS_LAYOUT_AUTHORING_SPEC.md` works in construction
-  mode for placed nodes (positions persist in construction store, not
-  layout stores).
-- Layout cache invariants: no recomputation on selection, hover, or
-  edge creation.
+- Student-created nodes do NOT trigger canonical hover-card; they open
+  the student-node edit panel instead.
+- Layout cache: no recomputation on selection, hover, or edge creation.
 
 ---
 
 ## Sequencing
 
-### Pre-MVP — foundation
+### Foundation (prerequisite)
 
-`ATLAS_LAYOUT_AUTHORING_SPEC.md` Move 1 must be implemented and
-shipped before any work in this spec begins. Move 2 (author mode) is
-not strictly required but should land in parallel.
+`ATLAS_LAYOUT_AUTHORING_SPEC.md` Move 1 must be implemented before this
+spec begins. Move 1 provides drag, position persistence, and
+import/export plumbing.
 
 ### MVP scope
 
-The MVP ships variant A only, with the architecture explicitly
-accommodating B/C/D. Specifically:
-
-- Construction file format supports all four `exercise_variant` values
-  (validator accepts all; UI exposes only A).
-- Edge data model supports `type` and `label` fields (variant A emits
-  `"untyped"` and `null`).
-- Metrics module is structured per-variant with A as the only
-  implemented variant.
+The MVP ships:
+- Landing page with all three entry paths.
+- Canonical node placement.
+- Student-created node creation and editing (all content fields).
+- Undirected edge drawing with explanation prompt and unfilled
+  indicator.
+- Auto-save, My Maps, submission flow.
+- Review mode and annotation.
+- Canonical edge recovery metrics.
 
 ### Implementation order
 
-1. **Construction file format & validator.** Schema, validator, fixture
-   round-trip tests (T1, T2). ~half day.
-2. **Construction-mode entry & banner.** URL param parsing, mode
-   switching, banner, store-key separation. (T11.) ~half day.
-3. **Node bank UI.** Available/placed state, drag-from-bank
-   interaction, unplace, dimming. (T3.) ~1 day.
-4. **Edge drawing (variant A).** Click-drag edge creation, edge data
-   model, edge deletion. (T4-A.) ~1 day.
-5. **Auto-save & restore.** localStorage persistence, multi-map
-   support, "My Maps" panel. (T5.) ~half day.
-6. **Submission flow.** Validator wiring, submit button, file
-   download, identity/collaborator widget. (T6, T7.) ~half day.
-7. **Review mode.** Read-only locks, annotation composer, annotation
-   data model. (T8, T9.) ~1.5 days.
-8. **Annotation back-and-forth.** Reply, resolve, new-annotation
-   detection on re-import. (T9.) ~half day.
-9. **Metrics (variant A).** Diff computation, Diff panel UI, canvas
-   highlight toggle. (T10.) ~1 day.
-10. **Cross-spec integration tests.** (T12.) ~half day.
+1. **File format & validator.** Schema, validator, round-trip tests
+   (T1, T2). ~half day.
+2. **Landing page.** Three entry paths, My Maps row. Library browser
+   with three tabs (static fixture data for instructor maps; topic-tag
+   query for subgraphs and templates). (T12.) ~1 day.
+3. **Canonical node bank.** Available/placed state, drag-from-bank,
+   unplace. (T3.) ~half day.
+4. **Student-created nodes.** Creation panel, all content fields, canvas
+   rendering (distinct visual treatment). (T4.) ~1 day.
+5. **Edge drawing + explanation.** Drag-to-create, popover, filled/unfilled
+   state, dashed stroke, toolbar badge, badge-click cycle. (T5, T6.)
+   ~1 day.
+6. **Auto-save, My Maps, sessions.** localStorage persistence, session
+   identity, title rename. (T7.) ~half day.
+7. **Submission flow.** Validator wiring, unfilled-edge warning, author
+   widget, file download. (T8.) ~half day.
+8. **Review mode.** Read-only locks, annotation composer, annotation
+   data model. (T9, T10.) ~1.5 days.
+9. **Metrics.** Diff computation, diff panel UI, canvas highlight toggle.
+   (T11.) ~1 day.
+10. **Cross-spec integration tests.** (T13, T14.) ~half day.
 
-**MVP total estimate: ~7 days of engineering**, plus design / iteration
-overhead. Treat the calendar estimate as 2 weeks for a polished ship.
+**MVP total estimate: ~8 days of engineering.** Treat as ~2.5 weeks
+calendar with design iteration and edge-case hardening.
 
 ### Post-MVP
 
-- Variant B (typed edges + popover, type-accuracy metrics).
-  ~1.5 days.
-- Variant C (directed, strict matching, inverted-edge handling).
-  ~1 day.
-- Variant D (free-text labels, no canonical comparison, descriptive
-  metrics).  ~1 day.
-- Additional refinements identified in deployment (see Open Questions).
+- **Directed edges.** Edge direction becomes a commitment at creation
+  time: drag direction is the default, with a confirm/flip affordance
+  in the explanation popover. Direction stored as `"source_to_target" |
+  "target_to_source" | "undirected"`. ~0.5 days.
+- **Topic subgraph thumbnails.** Pre-rendered SVG snapshots for the
+  library browser. ~0.5 days.
+- **Bulk explanation fill.** A "fill all explanations" mode that cycles
+  through unfilled edges without requiring the toolbar badge. ~0.5 days.
+- **Per-edge author attribution.** `created_by` field on edges
+  referencing `authors[].name`. Useful for group work. ~0.5 days.
 
 ---
 
@@ -748,106 +1364,692 @@ overhead. Treat the calendar estimate as 2 weeks for a polished ship.
 
 ### `ATLAS_LAYOUT_AUTHORING_SPEC.md`
 
-Hard dependency. Construction mode reuses drag, position persistence,
-file-format scaffold, import/export plumbing. Construction-mode files
-share the `format_version` banner with layout-authoring files,
-discriminated by the `format` field.
+Move 1 infrastructure is fully inherited. Construction mode uses a
+separate store key (`atlas_construction_<session_id>_v1`), not
+`atlas_user_layout_v1`, so the two never interfere.
 
 ### `ATLAS_NODE_AFFORDANCES_SPEC.md`
 
-Hover-peek card behaves identically in construction mode (peek
-without commit). Hover suppresses during edge-drawing drag (same
-mechanism as suppression during node-drag from layout-authoring spec).
+Canonical node hover-peek card works in construction mode for canonical
+nodes only. Student-created nodes open the student-node edit panel on
+click/hover; they do not trigger the canonical hover-card. Hover
+suppresses during edge-drawing drag (same mechanism as during
+node-drag).
 
 ### `ATLAS_REVEAL_NEIGHBORS_SPEC.md`
 
-Halo + count badge are HIDDEN in construction mode. The "this concept
-has connected content in other layers" signal is a canonical-graph
-affordance; it has no meaning in a student's construction. Nearby
-panel is similarly disabled.
+Halo and count badge are hidden in construction mode. The "connected
+content in other layers" signal is a canonical-graph affordance with
+no meaning in a student construction.
 
 ### `ATLAS_AUTHORING_SPEC.md`
 
-Construction-mode submissions are explicitly *not* author content.
-They do not flow into the canonical entity JSON, do not get
-provenance.draft_source promotion, and are not RAG-grounded for the
-eventual AI tutor. Provenance discipline applies to canonical
-content; construction-mode files have their own (lighter) provenance
-in `authors[]` and `submission` metadata.
-
-### Phase 4 LTI
-
-Phase 4 may add Canvas-LTI hooks for direct submission. Construction
-file format is designed to survive that transition unchanged: the
-Canvas-LTI integration would consume `.atlas-map.json` files server-
-side rather than client-uploaded, but the file content is the same.
+Construction-mode submissions are not author content. They do not flow
+into canonical entity JSON, do not receive provenance promotion, and
+are not RAG-grounded for the AI tutor. Provenance discipline applies
+to canonical content; construction-mode files have their own lighter
+provenance in `authors[]` and `submission` metadata.
 
 ---
 
 ## What this spec is not
 
-- **Not a quiz engine.** Construction is a constructive exercise, not a
-  closed-form assessment. Atlas does not auto-grade in the strict sense;
-  it computes metrics that inform a human grader.
+- **Not a quiz engine.** Atlas computes metrics that inform a human
+  grader; it does not auto-grade or auto-score.
 - **Not a real-time collaboration tool.** Multi-author maps are
-  serialized via "Add Collaborator" name entries; only one person edits
-  at a time per device. Real-time co-editing is not in scope.
+  serialized via file exchange. Real-time co-editing is not in scope.
 - **Not an LMS.** No assignment management UI, no class roster, no
-  gradebook. Atlas authors assignments as JSON files (TBD format —
-  see Open Questions); LMS-side workflow remains in Canvas.
-- **Not a content-authoring tool for canonical graph.** Construction
-  mode produces student artifacts. Author mode (separate spec)
-  produces canonical artifacts. They never cross over.
-- **Not an LLM tutor.** Atlas does not auto-generate annotations,
-  suggest edges, or provide feedback during construction. The whole
-  point is the student's own work. (Future LLM tutor in Phase 4 is a
-  separate primitive grounded in canonical content.)
-- **Not a long-term submission archive.** Submissions live in user
-  filesystems and Canvas; Atlas does not store a server-side history.
-  Phase 4 may revisit; Phase 3b explicitly does not.
+  gradebook. Assignment context is handled in Canvas; Atlas is the
+  map-building tool.
+- **Not a canonical authoring interface.** Construction mode produces
+  student artifacts. Canonical graph management is a backend workflow
+  (build, export, PR).
+- **Not an LLM tutor.** Atlas does not suggest edges, auto-generate
+  explanations, or provide feedback during construction. The student's
+  own work is the artifact.
+- **Not a long-term submission archive.** Submissions live in student
+  filesystems and Canvas. Atlas does not store server-side history.
+
+- **Not a hyperedge system.** Edges connect exactly two nodes. The
+  binary edge constraint is deliberate: it forces students to make
+  atomic, articulable claims ("this specific concept depends on this
+  other specific concept") rather than gesturing at clusters. The
+  "Explain the connection" prompt only makes sense in a binary context.
+  A student who genuinely needs to express an n-ary relationship
+  (e.g., Kirchhoff's voltage law relates three voltages simultaneously)
+  should create a student node for the relationship itself and connect
+  each participant to it — this decomposition is the intellectual work
+  the exercise is designed to surface. Hyperedges would add
+  implementation complexity (React Flow does not support them natively),
+  reduce pedagogical signal, and break the canonical edge recovery
+  metrics. This decision is final for Phase 3b; it may be revisited
+  in Phase 4 if concrete student use cases justify the cost.
 
 ---
 
 ## Open questions
 
-1. **Assignment authoring format.** Assignments are referenced by ID
-   in `?assignment=<id>` and in submission files. Where is the
-   assignment definition stored? Options: (a) JSON files in the Atlas
-   repo at `/assignments/<id>.json`, served as static content;
-   (b) a separate Atlas-assignments repo; (c) inlined in the
-   construction-mode URL via base64-encoded payload. Option (a) is
-   cheapest and matches existing JSON-via-PR conventions; (c) avoids
-   the need for any backend at all. Probably (a) for instructor-
-   authored assignments and (c) for ad-hoc in-class assignments.
-   Decide before implementation.
-2. **Per-author edge attribution in collaborative maps.** Currently
-   all edges are attributed to the file as a whole, not individual
-   collaborators. For in-class small-group work this is fine; for
-   homework-as-pair work it loses individual signal. Possible
-   extension: per-edge `created_by` field referencing
-   `authors[].name`. Defer until requested; the file format can
-   accept it as an additive change.
-3. **Submission versioning.** Re-exporting after a submission produces
-   a new file. Should it carry `parent_id` linking to the original
-   submission, building a chain? Useful for instructor visibility into
-   revision history; complicates the file format. Defer; revisit if
-   the assignment design pattern requires it.
-4. **Pre-construction concept inventory.** Variant D (build novel
-   connections) could be deployed at the *start* of a unit as a
-   diagnostic — students draw what they think they know, instructor
-   compares to canonical to identify what to teach. This is a
-   pedagogical use case, not a spec change, but the spec should
-   confirm the variant supports it (it does — empty-canonical-edge-set
-   in metrics).
-5. **Annotation export format for grading rubrics.** A TA might want
-   to bulk-export annotations across N student submissions for
-   gradebook entry. Format: CSV? JSON? Defer until grading workflow
-   is real and pain points are concrete.
-6. **Canvas LTI integration shape.** When Phase 4 lands LTI, the
-   submission flow may shift from client-side file download to
-   direct server-side post-back. The construction-mode spec should
-   not preclude this; the current file-based workflow is forward-
-   compatible.
-7. **Anonymization for research.** If construction submissions become a
-   PER research dataset, anonymization and consent need explicit
-   design. Not in scope here; flagged so it isn't an afterthought.
+1. **Student-created node shapes in typed variants (post-MVP).** When
+   directed edges land, student nodes may benefit from shape-based
+   type hints (concept-like vs. variable-like). Defer until the
+   directed-edge variant is scoped; the current rounded-rectangle
+   treatment is intentionally neutral.
+
+2. **Assignment authoring format.** How does an instructor specify a
+   "required nodes" list for a graded assignment? Options: (a) a JSON
+   assignment file at `/assignments/<id>.json` in the repo, loaded via
+   `?assignment=<id>`; (b) a URL-encoded payload for ad-hoc in-class
+   assignments. Probably (a) for prepared assignments, (b) for impromptu
+   ones. Decide before implementing assignment-scoped library entries.
+
+3. **Library thumbnails.** The library browser works without thumbnails
+   (title + tags are sufficient for selection), but thumbnails would
+   improve scannability. Generating SVG snapshots of instructor maps at
+   build time is the most likely approach. Defer until library UX is
+   validated with real students.
+
+4. ~~**Corpus-hash mismatch / orphan handling.**~~ Resolved. The orphan
+   policy is fully specified in the "Orphaned canonical node policy"
+   section: orphaned nodes render as placeholder nodes with a warning
+   glyph, retain their edges, are not auto-removed, and produce a
+   non-blocking warning at submission. This is no longer an open
+   question.
+
+5. **Annotation export for grading.** A TA annotating N student
+   submissions may want to bulk-export annotations for gradebook entry.
+   Format (CSV? JSON?) and tooling TBD. Defer until the grading workflow
+   is concrete.
+
+6. **Phase 4 Canvas LTI.** When LTI lands, submission flow shifts from
+   client-side file download to direct server-side post-back. The
+   `.atlas-map.json` format is designed to survive this unchanged.
+   Construction mode should not preclude it.
+
+7. **Anonymization for research.** If construction submissions become
+   a PER research dataset, anonymization and consent need explicit
+   design. Out of scope here; flagged so it isn't an afterthought.
+
+---
+
+## Cursor session prompts
+
+Each prompt below maps to one focused implementation session. Prompts are
+ordered to match the "Implementation order" section above. Run them
+sequentially — each session's output is a dependency for the next.
+
+**Before starting any session:** Read this spec in full. Also read
+`ATLAS_LAYOUT_AUTHORING_SPEC.md` (Move 1 is implemented and provides
+drag interaction, `userLayout.js`, export/import plumbing, and
+`src/lib/resolveRenderPosition.js`). Do not re-implement anything from
+Move 1; reference it.
+
+---
+
+### Session 1 — File format, types, and validator (T1, T2)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Construction file format",
+§"Validator rules", §"Validator severity table".
+Read: `src/lib/userLayout.js` (model for storage helpers).
+
+Create `src/lib/construction/` with the following files:
+
+**`constructionFile.js`**
+- `createConstructionSession({ title, librarySource })` — returns a fresh
+  session object with a new `session-<uuid>` id, timestamps, empty
+  `canonical_nodes`, `student_nodes`, `positions`, `edges`, `annotations`,
+  and `submission` block. All fields per the spec's JSON schema.
+- `serializeConstructionFile(session)` — returns a plain object suitable
+  for `JSON.stringify`. Derives `canonical_nodes` from `positions` keys
+  (keys not starting with `"student-"`). Sets `exported_at` to now.
+- `deserializeConstructionFile(raw)` — parses raw JSON text, returns a
+  session object or throws on parse failure.
+- `computeExplanationFilled(explanation)` — returns `true` iff explanation
+  is a non-null, non-empty string (for `explanation_filled` denormalization).
+
+**`validateConstructionFile.js`**
+- `validateConstructionFile(file)` — returns `{ errors: string[], warnings: string[] }`.
+- Implement every rule in the Validator severity table. Errors block
+  import; warnings do not. See the table for the exact list.
+- Auto-corrections (silent, no user prompt): recompute `canonical_nodes`
+  from `positions` if they diverge; fix `explanation_filled` inconsistency.
+  Apply these before returning results so the returned file object is
+  already corrected.
+
+**Tests** (put in `src/lib/construction/__tests__/`):
+- T1: round-trip fixture — create a session with 3 canonical nodes,
+  2 student nodes, 4 edges (2 filled, 2 not), serialize to JSON, parse
+  back, assert deep equality. Confirm `canonical_nodes` is derived
+  correctly.
+- T2: one positive + one negative test per validator rule in the severity
+  table. Assert each error rule returns the correct error string and each
+  warning rule returns the correct warning string. Confirm auto-corrections
+  are applied to the returned object.
+
+---
+
+### Session 2 — URL routing, construction landing page, and mode isolation (T12, T13)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"The two modes of Atlas",
+§"The landing page", §"Saving and persistence".
+Read: `src/App.jsx` (existing routing and URL param handling).
+Read: `src/lib/construction/constructionFile.js` (just created).
+
+**`App.jsx`**: add a `?mode=construct` branch. When present, render
+`<ConstructionApp />` instead of the reference graph. When absent,
+render the existing reference graph unchanged. Mode isolation: the
+construction localStorage keys (`atlas_construction_*`) must never be
+read or written by the reference-mode code path.
+
+**`src/lib/construction/constructionStore.js`**:
+- `CONSTRUCTION_KEY_PREFIX = 'atlas_construction_'`
+- `listConstructionSessions()` — scans localStorage for all keys matching
+  the prefix, parses each, returns an array of `{ id, title, modifiedAt,
+  submitted }` summary objects sorted descending by `modifiedAt`.
+- `loadConstructionSession(sessionId)` — returns full session object or null.
+- `saveConstructionSession(session)` — writes to
+  `atlas_construction_<session.id>_v1`.
+- `deleteConstructionSession(sessionId)` — removes the key.
+- All functions are localStorage-safe (guard for SSR; swallow write errors).
+
+**`src/construction/ConstructionApp.jsx`**:
+- Renders the construction landing page.
+- "My maps" row: reads `listConstructionSessions()`, displays title +
+  last-modified + "Continue" button for each. "Continue" loads session
+  and navigates to the canvas (stub `<ConstructionCanvas />` for now).
+- "Start from scratch": creates a new session via `createConstructionSession`,
+  saves it, navigates to canvas.
+- "Import a map": file picker for `.atlas-map.json`; validates with
+  `validateConstructionFile`; on hard errors show a blocking error modal
+  listing all errors; on warnings show acknowledgment dialog; on success
+  load into canvas.
+- "Load from library": stub — show a "Coming in Session 3" placeholder card.
+
+**Tests** (T12 partial, T13):
+- T13: `?mode=construct` renders landing page; no reference graph. Clear
+  param + reload restores reference view. Construction store never writes
+  to `atlas_user_layout_v1`.
+- T12 partial: "Start from scratch" creates a session in localStorage and
+  navigates to canvas stub. "My maps" row reflects it. "Import a map"
+  accepts a valid fixture file and rejects a malformed one.
+
+---
+
+### Session 3 — Library browser (T12 full)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Landing page: Load from
+library", §"Library manifest schema".
+Read: `src/data/tags.js` and `src/data/index.js` (canonical tag and node
+access patterns).
+
+Replace the "Coming in Session 3" stub in `ConstructionApp.jsx` with a
+full library browser panel (modal or slide-over). Three tabs:
+
+**Tab 1 — Instructor maps**:
+- `fetch('/library/instructor/manifest.json')` at open time. Handle
+  404/network error gracefully (show "No instructor maps available").
+- For each valid manifest entry, render a card: title, description (if
+  present), topic tags, node/edge count badge, author.
+- Malformed or file-missing entries: silently skip; emit `console.warn`.
+- "Load" button: fetches the referenced `.atlas-map.json` file, validates
+  it, creates a new session from it (new UUID, sets `library_source`),
+  saves to localStorage, navigates to canvas.
+
+**Tab 2 — Topic subgraphs**:
+- Derive list from canonical data: collect all unique topic tags across
+  published nodes. Group by domain.
+- Per topic: show a card with the topic name, domain tag, and node count.
+- "Load": collect all canonical nodes with that topic tag, place them at
+  their canonical positions (from `resolveRenderPosition`), **no
+  canonical edges**. Create session with `library_source.type:
+  "topic-subgraph"`.
+
+**Tab 3 — Blank templates**:
+- Same topic list as Tab 2, same cards.
+- "Load": empty canvas, but the node bank is pre-filtered to that topic's
+  canonical nodes. `library_source.type: "blank-template"`.
+
+**Tests** (T12 full):
+- "Load from library → topic subgraph" fixture: assert canonical nodes
+  at canonical positions, no edges.
+- "Load from library → blank template": assert empty canvas, node bank
+  filtered to topic.
+- Manifest with a malformed entry: assert that entry is skipped, rest load.
+
+---
+
+### Session 4 — Construction canvas + canonical node bank (T3, T7 partial)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Construction canvas",
+§"Node types" (canonical nodes subsection), §"Saving and persistence".
+Read: `src/components/GraphCanvas.jsx`, `src/components/nodes/ConceptNode.jsx`,
+`src/components/nodes/VariableNode.jsx` (existing React Flow setup).
+
+**`src/construction/ConstructionCanvas.jsx`**:
+- Receives `sessionId` prop; loads session from store on mount.
+- Renders a React Flow instance. **Disable the force simulation** (set
+  `nodesDraggable` to true but do not run `d3-force`; positions are
+  entirely student-authored).
+- **Mode banner** (top): "Construction mode — your work, not the canonical
+  graph." Includes "View canonical reference →" that opens `window.open('/', '_blank')`.
+- **Node bank panel** (left, collapsible): lists all published canonical
+  nodes (ConceptNode + VariableNode). Filter by domain and topic tag.
+  Search by name. Placed nodes render dimmed in the bank (not removed).
+  "+ New node" button — stub for Session 5.
+- **Drag from bank to canvas**: drop a bank node → adds it to
+  `session.positions` at drop coordinates, writes to `canonical_nodes`
+  (derived), saves session.
+- **Unplace**: right-click a placed node → context menu → "Remove" →
+  confirmation dialog → removes from `positions`, removes touching edges.
+- **Toolbar** (top-right): session title (inline rename on click), Save
+  button (explicit, in addition to auto-save), Export button (stub for
+  Session 8), My Maps link.
+- **Auto-save**: call `saveConstructionSession` on every state mutation
+  (node placed, node moved, node removed).
+- Canonical edges: hidden (do not render `edges.json` edges).
+
+**Tests** (T3, T7 partial):
+- T3: node bank lists all published nodes; drag to canvas → node appears
+  placed; bank entry dims; unplace → confirmation → node removed, touching
+  edges removed; bank entry un-dims.
+- T7 partial: place nodes, move them, reload page → positions restored
+  from localStorage.
+
+---
+
+### Session 5 — Student-created nodes (T4)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Node types" (student-created
+nodes subsection), §"Student-created node panel".
+Read: `src/construction/ConstructionCanvas.jsx` (just built).
+Read: `src/components/nodes/ConceptNode.jsx` (existing visual encoding
+patterns).
+
+**Student node visual** (`src/construction/nodes/StudentNode.jsx`):
+- Rounded rectangle, dashed border, neutral gray fill by default.
+- Small pencil glyph badge (top-right corner).
+- Displays node title.
+- Optional domain color: if `color` is set, use that domain's color from
+  `domainVisuals.js`; otherwise neutral gray.
+- Register in React Flow `nodeTypes` as `"student"`.
+
+**Double-click on empty canvas**: opens student-node creation panel at
+the click coordinates. Panel contains: Title input (required), Notes
+textarea. "Create" saves the node to the session at the click position
+with `id: "student-<uuid>"`. "Cancel" dismisses.
+
+**"+ New node" in node bank**: opens the same creation panel. Created
+node appears in the bank and must be dragged to place (like canonical nodes).
+
+**Student-node edit panel** (`src/construction/StudentNodePanel.jsx`):
+- Click a placed student node → panel slides in (or modal on mobile).
+- Title field (always editable).
+- Notes textarea with KaTeX + Markdown preview (reuse `KatexText.jsx` pattern).
+- "+ Add field" affordance at the bottom: adds optional fields one at a
+  time from: Formula, Description, Simplifying assumption, Applicability,
+  Misconception. Added fields are removable. Order is student-controlled
+  (drag to reorder within the panel).
+- All edits auto-save to session on blur.
+
+**Serialization**: student nodes are stored in `session.student_nodes[]`
+per the file format spec. `id` is always `"student-<uuid>"`.
+
+**Tests** (T4):
+- Double-click canvas → panel opens; create node → appears on canvas
+  at click position; ID starts with `"student-"` in serialized file.
+- "+ Add field" → each optional field appears; fields are removable; all
+  content persists after close + reopen.
+- Student node does NOT trigger canonical hover-card (assert canonical
+  HoverCardOverlay is suppressed for student nodes).
+
+---
+
+### Session 6 — Edge drawing and explanation (T4b, T5, T6)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Edge drawing and Explain
+the connection", §"Unfilled edge indicator", §"Editing an explanation".
+Read: `src/components/FloatingEdge.jsx` (existing edge component pattern).
+Read: `src/construction/ConstructionCanvas.jsx`.
+
+**Connection handles**: add a connection handle to every placed node's
+border (canonical and student). Visible on hover of the node border.
+Use React Flow's `Handle` component at position `Position.Right` and
+`Position.Left` (at minimum); all-sides is better.
+
+**Edge creation**:
+- Drag from handle → in-progress edge follows cursor.
+- Drop on target node → edge committed: add to `session.edges[]` with
+  new `"edge-<uuid>"` id, `explanation: null`, `explanation_filled: false`.
+- **Self-loop guard**: if source === target, reject immediately. Show
+  brief inline toast: "A node cannot connect to itself." No edge added.
+- **Duplicate guard**: if an edge already exists between the same two
+  nodes (in either direction), reject. Show toast: "A connection between
+  these nodes already exists." No edge added.
+
+**Explanation popover** (`src/construction/ExplanationPopover.jsx`):
+- Opens automatically at the edge midpoint immediately after edge creation.
+- Shows "Explain the connection" header + source–target node names.
+- Textarea (focus auto-set on open; focus trapped within popover).
+- "Save": writes explanation, sets `explanation_filled: true`, closes.
+- "Skip for now": closes without writing. Edge stays `explanation: null`.
+
+**Edge visuals** (`src/construction/ConstructionEdge.jsx`):
+- Unfilled (`explanation: null`): dashed stroke.
+- Filled: solid stroke.
+- Register as React Flow edge type `"construction"`.
+
+**Edge interaction**:
+- Click an edge → opens edge detail panel (shows explanation text or
+  "Add an explanation" prompt; edit button). Editable at any time.
+- Delete: click an edge → press Delete/Backspace; or right-click → delete.
+  No confirmation required for edges.
+
+**Toolbar badge**:
+- "N edges without explanations" when `N > 0`. When `N === 0`, badge absent.
+- `aria-live="polite"`.
+- Click badge → cycles through unfilled edges (pan/zoom to each); opens
+  explanation popover for that edge.
+
+**Tests** (T4b, T5, T6):
+- T4b: self-loop rejected, duplicate edge rejected, import with self-loop
+  blocked by validator.
+- T5: edge drawn → `explanation: null`; popover opens; Save → filled;
+  Skip → stays null; dashed vs solid renders correctly; badge count
+  accurate; badge-click cycles.
+- T6: create all four node-type combinations (canonical→canonical,
+  canonical→student, student→canonical, student→student); assert correct
+  source/target IDs in serialized file.
+
+---
+
+### Session 7 — Auto-save, My Maps, sessions, author widget (T7)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Saving and persistence",
+§"Authors and collaborators".
+Read: `src/lib/construction/constructionStore.js`.
+
+This session wires up the full auto-save loop and session management UI.
+Most of the auto-save calls should already exist as stubs from Sessions
+4–6; verify they're consistent and test the full round-trip.
+
+**Auto-save completeness check**: audit every mutation site in
+`ConstructionCanvas.jsx` and edge/node handlers. Every state change
+(node placed, moved, removed; edge created, deleted; explanation saved/
+edited; student node created/edited) must call `saveConstructionSession`.
+
+**Session title rename**: clicking the title in the toolbar makes it an
+inline `<input>`. On blur or Enter, saves the new title to the session
+and to localStorage. Default title: `"Untitled map — [date]"`. For
+library-loaded sessions, defaults to the library item's title.
+
+**My Maps panel** (`src/construction/MyMapsPanel.jsx`):
+- Slide-over panel accessible from the toolbar.
+- Lists all sessions from `listConstructionSessions()` sorted by
+  `modifiedAt` desc.
+- Per session: title, last-modified timestamp, submitted badge (if
+  `submission.submitted: true`), "Continue" and "Delete" buttons.
+- "Continue": load session → navigate to canvas.
+- "Delete": confirmation → `deleteConstructionSession(id)` → remove from list.
+- "Clear completed maps" button: deletes all sessions where
+  `submission.submitted: true` after a single bulk-confirmation dialog.
+
+**Author widget** (`src/construction/AuthorWidget.jsx`):
+- On first construction-mode entry, a one-time prompt captures the
+  student's name. Store in localStorage at `atlas_user_identity_v1`
+  as `{ name }`.
+- Author widget in toolbar shows the primary author name. "Edit" reopens
+  the name prompt.
+- "Add Collaborator" button: prompts for a name, adds entry to
+  `session.authors[]` with `role: "collaborator"`. Collaborators are
+  file metadata only — no per-author tracking.
+
+**Tests** (T7 full):
+- Make changes (place 3 nodes, draw 2 edges, write 1 explanation), simulate
+  page reload, assert full state restores from localStorage (positions,
+  edges, explanations, student nodes).
+- Title rename persists across reload.
+- My Maps panel: sessions appear, "Continue" loads the right one, delete
+  works, submitted sessions show badge.
+
+---
+
+### Session 8 — Submission flow (T8, T13c)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Export and sharing",
+§"Submission flow", §"Post-submission session behavior".
+Read: `src/lib/userLayout.js` `downloadLayoutPayload` (download helper pattern).
+Read: `src/lib/construction/validateConstructionFile.js`.
+
+**"Export map" button** (toolbar, always available):
+- Calls `serializeConstructionFile(session)`, triggers browser download
+  as `<title>-<date>.atlas-map.json`. No pre-flight checklist.
+
+**"Submit" button** (toolbar):
+A modal pre-flight checklist with four steps in sequence:
+
+1. **Validator**: run `validateConstructionFile`. If hard errors exist,
+   show error list and block — no proceed button. If warnings exist, show
+   warning list with "Continue anyway" button. If clean, advance automatically.
+2. **Unfilled edge warning**: if `N > 0` edges have `explanation: null`,
+   show "N edges are missing explanations. Your reviewer will see them
+   as dashed. Submit anyway?" with Continue / Go back.
+3. **Author confirmation**: show `session.authors[]` list with edit affordance.
+   "Confirm and submit" button.
+4. **Download**: set `submission.submitted: true`, `submission.submitted_at:
+   now` on the session, save to localStorage, trigger file download, close modal.
+
+**Post-submission locked state**:
+- In My Maps panel, submitted sessions render with a lock icon and
+  "Submitted" badge (already stubbed in Session 7 — wire it now).
+- "Continue" on a submitted session: show dialog "This map has been
+  submitted. What would you like to do?" with two buttons:
+  - "Start a new revision": creates a new session (new UUID) copying the
+    submitted session's full state, minus the `submission` flag and
+    timestamp. Navigates to that new session.
+  - "Cancel": dismiss dialog.
+- The submitted session in localStorage is never modified after the fact.
+
+**Tests** (T8, T13c):
+- T8: fill fixture map → Submit → validator runs → unfilled-edge warning
+  appears → downloaded file has `submission.submitted: true` and valid
+  timestamp → local store retains copy.
+- T13c: submit → "Submitted" badge in My Maps → "Continue" shows dialog →
+  "Start new revision" creates new session with new UUID and
+  `submitted: false` → original session unchanged.
+
+---
+
+### Session 9 — Review mode and annotation (T9, T10)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Review and annotation"
+in full — especially the "Review lock contract — exhaustive list of
+mutable surfaces."
+Read: `src/construction/ConstructionCanvas.jsx`.
+
+**Review mode detection**: when a file is imported via "Import a map"
+and the file belongs to a different primary author than the current
+`atlas_user_identity_v1`, prompt: "This map was authored by [name]. Open
+for review?" with role selector (peer / TA / instructor). Confirming
+enters review mode for this session. The reviewer identity is stored at
+`atlas_review_identity_v1` as `{ name, role }`.
+
+**Review-mode banner**: replaces the normal mode banner. "You are reviewing
+[Student A]'s map. Your edits will be saved as annotations." Includes
+same "View canonical reference →" link.
+
+**Review locks** (enforce in canvas and all panels):
+- Node bank: no place/unplace (bank hidden or all entries disabled).
+- Placed nodes: no drag (positions locked).
+- Student-created node panel: read-only (no editing of content).
+- Edges: no creation, no deletion.
+- The *only* writable surface is `annotations[]`.
+
+**Annotation composer** (`src/construction/AnnotationComposer.jsx`):
+- Clicking any placed node, any edge, or any empty canvas area in review
+  mode opens the annotation composer anchored to the target.
+- Fields: free-text body (Markdown + KaTeX), Save, Cancel.
+- `target.kind`: `"node"` | `"edge"` | `"map"`.
+- Saved annotation: `{ id: "ann-<uuid>", target, author, role, body,
+  resolved: false, parent_id: null, created_at }`.
+
+**Annotation rendering**:
+- Numbered pin badges on annotated targets. Hovering shows count; clicking
+  opens the annotation thread panel.
+- Thread panel: shows annotation body and all replies. Reply button (creates
+  child with `parent_id` set). Resolve button (sets `resolved: true`).
+  Edit button (own annotations only).
+- Resolved annotations render with a distinct style (grayed, strikethrough
+  badge).
+
+**"Export annotated map"** button (only in review mode): downloads the
+file with `annotations[]` populated.
+
+**Student re-import**: when a student imports a file that has annotations
+not present in their local session's annotation set, surface a notification
+toast: "N new annotations from [reviewer]." Student can view, reply to,
+and resolve annotations.
+
+**Validator enforcement**: before any import in review mode, run
+`validateConstructionFile`. If any non-annotation diff is detected between
+the reviewer's export and the student's local store, emit warning: "This
+file was modified outside of annotations."
+
+**Tests** (T9, T10):
+- T9: import fixture in review mode → node bank disabled, edges read-only,
+  positions locked, annotation composer opens on node/edge/canvas click.
+- T10: create annotation on node/edge/map → correct `target.kind`; reply
+  creates child with `parent_id`; resolve sets `resolved: true`; export
+  and re-import → student receives new annotations, notification fires,
+  replies serialize correctly.
+
+---
+
+### Session 10 — Canonical edge recovery metrics and diff panel (T11)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Automated metrics".
+Read: `src/data/edges.js` or `src/data/edges.json` (canonical edge data).
+Read: `src/construction/ConstructionCanvas.jsx`.
+
+**`src/lib/construction/metrics.js`**:
+- `computeEdgeMetrics({ studentEdges, canonicalEdges, placedCanonicalNodeIds })`:
+  - Filter `canonicalEdges` to only those where both endpoints are in
+    `placedCanonicalNodeIds` (edges "in scope").
+  - Compare student edges between canonical nodes to in-scope canonical
+    edges (undirected: `{A,B}` matches `{B,A}`).
+  - Classify each in-scope canonical edge as Recovered or Missed.
+  - Classify each student canonical-canonical edge as Recovered or Invented.
+  - Compute Recall = Recovered / in-scope canonical count.
+  - Compute Precision = Recovered / (Recovered + Invented).
+  - Compute F1 = harmonic mean (0 if either is 0; handle division by zero).
+  - Return `{ recovered, missed, invented, recall, precision, f1,
+    studentNodeEdges }` where `studentNodeEdges` is the list of edges
+    involving at least one student-created node (for qualitative display).
+
+**Diff panel** (`src/construction/DiffPanel.jsx`):
+- Available only in review mode, only when the reviewer's role is `"ta"`
+  or `"instructor"`.
+- Shows metrics summary at top: Recall / Precision / F1 as percentages.
+- Edge list below: each in-scope edge tagged ✔ Recovered / ✗ Missed /
+  ⚠ Invented.
+- "Highlight differences" toggle: when on, missed canonical edges render
+  as faint ghost edges on the canvas; invented edges highlight in a
+  distinct color (use a `"ghost"` and `"invented"` edge type).
+- Student-created-node edges listed in a separate section with their
+  explanation text (qualitative only; no metric).
+- Panel is closeable/collapsible.
+
+**Tests** (T11 — unit tests with hand-crafted fixtures):
+- Perfect recovery (all canonical edges drawn, none invented): recall =
+  precision = F1 = 1.0.
+- All missed (no canonical edges drawn): recall = 0, F1 = 0.
+- All invented (edges drawn but no canonical matches): recall = 0,
+  precision = 0.
+- Half recovered, no invented: recall = 0.5, precision = 1.0,
+  F1 ≈ 0.667.
+- Edges between student nodes are excluded from metric computation and
+  appear only in `studentNodeEdges`.
+
+---
+
+### Session 11 — Sanitization, accessibility, orphan policy, performance (T13b, T13d, T13e, T13f, T14)
+
+Read: `ATLAS_CONCEPT_MAP_CONSTRUCTION_SPEC.md` §"Markdown, KaTeX, and
+content sanitization", §"Accessibility baseline", §"Orphaned canonical
+node policy", §"Performance targets", §"Tests" (T13b, T13d, T13e, T13f,
+T14), §"Interactions with other specs".
+Read: `src/components/KatexText.jsx` (existing KaTeX render pattern).
+Read: `ATLAS_NODE_AFFORDANCES_SPEC.md` (hover-card suppression rules).
+
+**Sanitization** (`src/lib/construction/renderText.js`):
+- Install `dompurify` if not already present.
+- `renderUserText(rawMarkdown)`: parse Markdown (use `marked` or
+  `markdown-it`) → render KaTeX (`$...$` and `$$...$$`) → sanitize with
+  DOMPurify using exactly the config in the spec (allowed tags/attrs,
+  forbidden tags/attrs, FORCE_BODY). Validate `href` values: strip
+  `javascript:` and `data:` schemes.
+- Apply `renderUserText` at render time (not save time) in: student node
+  Notes/Description/Assumption/Applicability/Misconception fields, edge
+  explanation display, annotation body display.
+
+**Orphan policy**:
+- In `deserializeConstructionFile`, after loading, cross-reference every
+  ID in `canonical_nodes` against the live canonical corpus (via
+  `src/data/index.js`). IDs not found in the corpus are orphans.
+- Orphaned nodes: render using a new `OrphanedNode.jsx` component — gray
+  fill, dashed border, ⚠ glyph, bare ID as label.
+- Edges touching orphaned nodes: preserved and rendered normally.
+- "Clean up orphans" button in toolbar (only visible when orphans exist):
+  confirmation → removes all orphaned nodes and their touching edges from
+  the session, saves.
+- Orphaned nodes produce a non-blocking `warnings[]` entry in
+  `validateConstructionFile`; never an error.
+
+**Accessibility**:
+- Every placed node: `aria-label="[Node title], [canonical/student-created], [N edges]"`.
+- Every construction edge: `aria-label="Connection from [source] to [target], [filled/unfilled] explanation"`.
+- Mode banner: `role="status"`.
+- Unfilled edge count badge: `aria-live="polite"`.
+- Keyboard — placed nodes: Tab cycles focus; Enter opens detail panel;
+  Delete/Backspace triggers unplace confirmation; Escape closes any open
+  panel/dialog.
+- Keyboard — edge creation: with node focused, **E** enters edge-drawing
+  mode; Tab cycles through other placed nodes as targets; Enter commits;
+  Escape cancels.
+- Keyboard — node bank: Tab through entries; Enter places focused bank
+  node at center of current viewport.
+- All popovers and dialogs must trap focus (focus cannot leave via Tab).
+  All return focus to triggering element on close. Explanation popover
+  textarea receives focus automatically on open.
+
+**Cross-spec invariants** (T14):
+- Canonical node hover-card (`HoverCardOverlay.jsx`) works in construction
+  mode for canonical nodes (read-only peek), but is suppressed during
+  edge-drawing drag. Confirm this matches the suppression mechanism in
+  `ATLAS_NODE_AFFORDANCES_SPEC.md`.
+- Student-created nodes do NOT trigger the canonical hover-card; they open
+  the student-node edit panel.
+- Reveal-neighbors halo and count badge (`ATLAS_REVEAL_NEIGHBORS_SPEC.md`)
+  are hidden in construction mode.
+- Layout cache: no recomputation on selection, hover, or edge creation.
+
+**Performance**:
+- Create a large test fixture at `src/lib/construction/__tests__/fixtures/large.atlas-map.json`
+  with 60 nodes (mix of canonical and student), 150 edges, and 200
+  annotations (generated programmatically in a seed script).
+- T13f: render large fixture → assert canvas fully painted and interactive
+  within 500ms. Simulate drag on one node → assert drag-stop handler
+  completes within 16ms. Open explanation popover → assert popover renders
+  within 16ms.
+
+**Tests** (T13b, T13d, T13e, T13f, T14):
+- T13b orphan policy (full spec — see the test description).
+- T13d: script tag stripped from notes; `javascript:` href stripped; valid
+  KaTeX renders without error; Markdown with headings/bold/list renders
+  correctly.
+- T13e: Tab focus cycle, Enter opens panel, Delete opens confirmation,
+  focus trapped in popover, focus returns on close, mode banner role and
+  badge aria-live attributes present.
+- T13f: large fixture renders within 500ms; drag within 16ms; popover
+  within 16ms.
+- T14: canonical hover-card works for canonical nodes, suppressed during
+  drag; student nodes open edit panel; reveal-neighbors halo absent;
+  layout cache not invalidated on hover/select/edge-create.

@@ -18,7 +18,7 @@ function clampPanelWidth(width) {
   return Math.min(maxWidth, Math.max(minWidth, width))
 }
 
-/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingStateChange?: (entityId: string, state: string) => void, onSelectEntity?: (id: string) => void, onTagClick?: (tagId: string) => void, tagLabelById?: Record<string, string>, tagDescriptionById?: Record<string, string>, conceptById?: Map<string, any>, appearsInByVariableId?: Record<string, string[]>, understandingStatesById?: Record<string, string> }} props */
+/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingStateChange?: (entityId: string, state: string) => void, onSelectEntity?: (id: string) => void, onSubdomainClick?: (subdomainId: string) => void, subdomainLabelById?: Record<string, string>, subdomainDescriptionById?: Record<string, string>, tagLabelById?: Record<string, string>, tagDescriptionById?: Record<string, string>, conceptById?: Map<string, any>, appearsInByVariableId?: Record<string, string[]>, understandingStatesById?: Record<string, string> }} props */
 export default function NodePanel({
   selectedNode,
   panelWidth = 440,
@@ -29,7 +29,9 @@ export default function NodePanel({
   onClose,
   onUnderstandingStateChange,
   onSelectEntity,
-  onTagClick,
+  onSubdomainClick,
+  subdomainLabelById = {},
+  subdomainDescriptionById = {},
   tagLabelById = {},
   tagDescriptionById = {},
   conceptById = new Map(),
@@ -137,7 +139,9 @@ export default function NodePanel({
               understandingState={understandingState}
               isVariableKnown={isVariableKnown}
               onUnderstandingStateChange={onUnderstandingStateChange}
-              onTagClick={onTagClick}
+              onSubdomainClick={onSubdomainClick}
+              subdomainLabelById={subdomainLabelById}
+              subdomainDescriptionById={subdomainDescriptionById}
               tagLabelById={tagLabelById}
               tagDescriptionById={tagDescriptionById}
             />

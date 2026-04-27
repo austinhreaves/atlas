@@ -37,6 +37,8 @@ export function centerOnNodeInViewport({
   nodeId,
   panelWidth = 440,
   isPanelOpen = false,
+  viewPanelWidth = 0,
+  isViewPanelOpen = false,
   isMobile = false,
   duration = 380,
 }) {
@@ -51,19 +53,22 @@ export function centerOnNodeInViewport({
 
   const viewport = reactFlow.getViewport()
   const zoom = viewport?.zoom ?? 1
-  const effectivePanelWidth = clampPanelWidth(panelWidth)
-  const offsetGraphX = isPanelOpen && !isMobile ? effectivePanelWidth / (2 * zoom) : 0
+  const rightPanelWidth = isPanelOpen && !isMobile ? clampPanelWidth(panelWidth) : 0
+  const leftPanelWidth = isViewPanelOpen && !isMobile ? viewPanelWidth : 0
+  const offsetGraphX = (rightPanelWidth - leftPanelWidth) / (2 * zoom)
   const targetX = center.x + offsetGraphX
 
   reactFlow.setCenter(targetX, center.y, { zoom, duration })
   return true
 }
 
-/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, userMoveEndCount?: number, isMobile?: boolean, autoRecenterEnabled?: boolean }} props */
+/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, viewPanelWidth?: number, isViewPanelOpen?: boolean, userMoveEndCount?: number, isMobile?: boolean, autoRecenterEnabled?: boolean }} props */
 export default function CameraController({
   selectedNodeId,
   panelWidth = 440,
   isPanelOpen = false,
+  viewPanelWidth = 0,
+  isViewPanelOpen = false,
   userMoveEndCount = 0,
   isMobile = false,
   autoRecenterEnabled = true,
@@ -88,10 +93,12 @@ export default function CameraController({
       nodeId: selectedNodeId,
       panelWidth,
       isPanelOpen,
+      viewPanelWidth,
+      isViewPanelOpen,
       isMobile,
       duration: 420,
     })
-  }, [isMobile, isPanelOpen, panelWidth, reactFlow, selectedNodeId])
+  }, [isMobile, isPanelOpen, isViewPanelOpen, panelWidth, reactFlow, selectedNodeId, viewPanelWidth])
 
   useEffect(() => {
     const previousSelectedNodeId = previousSelectedNodeIdRef.current
@@ -132,6 +139,8 @@ export default function CameraController({
         nodeId: selectedNodeId,
         panelWidth,
         isPanelOpen,
+        viewPanelWidth,
+        isViewPanelOpen,
         isMobile,
         duration: 420,
       })
@@ -141,10 +150,12 @@ export default function CameraController({
     autoRecenterEnabled,
     isMobile,
     isPanelOpen,
+    isViewPanelOpen,
     panelWidth,
     reactFlow,
     selectedNodeId,
     userMoveEndCount,
+    viewPanelWidth,
   ])
 
   useEffect(() => {

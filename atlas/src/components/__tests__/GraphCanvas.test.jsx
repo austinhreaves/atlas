@@ -100,6 +100,8 @@ function createProps(overrides = {}) {
     selectedNodeId: null,
     isPanelOpen: false,
     panelWidth: 440,
+    isViewPanelOpen: false,
+    viewPanelWidth: 360,
     focalNodeIds: new Set(),
     neighborNodeIds: new Set(),
     distantNodeIds: new Set(),
@@ -256,6 +258,42 @@ describe('GraphCanvas camera behavior', () => {
 
     const [targetX] = reactFlowState.setCenter.mock.calls[0]
     expect(targetX).toBe(120 + 500 / (2 * 1.25))
+  })
+
+  it('shifts recenter target left when the view panel is open', () => {
+    const { rerender } = render(<GraphCanvas {...createProps()} />)
+
+    rerender(
+      <GraphCanvas
+        {...createProps({
+          selectedNodeId: 'n1',
+          isViewPanelOpen: true,
+          viewPanelWidth: 300,
+        })}
+      />,
+    )
+
+    const [targetX] = reactFlowState.setCenter.mock.calls[0]
+    expect(targetX).toBe(120 - 300 / (2 * 1.25))
+  })
+
+  it('combines left and right panel offsets when both panels are open', () => {
+    const { rerender } = render(<GraphCanvas {...createProps()} />)
+
+    rerender(
+      <GraphCanvas
+        {...createProps({
+          selectedNodeId: 'n1',
+          isPanelOpen: true,
+          panelWidth: 500,
+          isViewPanelOpen: true,
+          viewPanelWidth: 300,
+        })}
+      />,
+    )
+
+    const [targetX] = reactFlowState.setCenter.mock.calls[0]
+    expect(targetX).toBe(120 + (500 - 300) / (2 * 1.25))
   })
 
   it('does not schedule idle recenter when no node is selected', () => {

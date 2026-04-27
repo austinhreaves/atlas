@@ -1,0 +1,10 @@
+{
+  "subjects": [
+    {
+      "id": "physics",
+      "label": "Physics",
+      "description": "Foundational and applied physics concepts, variables, and relationships.",
+      "review_state": "published"
+    }
+  ]
+}

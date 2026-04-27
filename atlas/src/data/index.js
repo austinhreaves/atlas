@@ -1,5 +1,6 @@
 import electromagnetismConcepts from './concepts/electromagnetism.json'
 import mechanicsConcepts from './concepts/mechanics.json'
+import { getSubdomainRegistry, getVisibleSubdomainRegistry } from './subdomains'
 import { getTagRegistry, getVisibleTagRegistry } from './tags'
 import variables from './variables.json'
 
@@ -34,3 +35,4 @@ export function computeAppearsIn(variableEntities = variables, conceptEntities =
 
 export { concepts, variables }
 export { getTagRegistry, getVisibleTagRegistry }
+export { getSubdomainRegistry, getVisibleSubdomainRegistry }

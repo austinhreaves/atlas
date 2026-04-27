@@ -119,11 +119,11 @@ describe('entities data integrity', () => {
     expect(invalidPhetNodes).toEqual([])
   })
 
-  it('every concept has at least one tag', () => {
-    const taglessNodes = concepts.filter(
-      (node) => !Array.isArray(node.tags) || node.tags.length === 0,
+  it('every concept has at least one sub-domain', () => {
+    const uncategorizedNodes = concepts.filter(
+      (node) => !Array.isArray(node.sub_domains) || node.sub_domains.length === 0,
     )
-    expect(taglessNodes).toEqual([])
+    expect(uncategorizedNodes).toEqual([])
   })
 
   it('every variable has a valid role', () => {

@@ -10,8 +10,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "measurement",
-      "foundations"
+      "kw-measurement",
+      "kw-foundations"
     ],
     "author": "austin",
     "review_state": "published",
@@ -28,8 +28,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "measurement",
-      "uncertainty"
+      "kw-measurement",
+      "kw-uncertainty"
     ],
     "author": "austin",
     "review_state": "published",
@@ -46,8 +46,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "measurement",
-      "uncertainty"
+      "kw-measurement",
+      "kw-uncertainty"
     ],
     "author": "austin",
     "review_state": "published",
@@ -64,8 +64,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "measurement",
-      "approximation"
+      "kw-measurement",
+      "kw-approximation"
     ],
     "author": "austin",
     "review_state": "published",
@@ -82,8 +82,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -100,8 +99,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -118,8 +116,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -136,8 +133,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -154,8 +150,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -172,8 +167,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -190,8 +184,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -208,8 +201,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -227,9 +219,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "two-d-motion"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -247,9 +237,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "two-d-motion"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -267,9 +255,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "two-d-motion"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -287,9 +273,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "two-d-motion"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -306,9 +290,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "projectile"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -325,9 +307,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "projectile"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -345,9 +325,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "two-d-motion"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -365,9 +343,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "two-d-motion"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -385,9 +361,7 @@
     "variable_type": "quantity",
     "sign_convention": "Measured counterclockwise from +x by convention.",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "projectile"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -404,9 +378,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "kinematics",
-      "projectile"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -423,9 +395,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "dynamics",
-      "gravity"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -442,9 +412,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "dynamics",
-      "contact-force"
+      "kw-mechanics",
+      "kw-force"
     ],
     "author": "austin",
     "review_state": "published",
@@ -461,9 +430,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "dynamics",
-      "contact-force"
+      "kw-mechanics",
+      "kw-force"
     ],
     "author": "austin",
     "review_state": "published",
@@ -481,8 +449,8 @@
     "variable_type": "quantity",
     "sign_convention": "Measured from +x horizontal toward the incline surface.",
     "tags": [
-      "mechanics",
-      "geometry"
+      "kw-mechanics",
+      "kw-geometry"
     ],
     "author": "austin",
     "review_state": "published",
@@ -499,8 +467,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "dynamics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -522,8 +489,7 @@
     "variable_type": "quantity",
     "sign_convention": "Positive along the chosen coordinate axis.",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -544,7 +510,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "fundamental",
     "tags": [
-      "mechanics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -565,8 +531,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "energy"
+      "kw-mechanics",
+      "kw-energy"
     ],
     "author": "austin",
     "review_state": "published",
@@ -587,8 +553,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "energy"
+      "kw-mechanics",
+      "kw-energy"
     ],
     "author": "austin",
     "review_state": "published",
@@ -609,8 +575,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "collisions"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -627,8 +592,8 @@
     "vector_or_scalar": "vector",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "systems"
+      "kw-mechanics",
+      "kw-systems"
     ],
     "author": "austin",
     "review_state": "published",
@@ -649,8 +614,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "fundamental",
     "tags": [
-      "mechanics",
-      "electromagnetism"
+      "kw-mechanics",
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -671,8 +636,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -693,8 +657,7 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "mechanics",
-      "kinematics"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -715,8 +678,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "constant",
     "tags": [
-      "mechanics",
-      "gravity"
+      "kw-mechanics"
     ],
     "author": "austin",
     "review_state": "published",
@@ -738,8 +700,8 @@
     "variable_type": "quantity",
     "sign_convention": "Positive upward from the reference level unless otherwise stated.",
     "tags": [
-      "mechanics",
-      "energy"
+      "kw-mechanics",
+      "kw-energy"
     ],
     "author": "austin",
     "review_state": "published",
@@ -760,8 +722,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "mechanics",
-      "energy"
+      "kw-mechanics",
+      "kw-energy"
     ],
     "author": "austin",
     "review_state": "published",
@@ -788,7 +750,7 @@
       }
     ],
     "tags": [
-      "electromagnetism"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -809,8 +771,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "electromagnetism",
-      "geometry"
+      "kw-electromagnetism",
+      "kw-geometry"
     ],
     "author": "austin",
     "review_state": "published",
@@ -831,8 +793,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "constant",
     "tags": [
-      "electromagnetism",
-      "constants"
+      "kw-electromagnetism",
+      "kw-constants"
     ],
     "author": "austin",
     "review_state": "published",
@@ -849,8 +811,8 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "electromagnetism",
-      "force"
+      "kw-electromagnetism",
+      "kw-force"
     ],
     "author": "austin",
     "review_state": "published",
@@ -867,8 +829,8 @@
     "vector_or_scalar": "vector",
     "variable_type": "derived",
     "tags": [
-      "electromagnetism",
-      "fields"
+      "kw-electromagnetism",
+      "kw-fields"
     ],
     "author": "austin",
     "review_state": "published",
@@ -890,8 +852,7 @@
     "variable_type": "derived",
     "sign_convention": "Defined as potential at point A minus potential at point B.",
     "tags": [
-      "electromagnetism",
-      "circuits"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -913,8 +874,7 @@
     "variable_type": "fundamental",
     "sign_convention": "Conventional current is positive in the direction of positive charge flow.",
     "tags": [
-      "electromagnetism",
-      "circuits"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -935,8 +895,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "electromagnetism",
-      "circuits"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -957,8 +916,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "electromagnetism",
-      "magnetism"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -975,8 +933,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "derived",
     "tags": [
-      "electromagnetism",
-      "induction"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -997,8 +954,7 @@
     "vector_or_scalar": "scalar",
     "variable_type": "quantity",
     "tags": [
-      "electromagnetism",
-      "electrostatics"
+      "kw-electromagnetism"
     ],
     "author": "austin",
     "review_state": "published",
@@ -1019,8 +975,8 @@
     "vector_or_scalar": "scalar",
     "variable_type": "constant",
     "tags": [
-      "electromagnetism",
-      "constants"
+      "kw-electromagnetism",
+      "kw-constants"
     ],
     "author": "austin",
     "review_state": "published",
@@ -1041,8 +997,8 @@
     "vector_or_scalar": "vector",
     "variable_type": "quantity",
     "tags": [
-      "electromagnetism",
-      "geometry"
+      "kw-electromagnetism",
+      "kw-geometry"
     ],
     "author": "austin",
     "review_state": "published",

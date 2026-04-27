@@ -43,11 +43,13 @@ function getMiniMapNodeColor(node) {
   return '#64748b'
 }
 
-/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, isMobile?: boolean, onActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void }} props */
+/** @param {{ selectedNodeId: string | null, panelWidth?: number, isPanelOpen?: boolean, viewPanelWidth?: number, isViewPanelOpen?: boolean, isMobile?: boolean, onActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void }} props */
 function ViewportActionsBridge({
   selectedNodeId,
   panelWidth = 440,
   isPanelOpen = false,
+  viewPanelWidth = 0,
+  isViewPanelOpen = false,
   isMobile = false,
   onActionsChange,
 }) {
@@ -66,10 +68,20 @@ function ViewportActionsBridge({
       nodeId: selectedNodeId,
       panelWidth,
       isPanelOpen,
+      viewPanelWidth,
+      isViewPanelOpen,
       isMobile,
       duration: 420,
     })
-  }, [isMobile, isPanelOpen, panelWidth, reactFlow, selectedNodeId])
+  }, [
+    isMobile,
+    isPanelOpen,
+    isViewPanelOpen,
+    panelWidth,
+    reactFlow,
+    selectedNodeId,
+    viewPanelWidth,
+  ])
 
   useEffect(() => {
     if (typeof onActionsChange !== 'function') {
@@ -342,7 +354,7 @@ function toFlowEdges(
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understandingStatesById?: Record<string, string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onViewportActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void, autoRecenterEnabled?: boolean, isMobile?: boolean, hoveredEntity?: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null, onSetHover?: (nextHover: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null) => void }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, viewPanelWidth?: number, isViewPanelOpen?: boolean, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understandingStatesById?: Record<string, string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onViewportActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void, autoRecenterEnabled?: boolean, isMobile?: boolean, hoveredEntity?: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null, onSetHover?: (nextHover: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null) => void }} props */
 export default function GraphCanvas({
   nodes,
   edges,
@@ -351,6 +363,8 @@ export default function GraphCanvas({
   selectedNodeId,
   isPanelOpen = false,
   panelWidth = 440,
+  viewPanelWidth = 0,
+  isViewPanelOpen = false,
   focalNodeIds,
   neighborNodeIds,
   distantNodeIds,
@@ -703,6 +717,8 @@ export default function GraphCanvas({
           selectedNodeId={selectedNodeId}
           panelWidth={panelWidth}
           isPanelOpen={isPanelOpen}
+          viewPanelWidth={viewPanelWidth}
+          isViewPanelOpen={isViewPanelOpen}
           isMobile={isMobile}
           onActionsChange={handleViewportActionsChange}
         />
@@ -710,6 +726,8 @@ export default function GraphCanvas({
           selectedNodeId={selectedNodeId}
           isPanelOpen={isPanelOpen}
           panelWidth={panelWidth}
+          viewPanelWidth={viewPanelWidth}
+          isViewPanelOpen={isViewPanelOpen}
           userMoveEndCount={userMoveEndCount}
           autoRecenterEnabled={autoRecenterEnabled}
           isMobile={isMobile}

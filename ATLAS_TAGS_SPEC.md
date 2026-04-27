@@ -4,6 +4,10 @@
 > Phase placement: schema additions and filter UI MVP can ship at any time;
 > URL-param integration overlaps with `ATLAS_UX_IMPROVEMENTS_SPEC.md`
 > Session 6 and harmonizes with that work when it lands.
+>
+> Update note: Atlas now separates topical taxonomy from keyword tags.
+> `sub_domains` are registry-backed topical filters on concepts; `tags` are keyword metadata.
+> Domain remains the color channel.
 
 ---
 

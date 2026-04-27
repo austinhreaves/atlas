@@ -1,8 +1,11 @@
+import { getSubdomainValidationContext } from './subdomains'
+import { getSubjectValidationContext } from './subjects'
 import { getTagValidationContext } from './tags'
 
 const REQUIRED_CONCEPT_FIELDS = [
   'id',
   'layer',
+  'subject',
   'title',
   'type',
   'domain',
@@ -76,7 +79,16 @@ function validateMetadata(entity, errors) {
   }
 }
 
-function validateTagsField({ entity, fieldPath, required, errors, validationContext }) {
+function validateRegistryIdArray({
+  entity,
+  fieldPath,
+  required,
+  errors,
+  validationContext,
+  idSetKey,
+  unknownIdErrorLabel,
+  onValidateId,
+}) {
   const hasField = fieldPath in entity
   if (!hasField) {
     if (required) {
@@ -95,17 +107,68 @@ function validateTagsField({ entity, fieldPath, required, errors, validationCont
     return
   }
 
-  const tagIds = validationContext.tagIds instanceof Set ? validationContext.tagIds : new Set()
-  value.forEach((tag, index) => {
-    if (!tagIds.has(tag)) {
-      errors.push(`${fieldPath}[${index}] references unknown tag id: ${tag}`)
+  const allowedIds = validationContext[idSetKey] instanceof Set ? validationContext[idSetKey] : new Set()
+  value.forEach((id, index) => {
+    if (!allowedIds.has(id)) {
+      errors.push(`${fieldPath}[${index}] references unknown ${unknownIdErrorLabel} id: ${id}`)
+      return
+    }
+
+    if (typeof onValidateId === 'function') {
+      onValidateId({ id, index, errors, entity, validationContext })
     }
   })
+}
+
+function validateTagsField(args) {
+  validateRegistryIdArray({
+    ...args,
+    idSetKey: 'tagIds',
+    unknownIdErrorLabel: 'tag',
+  })
+}
+
+function validateSubdomainsField(args) {
+  validateRegistryIdArray({
+    ...args,
+    idSetKey: 'subdomainIds',
+    unknownIdErrorLabel: 'sub-domain',
+    onValidateId: ({ id, index, errors, entity, validationContext }) => {
+      const subdomainById =
+        validationContext.subdomainById instanceof Map ? validationContext.subdomainById : new Map()
+      const subdomainEntry = subdomainById.get(id)
+      if (!subdomainEntry || !Array.isArray(subdomainEntry.domains) || subdomainEntry.domains.length === 0) {
+        return
+      }
+      if (!subdomainEntry.domains.includes(entity.domain)) {
+        errors.push(`sub_domains[${index}] is not allowed for domain "${entity.domain}": ${id}`)
+      }
+    },
+  })
+}
+
+function validateSubjectField({ entity, fieldPath, errors, validationContext }) {
+  if (!isNonEmptyString(entity[fieldPath])) {
+    errors.push(`${fieldPath} must be a non-empty string.`)
+    return
+  }
+
+  if (!validationContext?.enforceMembership) {
+    return
+  }
+
+  const subjectIds = validationContext.subjectIds instanceof Set ? validationContext.subjectIds : new Set()
+  if (!subjectIds.has(entity[fieldPath])) {
+    errors.push(`${fieldPath} references unknown subject id: ${entity[fieldPath]}`)
+  }
 }
 
 export function validateConceptNode(node, options = {}) {
   const errors = []
   const tagValidationContext = options.tagValidationContext ?? getTagValidationContext()
+  const subdomainValidationContext =
+    options.subdomainValidationContext ?? getSubdomainValidationContext()
+  const subjectValidationContext = options.subjectValidationContext ?? getSubjectValidationContext()
 
   if (!node || typeof node !== 'object' || Array.isArray(node)) {
     return ['Node must be an object.']
@@ -126,6 +189,13 @@ export function validateConceptNode(node, options = {}) {
   if (node.layer !== 'concept') {
     errors.push('layer must be "concept".')
   }
+
+  validateSubjectField({
+    entity: node,
+    fieldPath: 'subject',
+    errors,
+    validationContext: subjectValidationContext,
+  })
 
   if (!isNonEmptyString(node.title)) {
     errors.push('title must be a non-empty string.')
@@ -385,6 +455,14 @@ export function validateConceptNode(node, options = {}) {
     }
   }
 
+  validateSubdomainsField({
+    entity: node,
+    fieldPath: 'sub_domains',
+    required: false,
+    errors,
+    validationContext: subdomainValidationContext,
+  })
+
   validateTagsField({
     entity: node,
     fieldPath: 'tags',
@@ -507,6 +585,9 @@ export function validateVariableNode(variable, options = {}) {
 
 export function validateEntity(entity, options = {}) {
   const tagValidationContext = options.tagValidationContext ?? getTagValidationContext()
+  const subdomainValidationContext =
+    options.subdomainValidationContext ?? getSubdomainValidationContext()
+  const subjectValidationContext = options.subjectValidationContext ?? getSubjectValidationContext()
   if (!entity || typeof entity !== 'object' || Array.isArray(entity)) {
     return ['Node must be an object.']
   }
@@ -516,7 +597,11 @@ export function validateEntity(entity, options = {}) {
   }
 
   if (entity.layer === 'concept') {
-    return validateConceptNode(entity, { tagValidationContext })
+    return validateConceptNode(entity, {
+      tagValidationContext,
+      subdomainValidationContext,
+      subjectValidationContext,
+    })
   }
 
   if (entity.layer === 'variable') {
