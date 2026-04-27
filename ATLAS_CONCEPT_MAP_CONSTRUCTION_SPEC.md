@@ -149,7 +149,7 @@ Author Mode is retired. Atlas now has two modes:
 | Mode | Gate | Banner | Purpose |
 |---|---|---|---|
 | Reference | default | none | Browse the canonical graph |
-| Construction | `?mode=construct` | "Construction mode — your work, not the canonical graph" | Build a personal or assignment concept map |
+| Construction | `?mode=construct` | "Construction mode. Happy building!" | Build a concept map |
 
 Modes are mutually exclusive within a session. Entering construction
 mode hides canonical edges, loads the construction UI, and switches
@@ -1468,9 +1468,6 @@ provenance in `authors[]` and `submission` metadata.
 7. **Anonymization for research.** If construction submissions become
    a PER research dataset, anonymization and consent need explicit
    design. Out of scope here; flagged so it isn't an afterthought.
-
----
-
 ## Cursor session prompts
 
 Each prompt below maps to one focused implementation session. Prompts are

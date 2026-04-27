@@ -1,0 +1,19 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "rc-circuits-week4",
+      "title": "RC Circuits - Week 4",
+      "description": "Starter map focused on RC charging relationships.",
+      "file": "rc-circuits-week4.atlas-map.json",
+      "topic_tags": ["circuits", "electromagnetism"],
+      "node_count": 2,
+      "edge_count": 1,
+      "author": "Atlas Instructor Team"
+    },
+    {
+      "id": "invalid-entry",
+      "title": "Malformed entry should be skipped"
+    }
+  ]
+}

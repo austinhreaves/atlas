@@ -1,0 +1,37 @@
+{
+  "format": "atlas-concept-map",
+  "format_version": 2,
+  "id": "session-library-seed",
+  "title": "RC Circuits - Week 4",
+  "created_at": "2026-04-26T09:00:00.000Z",
+  "modified_at": "2026-04-26T09:00:00.000Z",
+  "exported_at": null,
+  "atlas_corpus_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "atlas_corpus_version": "v3.0.0",
+  "library_source": null,
+  "authors": [{ "name": "Atlas Instructor Team", "role": "primary" }],
+  "exporter": { "role": "instructor" },
+  "canonical_nodes": ["ohms-law", "resistance"],
+  "student_nodes": [],
+  "positions": {
+    "ohms-law": { "x": 140, "y": 160 },
+    "resistance": { "x": 320, "y": 240 }
+  },
+  "edges": [
+    {
+      "id": "edge-seed-1",
+      "source": "ohms-law",
+      "target": "resistance",
+      "explanation": "Ohm's Law links current to resistance.",
+      "explanation_filled": true,
+      "created_at": "2026-04-26T09:00:00.000Z"
+    }
+  ],
+  "annotations": [],
+  "submission": {
+    "submitted": false,
+    "submitted_at": null,
+    "self_review_complete": false,
+    "peer_reviews": []
+  }
+}
