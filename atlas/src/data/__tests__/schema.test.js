@@ -201,6 +201,44 @@ describe('validateConceptNode', () => {
     expect(errors).toContain('review_state must be one of: draft, reviewed, published')
     expect(errors).toContain('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
   })
+
+  it('accepts valid optional blocks payload on concept nodes', () => {
+    const errors = validateConceptNode(
+      createValidConcept({
+        blocks: [
+          {
+            block_id: 'overview-1',
+            type: 'markdown-katex',
+            data: { markdown: "Hooke's law" },
+          },
+        ],
+      }),
+    )
+    expect(errors).toEqual([])
+  })
+
+  it('rejects malformed optional blocks payload on concept nodes', () => {
+    const errors = validateConceptNode(
+      createValidConcept({
+        blocks: [
+          {
+            block_id: 'dup',
+            type: 'markdown-katex',
+            data: { markdown: 'One' },
+          },
+          {
+            block_id: 'dup',
+            type: '',
+            data: null,
+          },
+        ],
+      }),
+    )
+
+    expect(errors).toContain('blocks[].block_id values must be unique within a node: dup')
+    expect(errors).toContain('blocks[1].type must be a non-empty string.')
+    expect(errors).toContain('blocks[1].data must be an object.')
+  })
 })
 
 describe('validateVariableNode', () => {

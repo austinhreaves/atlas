@@ -79,6 +79,41 @@ function validateMetadata(entity, errors) {
   }
 }
 
+function validateBlocksWhenPresent(node, errors) {
+  if (!('blocks' in node)) {
+    return
+  }
+
+  if (!Array.isArray(node.blocks)) {
+    errors.push('blocks must be an array when provided.')
+    return
+  }
+
+  const seenBlockIds = new Set()
+  node.blocks.forEach((block, index) => {
+    if (!block || typeof block !== 'object' || Array.isArray(block)) {
+      errors.push(`blocks[${index}] must be an object.`)
+      return
+    }
+
+    if (!isNonEmptyString(block.block_id)) {
+      errors.push(`blocks[${index}].block_id must be a non-empty string.`)
+    } else if (seenBlockIds.has(block.block_id)) {
+      errors.push(`blocks[].block_id values must be unique within a node: ${block.block_id}`)
+    } else {
+      seenBlockIds.add(block.block_id)
+    }
+
+    if (!isNonEmptyString(block.type)) {
+      errors.push(`blocks[${index}].type must be a non-empty string.`)
+    }
+
+    if (!('data' in block) || !block.data || typeof block.data !== 'object' || Array.isArray(block.data)) {
+      errors.push(`blocks[${index}].data must be an object.`)
+    }
+  })
+}
+
 function validateRegistryIdArray({
   entity,
   fieldPath,
@@ -488,6 +523,7 @@ export function validateConceptNode(node, options = {}) {
   }
 
   validateMetadata(node, errors)
+  validateBlocksWhenPresent(node, errors)
   return errors
 }
 
@@ -580,6 +616,7 @@ export function validateVariableNode(variable, options = {}) {
   })
 
   validateMetadata(variable, errors)
+  validateBlocksWhenPresent(variable, errors)
   return errors
 }
 
