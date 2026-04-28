@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { validateConceptNode, validateEntity, validateVariableNode } from '../schema'
+import {
+  validateConceptNode,
+  validateEntity,
+  validateLabQuestionNode,
+  validateSopNode,
+  validateTaCheckpointNode,
+  validateVariableNode,
+} from '../schema'
 
 function createValidConcept(overrides = {}) {
   return {
@@ -30,6 +37,13 @@ function createValidConcept(overrides = {}) {
     visual: { type: 'none', url: null, caption: null },
     sub_domains: [],
     tags: ['kw-mechanics'],
+    blocks: [
+      {
+        block_id: 'overview',
+        type: 'markdown-katex',
+        data: { markdown: "Newton's second law overview." },
+      },
+    ],
     position: null,
     author: 'austin',
     review_state: 'published',
@@ -51,9 +65,35 @@ function createValidVariable(overrides = {}) {
     sign_convention: 'Positive along chosen axis.',
     common_aliases: [{ symbol: 'a_x', context: 'x-component in 1D projections' }],
     tags: ['kw-mechanics'],
+    blocks: [
+      {
+        block_id: 'overview',
+        type: 'markdown-katex',
+        data: { markdown: 'Acceleration metadata.' },
+      },
+    ],
     author: 'austin',
     review_state: 'published',
     last_reviewed: '2026-04-25',
+    ...overrides,
+  }
+}
+
+function createValidSop(overrides = {}) {
+  return {
+    id: 'sop-intro-checkout',
+    layer: 'sop',
+    title: 'Intro Checkout',
+    description: 'SOP node.',
+    blocks: [
+      {
+        block_id: 'sop-overview',
+        type: 'markdown-katex',
+        data: { markdown: 'Overview' },
+      },
+    ],
+    author: 'austin',
+    review_state: 'published',
     ...overrides,
   }
 }
@@ -63,11 +103,9 @@ describe('validateConceptNode', () => {
     expect(validateConceptNode(createValidConcept())).toEqual([])
   })
 
-  it('requires applicability_conditions for laws and principles', () => {
-    const errors = validateConceptNode(createValidConcept({ applicability_conditions: [] }))
-    expect(errors).toContain(
-      'applicability_conditions must contain at least one entry for law/principle nodes.',
-    )
+  it('validates applicability_conditions shape when provided', () => {
+    const errors = validateConceptNode(createValidConcept({ applicability_conditions: [42] }))
+    expect(errors).toContain('applicability_conditions must be an array of non-empty strings.')
   })
 
   it('allows equations without applicability_conditions', () => {
@@ -202,7 +240,7 @@ describe('validateConceptNode', () => {
     expect(errors).toContain('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
   })
 
-  it('accepts valid optional blocks payload on concept nodes', () => {
+  it('accepts valid blocks payload on concept nodes', () => {
     const errors = validateConceptNode(
       createValidConcept({
         blocks: [
@@ -217,7 +255,12 @@ describe('validateConceptNode', () => {
     expect(errors).toEqual([])
   })
 
-  it('rejects malformed optional blocks payload on concept nodes', () => {
+  it('requires non-empty blocks on concept nodes', () => {
+    const errors = validateConceptNode(createValidConcept({ blocks: [] }))
+    expect(errors).toContain('blocks must be a non-empty array.')
+  })
+
+  it('rejects malformed blocks payload on concept nodes', () => {
     const errors = validateConceptNode(
       createValidConcept({
         blocks: [
@@ -277,6 +320,47 @@ describe('validateVariableNode', () => {
     expect(errors).toContain('review_state must be one of: draft, reviewed, published')
     expect(errors).toContain('last_reviewed must be an ISO date string (YYYY-MM-DD) or null.')
   })
+
+  it('requires non-empty blocks on variable nodes', () => {
+    const errors = validateVariableNode(createValidVariable({ blocks: [] }))
+    expect(errors).toContain('blocks must be a non-empty array.')
+  })
+})
+
+describe('new phase 2 layer validators', () => {
+  it('accepts valid SOP nodes', () => {
+    expect(validateSopNode(createValidSop())).toEqual([])
+  })
+
+  it('accepts valid ta-checkpoint nodes', () => {
+    const node = createValidSop({
+      layer: 'ta-checkpoint',
+      id: 'ta-checkpoint-intro',
+      blocks: [
+        {
+          block_id: 'checklist',
+          type: 'checklist',
+          data: { items: [{ id: 'item-1', text: 'Done' }] },
+        },
+      ],
+    })
+    expect(validateTaCheckpointNode(node)).toEqual([])
+  })
+
+  it('accepts valid lab-question nodes', () => {
+    const node = createValidSop({
+      layer: 'lab-question',
+      id: 'lab-question-ohms-law',
+      blocks: [
+        {
+          block_id: 'prompt',
+          type: 'prompt-and-response',
+          data: { prompt: 'Explain your result.' },
+        },
+      ],
+    })
+    expect(validateLabQuestionNode(node)).toEqual([])
+  })
 })
 
 describe('validateEntity', () => {
@@ -290,5 +374,22 @@ describe('validateEntity', () => {
 
   it('returns errors for unsupported layers', () => {
     expect(validateEntity({ layer: 'problem' })).toEqual(['Unsupported layer: problem'])
+  })
+
+  it('enforces valid_block_types from layer contract', () => {
+    const errors = validateEntity(
+      createValidSop({
+        layer: 'sop',
+        blocks: [
+          {
+            block_id: 'bad',
+            type: 'not-allowed',
+            data: { anything: true },
+          },
+        ],
+      }),
+    )
+
+    expect(errors).toContain('blocks[0].type is not allowed for layer "sop": not-allowed')
   })
 })

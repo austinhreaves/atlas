@@ -1,12 +1,6 @@
 import KatexText from '../KatexText'
+import { LAYERS } from '../../data/layers'
 import { getVariableTypeLabel } from './nodePanel.utils'
-
-const UNDERSTANDING_OPTIONS = [
-  { value: 'seen', label: 'Seen' },
-  { value: 'recognize', label: 'Recognize' },
-  { value: 'apply', label: 'Apply' },
-  { value: 'derive', label: 'Derive' },
-]
 
 function TypeBadge({ type }) {
   return (
@@ -19,9 +13,9 @@ function TypeBadge({ type }) {
 export default function NodePanelHeader({
   selectedNode,
   onClose,
-  understandingState = 'unseen',
+  progress = 0,
   isVariableKnown = false,
-  onUnderstandingStateChange,
+  onProgressChange,
   onSubdomainClick,
   subdomainLabelById = {},
   subdomainDescriptionById = {},
@@ -44,6 +38,12 @@ export default function NodePanelHeader({
     selectedNode?.layer === 'concept' && Array.isArray(selectedNode?.tags)
       ? selectedNode.tags
       : []
+  const progressLabel =
+    typeof LAYERS[selectedNode?.layer]?.progress_label === 'string'
+      ? LAYERS[selectedNode.layer].progress_label
+      : 'Progress'
+  const progressValue =
+    typeof progress === 'number' && Number.isFinite(progress) ? Math.min(100, Math.max(0, Math.round(progress))) : 0
 
   return (
     <header className="border-b border-slate-700/80 px-5 py-4">
@@ -93,49 +93,41 @@ export default function NodePanelHeader({
               ))}
             </div>
           ) : null}
-          {selectedNode?.layer === 'concept' ? (
-            <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-3 space-y-2">
+            <div className="flex items-center justify-between gap-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Understanding
+                {progressLabel}
               </span>
-              <div
-                className="inline-flex overflow-hidden rounded-md border border-slate-600/70"
-                role="group"
-                aria-label="Concept understanding"
-              >
-                {UNDERSTANDING_OPTIONS.map((option) => {
-                  const selected = understandingState === option.value
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => onUnderstandingStateChange?.(selectedNode.id, option.value)}
-                      aria-pressed={selected}
-                      className={`px-2.5 py-1 text-[11px] font-semibold tracking-wide transition ${
-                        selected
-                          ? 'bg-cyan-500/25 text-cyan-100'
-                          : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700/90'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  )
-                })}
-              </div>
+              <span className="text-xs font-semibold text-cyan-200">{progressValue}%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={1}
+                value={progressValue}
+                onChange={(event) =>
+                  onProgressChange?.(selectedNode.id, Number.parseInt(event.target.value, 10))
+                }
+                aria-label={`${progressLabel} progress`}
+                className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-700 accent-cyan-400"
+              />
               <button
                 type="button"
-                onClick={() => onUnderstandingStateChange?.(selectedNode.id, 'unseen')}
+                onClick={() => onProgressChange?.(selectedNode.id, 0)}
                 className="rounded border border-slate-600/70 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-300 transition hover:bg-slate-800/85"
               >
                 Reset
               </button>
             </div>
-          ) : (
+          </div>
+          {selectedNode?.layer === 'variable' ? (
             <p className="mt-3 text-xs text-slate-300">
               <span className="font-semibold uppercase tracking-wider text-slate-400">Status: </span>
               {isVariableKnown ? 'Known' : 'Unfamiliar'}
             </p>
-          )}
+          ) : null}
         </div>
         <button
           type="button"

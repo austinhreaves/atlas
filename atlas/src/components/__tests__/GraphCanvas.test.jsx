@@ -105,7 +105,7 @@ function createProps(overrides = {}) {
     focalNodeIds: new Set(),
     neighborNodeIds: new Set(),
     distantNodeIds: new Set(),
-    understandingStatesById: {},
+    progressById: {},
     onNodeClick: vi.fn(),
     onNodePositionCommit: vi.fn(),
     onResetToCanonical: vi.fn(),
@@ -448,10 +448,10 @@ describe('GraphCanvas camera behavior', () => {
           ],
           edges: [
             {
-              id: 'n-concept__uses-variable__n-variable',
+              id: 'n-concept__references__n-variable',
               source: 'n-concept',
               target: 'n-variable',
-              type: 'uses-variable',
+              type: 'references',
               weight: 1,
               layer_pair: 'concept-variable',
             },
@@ -623,7 +623,7 @@ describe('GraphCanvas camera behavior', () => {
     expect(reactFlowHandlers.lastProps?.nodeDragThreshold).toBe(1)
   })
 
-  it('marks uses-variable edges as focal when their concept is selected', () => {
+  it('marks references edges as focal when their concept is selected', () => {
     render(
       <GraphCanvas
         {...createProps({
@@ -647,10 +647,10 @@ describe('GraphCanvas camera behavior', () => {
           ],
           edges: [
             {
-              id: 'concept-1__uses-variable__variable-1',
+              id: 'concept-1__references__variable-1',
               source: 'concept-1',
               target: 'variable-1',
-              type: 'uses-variable',
+              type: 'references',
               weight: 1,
               layer_pair: 'concept-variable',
             },
@@ -700,9 +700,9 @@ describe('GraphCanvas camera behavior', () => {
               layer_pair: 'concept-concept',
             },
           ],
-          understandingStatesById: {
-            'concept-source': 'apply',
-            'concept-target': 'seen',
+          progressById: {
+            'concept-source': 100,
+            'concept-target': 33,
           },
         })}
       />,
@@ -745,9 +745,9 @@ describe('GraphCanvas camera behavior', () => {
               layer_pair: 'concept-variable',
             },
           ],
-          understandingStatesById: {
-            'concept-source': 'derive',
-            'variable-target': 'unseen',
+          progressById: {
+            'concept-source': 100,
+            'variable-target': 0,
           },
         })}
       />,
@@ -793,7 +793,7 @@ describe('GraphCanvas camera behavior', () => {
               id: 'edge-visible',
               source: 'concept-mech',
               target: 'variable-1',
-              type: 'uses-variable',
+              type: 'references',
               weight: 1,
               layer_pair: 'concept-variable',
             },
@@ -801,7 +801,7 @@ describe('GraphCanvas camera behavior', () => {
               id: 'edge-hidden-domain',
               source: 'concept-em',
               target: 'variable-1',
-              type: 'uses-variable',
+              type: 'references',
               weight: 1,
               layer_pair: 'concept-variable',
             },
@@ -854,7 +854,7 @@ describe('GraphCanvas camera behavior', () => {
               id: 'edge-hidden-domain-only',
               source: 'concept-em',
               target: 'variable-em-only',
-              type: 'uses-variable',
+              type: 'references',
               weight: 1,
               layer_pair: 'concept-variable',
             },
@@ -931,10 +931,10 @@ describe('GraphCanvas camera behavior', () => {
           ],
           edges: [
             {
-              id: 'concept-1__uses-variable__variable-1',
+              id: 'concept-1__references__variable-1',
               source: 'concept-1',
               target: 'variable-1',
-              type: 'uses-variable',
+              type: 'references',
               weight: 1,
               layer_pair: 'concept-variable',
             },

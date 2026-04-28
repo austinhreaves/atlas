@@ -124,7 +124,7 @@ function toFlowNode(nodeId, position, entityById) {
       mass: entity.mass ?? 1,
       color: entity.color ?? null,
       visualState: 'base',
-      understandingState: 'unseen',
+      progress: 0,
       constructionMode: true,
     },
   }

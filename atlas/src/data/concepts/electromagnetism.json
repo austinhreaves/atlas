@@ -97,6 +97,138 @@
       "kw-inverse-square",
       "kw-charge",
       "kw-electromagnetism"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electrostatic force between point charges scales with charge product and inverse-square separation."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nF = k\\frac{|q_1 q_2|}{r^2}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$q_1, q_2$",
+              "Charges",
+              "driver",
+              "$C$",
+              ""
+            ],
+            [
+              "$r$",
+              "Separation distance",
+              "driver",
+              "$m$",
+              ""
+            ],
+            [
+              "$k$",
+              "Coulomb constant",
+              "parameter",
+              "$N\\cdot m^2/C^2$",
+              ""
+            ],
+            [
+              "$F$",
+              "Electrostatic force magnitude",
+              "response",
+              "$N$",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Charges are approximated as point charges or spherically symmetric\n- Medium is uniform, commonly vacuum in introductory form\n- Electrostatic regime with negligible radiation effects"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- r \\rightarrow \\infty -> Force magnitude tends to zero.\n- r \\rightarrow 0 -> Point-charge model predicts divergence and breaks down physically."
+        }
+      },
+      {
+        "block_id": "assumptions",
+        "type": "markdown-katex",
+        "title": "Assumptions",
+        "data": {
+          "markdown": "- Material medium (idealized) - The vacuum form is emphasized before introducing dielectric effects."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "The electric force between two point charges scales with charge product and falls with inverse-square distance."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Like charges attract if one charge is much larger.",
+              "Sign determines attraction or repulsion; magnitude only changes force size."
+            ],
+            [
+              "Doubling distance halves force.",
+              "Inverse-square scaling means doubling distance reduces force to one quarter."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "historical-context",
+        "type": "markdown-katex",
+        "title": "Historical Context",
+        "data": {
+          "markdown": "Formulated by Charles-Augustin de Coulomb in the 1780s using torsion balance experiments."
+        }
+      },
+      {
+        "block_id": "simulation",
+        "type": "embed-iframe",
+        "title": "Simulation",
+        "data": {
+          "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+          "title": "Charges and Fields"
+        }
+      }
     ]
   },
   {
@@ -176,6 +308,102 @@
     "subject": "physics",
     "sub_domains": [
       "electrostatics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electric field gives force per unit positive test charge at each point in space."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F} = q\\vec{E}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "Electric field",
+              "driver",
+              "$N/C$",
+              ""
+            ],
+            [
+              "$q$",
+              "Test charge",
+              "parameter",
+              "$C$",
+              ""
+            ],
+            [
+              "$\\vec{F}$",
+              "Electric force",
+              "response",
+              "$N$",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- q \\rightarrow 0 -> Test-force tends to zero while field remains defined by source charges."
+        }
+      },
+      {
+        "block_id": "assumptions",
+        "type": "markdown-katex",
+        "title": "Assumptions",
+        "data": {
+          "markdown": "- Polarization effects (idealized) - Intro field definitions assume simple media or vacuum behavior."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Electric field describes how strongly and in what direction charges would be pushed at each point in space."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- coulombs-law (foundational, weight 0.85)"
+        }
+      },
+      {
+        "block_id": "simulation",
+        "type": "embed-iframe",
+        "title": "Simulation",
+        "data": {
+          "url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+          "title": "Charges and Fields"
+        }
+      }
     ]
   },
   {
@@ -280,6 +508,139 @@
       "kw-current",
       "kw-resistance",
       "kw-electromagnetism"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "For ohmic conductors, current is proportional to voltage with resistance as proportionality constant."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nI = \\frac{V}{R}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V$",
+              "Voltage",
+              "driver",
+              "$V$",
+              ""
+            ],
+            [
+              "$I$",
+              "Current",
+              "response",
+              "$A$",
+              ""
+            ],
+            [
+              "$R$",
+              "Resistance",
+              "parameter",
+              "$\\Omega$",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Conductor operates in approximately linear ohmic regime\n- Temperature is approximately constant\n- Steady-state circuit conditions apply"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- R \\rightarrow 0 -> Ideal short-circuit behavior with very large current for finite voltage.\n- R \\rightarrow \\infty -> Open-circuit behavior with current approaching zero."
+        }
+      },
+      {
+        "block_id": "assumptions",
+        "type": "markdown-katex",
+        "title": "Assumptions",
+        "data": {
+          "markdown": "- Temperature (idealized) - Resistance is treated as constant in the linear ohmic regime."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "In many conductors, voltage is proportional to current with resistance as the proportionality constant."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Current is consumed by a resistor.",
+              "Charge flow is continuous; resistors dissipate energy, not charge."
+            ],
+            [
+              "Voltage is a flowing substance in wires.",
+              "Voltage is a potential difference; current is what flows."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "historical-context",
+        "type": "markdown-katex",
+        "title": "Historical Context",
+        "data": {
+          "markdown": "Georg Ohm published this relationship in 1827, initially meeting significant skepticism."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-field-definition (supporting, weight 0.55)\n- coulombs-law (lateral, weight 0.20)"
+        }
+      },
+      {
+        "block_id": "simulation",
+        "type": "embed-iframe",
+        "title": "Simulation",
+        "data": {
+          "url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
+          "title": "Circuit Construction Kit: DC"
+        }
+      }
     ]
   },
   {
@@ -370,6 +731,101 @@
       "kw-emf",
       "kw-flux",
       "kw-electromagnetism"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Changing magnetic flux through a loop induces an emf opposing the change."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\mathcal{E} = -\\frac{d\\Phi_B}{dt}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\Phi_B$",
+              "Magnetic flux",
+              "driver",
+              "$Wb$",
+              ""
+            ],
+            [
+              "$t$",
+              "Time",
+              "driver",
+              "$s$",
+              ""
+            ],
+            [
+              "$\\mathcal{E}$",
+              "Induced emf",
+              "response",
+              "$V$",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Magnetic flux through a conducting loop changes over time\n- Loop orientation and area are well-defined\n- Macroscopic classical electromagnetism applies"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- d\\Phi_B/dt = 0 -> No induced emf is produced."
+        }
+      },
+      {
+        "block_id": "assumptions",
+        "type": "markdown-katex",
+        "title": "Assumptions",
+        "data": {
+          "markdown": "- Circuit resistance (idealized) - The flux-emf relation is introduced independent of resistive details."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "A changing magnetic flux induces an emf, which drives current in a closed loop."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- ohms-law (lateral, weight 0.20)\n- gauss-law (supporting, weight 0.45)"
+        }
+      }
     ]
   },
   {
@@ -477,6 +933,137 @@
       "kw-flux",
       "kw-field-symmetry",
       "kw-electromagnetism"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electric flux through a closed surface equals enclosed charge divided by vacuum permittivity."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$Q_{\\text{enc}}$",
+              "Enclosed charge",
+              "parameter",
+              "$C$",
+              ""
+            ],
+            [
+              "$\\varepsilon_0$",
+              "Vacuum permittivity",
+              "parameter",
+              "$C^2/(N\\cdot m^2)$",
+              ""
+            ],
+            [
+              "$d\\vec{A}$",
+              "Area element",
+              "parameter",
+              "$m^2$",
+              ""
+            ],
+            [
+              "$\\vec{E}$",
+              "Electric field",
+              "parameter",
+              "$N/C$",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Closed Gaussian surface is defined\n- Field and charge distribution satisfy electrostatic modeling assumptions\n- Symmetry is used when solving for explicit field magnitudes"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- Q_{\\text{enc}} = 0 -> Net electric flux through the closed surface is zero."
+        }
+      },
+      {
+        "block_id": "assumptions",
+        "type": "markdown-katex",
+        "title": "Assumptions",
+        "data": {
+          "markdown": "- Symmetry imperfections (idealized) - Canonical examples assume ideal geometric symmetry for tractable flux integrals."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Total electric flux through a closed surface equals enclosed charge divided by vacuum permittivity."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Only charges located on the surface contribute to flux.",
+              "Only net enclosed charge determines total flux, regardless of exact placement inside."
+            ],
+            [
+              "Zero net flux means electric field is zero everywhere on the surface.",
+              "Field can be nonzero locally while positive and negative contributions cancel in net flux."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "historical-context",
+        "type": "markdown-katex",
+        "title": "Historical Context",
+        "data": {
+          "markdown": "Integral law developed by Carl Friedrich Gauss and became foundational to Maxwell's framework."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-field-definition (foundational, weight 0.80)\n- coulombs-law (supporting, weight 0.55)"
+        }
+      }
     ]
   },
   {
@@ -522,7 +1109,70 @@
     "position": {
       "x": 951.1610569318358,
       "y": 598.6990574012215
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electric charge is a conserved intrinsic property of matter quantized in units of elementary charge."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nq = ne\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$q$",
+              "charge",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$n$",
+              "charge-number",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$e$",
+              "elementary-charge",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines charge and quantization for electrostatics and current models."
+        }
+      }
+    ]
   },
   {
     "id": "conservation-of-charge",
@@ -573,7 +1223,79 @@
     "position": {
       "x": -405.9835309938382,
       "y": -272.5560358651162
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Net charge is conserved globally and locally through the continuity equation."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\frac{\\partial \\rho}{\\partial t} + \\nabla\\cdot\\vec{J} = 0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\rho$",
+              "charge-density",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{J}$",
+              "current-density",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Classical or quantum electrodynamics in closed accounting of charge\n- Charge density and current density are defined for the modeled medium"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "States that charge changes in a region only through charge flow across its boundary."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-charge (foundational, weight 0.90)"
+        }
+      }
+    ]
   },
   {
     "id": "conductors-insulators",
@@ -625,7 +1347,78 @@
     "position": {
       "x": 886.9170470740934,
       "y": 21.698674233208607
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Material conductivity controls how strongly charge carriers respond to electric fields."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{J} = \\sigma \\vec{E}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{J}$",
+              "current-density",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\sigma$",
+              "conductivity",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Classifies materials by charge mobility and links to microscopic Ohm behavior."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-charge (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "methods-of-charging",
@@ -676,6 +1469,78 @@
     "subject": "physics",
     "sub_domains": [
       "electrostatics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Contact, friction, and induction redistribute charge while preserving total charge."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Delta q_{\\mathrm{system}} = 0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$q$",
+              "charge",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{J}$",
+              "current-density",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- System boundaries and grounding path are well-defined\n- Charge transfer mechanism is modeled macroscopically"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Summarizes classical charging processes used in electrostatic demonstrations."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-charge (foundational, weight 0.85)\n- conservation-of-charge (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -727,7 +1592,78 @@
     "position": {
       "x": 1160.8753554505208,
       "y": 923.6683370698859
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "The electric field gives force per unit positive test charge at each point."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{E} = \\frac{\\vec{F}}{q}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}$",
+              "electric-force",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$r$",
+              "separation-distance",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines electric field as an independent physical field and as a force-density relation."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- coulombs-law (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "electric-field-lines",
@@ -773,7 +1709,71 @@
     "position": {
       "x": 1760.5372816302736,
       "y": 1034.6591146181518
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Field-line direction follows local electric-field direction and line density tracks magnitude."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\text{line tangent} \\parallel \\vec{E}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides a geometric representation for interpreting electric-field direction and strength."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-field (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "electric-field-superposition",
@@ -828,7 +1828,79 @@
     "position": {
       "x": 1364.469387753614,
       "y": 1096.3937285424522
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Total electric field equals vector sum of fields from each source charge distribution."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{E}_{\\mathrm{net}} = \\sum_i \\vec{E}_i\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$q_i$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Linear Maxwell regime with additive field contributions\n- Fields are evaluated at the same observation point"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Extends single-source field models to multi-source configurations."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-field (foundational, weight 0.85)\n- coulombs-law (supporting, weight 0.60)"
+        }
+      }
+    ]
   },
   {
     "id": "conductor-electrostatic-equilibrium",
@@ -883,7 +1955,79 @@
     "position": {
       "x": 1268.3932816239098,
       "y": 388.92384576632634
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "In electrostatic equilibrium, free charges redistribute until conductor interior field is zero."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{E}_{\\mathrm{inside}} = 0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\rho$",
+              "charge-density",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Steady electrostatic state with no time-varying fields\n- Material has mobile charge carriers"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Describes shielding and surface-charge behavior for conductors at electrostatic equilibrium."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-field (foundational, weight 0.80)\n- conductors-insulators (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "electric-dipole",
@@ -939,7 +2083,78 @@
     "position": {
       "x": 1442.4841708711272,
       "y": 1430.8180239026435
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "A dipole is an equal and opposite charge pair separated by a displacement vector."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{p} = q\\vec{d}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$d$",
+              "separation-distance",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$F$",
+              "electric-force",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Introduces dipole moment and field behavior for separated opposite charges."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- coulombs-law (foundational, weight 0.80)\n- electric-field-superposition (supporting, weight 0.60)"
+        }
+      }
+    ]
   },
   {
     "id": "electric-potential",
@@ -990,7 +2205,78 @@
     "position": {
       "x": 232.5205168274942,
       "y": 1044.9430369933193
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electric potential is potential energy per unit charge in a conservative electrostatic field."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nV = \\frac{U}{q}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V$",
+              "voltage",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$U$",
+              "electric-potential-energy",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Connects electrostatic fields to scalar potential energy accounting."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-field (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "electron-volt",
@@ -1046,7 +2332,78 @@
     "position": {
       "x": 2138.863795032185,
       "y": 758.1649195713743
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "An electron-volt is the energy change of one elementary charge across one volt."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n1\\,\\mathrm{eV} = e\\cdot 1\\,\\mathrm{V}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\mathrm{eV}$",
+              "electric-potential-energy",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$e$",
+              "elementary-charge",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "voltage",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines a convenient microscopic energy unit used across electromagnetism and modern physics."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-potential (foundational, weight 0.75)\n- electric-charge (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "gradient-relation",
@@ -1097,7 +2454,71 @@
     "position": {
       "x": -81.21431261801727,
       "y": 1396.9221981503028
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electrostatic field equals the negative spatial gradient of potential."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{E} = -\\nabla V\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "electric-potential",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Links scalar potential maps to vector electric-field predictions."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-potential (foundational, weight 0.85)\n- electric-field (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "point-charge-potential",
@@ -1153,7 +2574,78 @@
     "position": {
       "x": -187.92198556902272,
       "y": 1137.7918092499867
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Potential from a point charge scales with source charge and inverse distance."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nV = k\\frac{q}{r}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V$",
+              "electric-potential",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$r$",
+              "separation-distance",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides the scalar-potential counterpart to Coulomb's inverse-square field relation."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-potential (foundational, weight 0.70)\n- coulombs-law (supporting, weight 0.70)"
+        }
+      }
+    ]
   },
   {
     "id": "equipotential-surfaces",
@@ -1204,7 +2696,71 @@
     "position": {
       "x": 275.4002072907551,
       "y": 1456.133583741861
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "All points on an equipotential share the same potential and require no work for charge motion along the surface."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Delta V = 0 \\Rightarrow W = 0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V$",
+              "electric-potential",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Supplies geometric intuition for field direction and work calculations."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-potential (foundational, weight 0.80)\n- gradient-relation (supporting, weight 0.65)"
+        }
+      }
+    ]
   },
   {
     "id": "capacitance",
@@ -1261,7 +2817,78 @@
     "position": {
       "x": 316.0135898859441,
       "y": 560.7973652408109
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Capacitance measures stored charge per applied potential difference."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nC = \\frac{Q}{V}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$Q$",
+              "charge",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "electric-potential",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$C$",
+              "capacitance-equivalent",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines charge storage behavior for conductors and capacitor geometries."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-potential (foundational, weight 0.80)\n- conductor-electrostatic-equilibrium (supporting, weight 0.55)"
+        }
+      }
+    ]
   },
   {
     "id": "dielectrics",
@@ -1321,7 +2948,86 @@
     "position": {
       "x": 680.2669359024893,
       "y": -70.04677743349625
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Polarizable media reduce effective field and increase capacitance."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nC' = \\kappa C\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\kappa$",
+              "dielectric-constant",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$C$",
+              "capacitance-equivalent",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Material remains below dielectric-breakdown field\n- Linear dielectric approximation is acceptable"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Explains how insulating media alter electric response and capacitor behavior."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- capacitance (foundational, weight 0.80)\n- electric-field (supporting, weight 0.65)"
+        }
+      }
+    ]
   },
   {
     "id": "capacitors-series-parallel",
@@ -1367,7 +3073,71 @@
     "position": {
       "x": 881.0835583149761,
       "y": 1259.144602761277
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Network topology determines equivalent capacitance rules for series and parallel combinations."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nC_{\\mathrm{eq,parallel}}=\\sum_i C_i,\\;\\frac{1}{C_{\\mathrm{eq,series}}}=\\sum_i\\frac{1}{C_i}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$C_{\\mathrm{eq}}$",
+              "capacitance-equivalent",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$Q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Reduces multi-capacitor networks to equivalent single-capacitance models."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- capacitance (foundational, weight 0.90)"
+        }
+      }
+    ]
   },
   {
     "id": "capacitor-energy",
@@ -1418,7 +3188,78 @@
     "position": {
       "x": -847.8501512050262,
       "y": -1580.3496325249525
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Capacitor energy scales with capacitance and square of potential difference."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nU_C = \\frac{1}{2}CV^2\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$U_C$",
+              "electric-potential-energy",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$C$",
+              "capacitance-equivalent",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "electric-potential",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Quantifies electrical energy storage in electrostatic systems and circuit components."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- capacitance (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "electric-current",
@@ -1469,7 +3310,78 @@
     "position": {
       "x": -46.43830547898624,
       "y": 56.776294452228655
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Current is the rate of charge transport through a cross section."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nI = \\frac{dQ}{dt}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$Q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$t$",
+              "time",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines the central flow variable used in all circuit models."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- conservation-of-charge (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "drift-velocity",
@@ -1520,7 +3432,78 @@
     "position": {
       "x": 24.111166042075638,
       "y": 438.94728454539654
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Macroscopic current emerges from average carrier drift through conductor area."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nI = nqAv_d\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$nq$",
+              "charge-density",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$A$",
+              "cross-sectional-area",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Connects microscopic charge-carrier motion to measured current."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-current (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "resistance-resistivity",
@@ -1577,6 +3560,84 @@
     "subject": "physics",
     "sub_domains": [
       "circuits"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Resistance is set by material resistivity and conductor geometry."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nR = \\rho_e\\frac{L}{A}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$R$",
+              "resistance",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\rho_e$",
+              "resistivity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$L$",
+              "resistor-length",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$A$",
+              "cross-sectional-area",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Links lumped resistance to microscopic transport material parameters."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-current (foundational, weight 0.70)\n- ohms-law (supporting, weight 0.70)"
+        }
+      }
     ]
   },
   {
@@ -1628,7 +3689,78 @@
     "position": {
       "x": 94.64133639684438,
       "y": -1349.2401871978295
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electrical power is the rate of energy transfer in a circuit element."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nP = IV\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "voltage",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$R$",
+              "resistance",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides power and dissipation relationships used for component sizing and safety."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- ohms-law (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "alternating-current-rms",
@@ -1684,7 +3816,78 @@
     "position": {
       "x": 567.6501082065207,
       "y": -1356.5015311609422
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "RMS values map sinusoidal AC to equivalent DC heating behavior."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nI_{\\mathrm{rms}} = \\frac{I_0}{\\sqrt{2}},\\;V_{\\mathrm{rms}} = \\frac{V_0}{\\sqrt{2}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I_{\\mathrm{rms}}$",
+              "current-rms",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$V_{\\mathrm{rms}}$",
+              "voltage-rms",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$f$",
+              "frequency",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines practical AC measurement values for power and instrumentation."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-power (supporting, weight 0.65)\n- electric-current (foundational, weight 0.70)"
+        }
+      }
+    ]
   },
   {
     "id": "electrical-safety",
@@ -1744,7 +3947,86 @@
     "position": {
       "x": -377.0497184243513,
       "y": -1390.0557235586339
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Shock and heating hazards scale with current path and dissipation through tissue and wiring."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nP = I^2R\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$R$",
+              "resistance",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$P$",
+              "electric-power",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Human-body and circuit paths are represented by effective resistances\n- Exposure duration and current magnitude are in hazardous ranges"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Frames electrical hazard analysis for household and laboratory contexts."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-power (foundational, weight 0.75)\n- ohms-law (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "nerve-conduction",
@@ -1804,7 +4086,86 @@
     "position": {
       "x": 421.09282900637095,
       "y": 1253.803868400845
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Biological signaling uses controlled ionic currents and membrane potential differences."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Delta V_m \\leftrightarrow I_{\\mathrm{ion}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I_{\\mathrm{ion}}$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$V_m$",
+              "electric-potential",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$R_m$",
+              "resistance",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Membrane-channel dynamics are represented at lumped-circuit level\n- Ionic concentrations define equilibrium potentials"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Connects electrophysiology to core current and potential concepts."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-current (foundational, weight 0.70)\n- electric-potential (foundational, weight 0.70)"
+        }
+      }
+    ]
   },
   {
     "id": "resistors-series",
@@ -1850,7 +4211,71 @@
     "position": {
       "x": -194.0486813106928,
       "y": -699.5659219613508
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Series resistors carry identical current and add directly."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nR_{\\mathrm{eq}} = \\sum_i R_i\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$R_i$",
+              "resistance",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Gives equivalent-resistance reduction rule for one-current branches."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- ohms-law (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "resistors-parallel",
@@ -1896,7 +4321,71 @@
     "position": {
       "x": 223.45519588062922,
       "y": -1005.4041232767016
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Parallel resistors share voltage while branch currents add."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\frac{1}{R_{\\mathrm{eq}}} = \\sum_i\\frac{1}{R_i}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$R_i$",
+              "resistance",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "voltage",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides equivalent-resistance reduction rule for common-voltage branches."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- ohms-law (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "series-parallel-combinations",
@@ -1956,7 +4445,86 @@
     "position": {
       "x": -286.01203259248484,
       "y": -982.3390152865038
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Complex resistor networks can be simplified recursively using local equivalence rules."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\text{reduce network by local series/parallel substitutions}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$R_{\\mathrm{eq}}$",
+              "resistance",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$V$",
+              "voltage",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Topology contains reducible series or parallel subgraphs\n- Elements are modeled as lumped linear resistors"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Combines basic equivalence rules into a practical multi-step analysis workflow."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- resistors-series (foundational, weight 0.80)\n- resistors-parallel (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "emf-terminal-voltage",
@@ -2017,7 +4585,85 @@
     "position": {
       "x": 93.32106414171645,
       "y": -468.696469951648
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Internal resistance causes terminal voltage to drop below source emf under load."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nV_{\\mathrm{term}} = \\mathcal{E} - Ir\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V_{\\mathrm{term}}$",
+              "terminal-voltage",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\mathcal{E}$",
+              "emf",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$r$",
+              "internal-resistance",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Relates source ideal voltage, internal losses, and observed output voltage."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- ohms-law (foundational, weight 0.75)\n- electric-current (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "kirchhoffs-rules",
@@ -2072,7 +4718,79 @@
     "position": {
       "x": -14.638085501881799,
       "y": 847.9365690060141
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Charge conservation at nodes and energy conservation around loops constrain circuit solutions."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\sum I_{\\mathrm{in}} = \\sum I_{\\mathrm{out}},\\;\\sum \\Delta V = 0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\Delta V$",
+              "voltage",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Lumped-circuit approximation with negligible radiation\n- Branch currents and element voltage drops are well-defined"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides the global equations used to solve nontrivial multi-loop circuits."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- conservation-of-charge (foundational, weight 0.85)\n- electric-potential (supporting, weight 0.65)"
+        }
+      }
+    ]
   },
   {
     "id": "voltmeters-ammeters",
@@ -2128,7 +4846,78 @@
     "position": {
       "x": 388.51835719333366,
       "y": -300.5666552319567
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Measurement instruments are designed to minimize circuit disturbance by extreme internal resistance targets."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nR_V \\gg R_{\\mathrm{circuit}},\\;R_A \\ll R_{\\mathrm{branch}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V$",
+              "voltage",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$R$",
+              "resistance",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Encodes proper meter insertion and loading-error intuition."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- ohms-law (foundational, weight 0.80)\n- kirchhoffs-rules (supporting, weight 0.55)"
+        }
+      }
+    ]
   },
   {
     "id": "null-measurements",
@@ -2178,7 +4967,79 @@
     "position": {
       "x": 863.3059131456532,
       "y": -464.0708867800016
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Balancing a bridge to zero detector signal can increase precision and suppress loading effects."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Delta V_{\\mathrm{detector}} = 0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\Delta V$",
+              "voltage",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$R$",
+              "resistance",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Bridge or comparator has an adjustable balancing element\n- Detector sensitivity around zero is sufficient"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Introduces a high-precision method for extracting unknown electrical quantities."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- voltmeters-ammeters (supporting, weight 0.60)"
+        }
+      }
+    ]
   },
   {
     "id": "rc-circuits",
@@ -2239,7 +5100,85 @@
     "position": {
       "x": 631.6456915213548,
       "y": 227.10672613755435
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Charging and discharging in RC circuits follow exponential transients set by time constant."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nV_C(t)=\\mathcal{E}(1-e^{-t/RC}),\\;\\tau=RC\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\tau$",
+              "time-constant",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$U_C$",
+              "capacitor-energy",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$R$",
+              "resistance",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$C$",
+              "capacitance-equivalent",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Models first-order transient behavior central to timing and filtering circuits."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- capacitance (foundational, weight 0.75)\n- ohms-law (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-dipole",
@@ -2290,7 +5229,78 @@
     "position": {
       "x": -465.7045095329904,
       "y": -535.7331063465272
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Current loops and aligned moments act as magnetic dipoles in external fields."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{\\mu} = IA\\hat{n}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{\\mu}$",
+              "magnetic-dipole-moment",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$A$",
+              "cross-sectional-area",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines magnetic dipole moment used for torque and energy relations."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-current (foundational, weight 0.70)"
+        }
+      }
+    ]
   },
   {
     "id": "ferromagnetism",
@@ -2340,7 +5350,79 @@
     "position": {
       "x": -1007.8249199810631,
       "y": -946.1630012605052
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Ferromagnetic materials exhibit strong magnetization from collective dipole-domain alignment."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\text{domain alignment} \\Rightarrow M \\uparrow\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{\\mu}$",
+              "magnetic-dipole-moment",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Material is below Curie temperature\n- Domain-wall dynamics dominate macroscopic response"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Explains hysteresis-ready material behavior used in cores and permanent magnets."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- magnetic-dipole (foundational, weight 0.70)"
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-field",
@@ -2391,7 +5473,78 @@
     "position": {
       "x": 1998.4597108889163,
       "y": -849.1202712475952
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Magnetic field determines velocity-dependent force on moving charge and current."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F}_B = q\\vec{v}\\times\\vec{B}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{F}_B$",
+              "magnetic-force",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Introduces magnetic field as the central driver in magnetism and induction."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- electric-current (supporting, weight 0.55)"
+        }
+      }
+    ]
   },
   {
     "id": "lorentz-force-magnetic",
@@ -2451,7 +5604,93 @@
     "position": {
       "x": 1065.1512330533658,
       "y": -1572.4492475622321
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Moving charges experience a magnetic force perpendicular to both velocity and magnetic field."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F}_B = q\\vec{v}\\times\\vec{B}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}_B$",
+              "magnetic-force",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{v}$",
+              "velocity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Particle speed is in classical regime unless relativistic correction is added\n- External magnetic field is defined at particle location"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Sets force direction and magnitude rules for charged-particle dynamics in magnetic fields."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- magnetic-field (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "circular-motion-magnetic-field",
@@ -2512,7 +5751,92 @@
     "position": {
       "x": 1474.8642098953871,
       "y": -2074.3565238224355
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Uniform magnetic force provides centripetal acceleration for perpendicular velocity components."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nr = \\frac{mv}{qB}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$r$",
+              "radius-path",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$m$",
+              "mass",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$v$",
+              "velocity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$B$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Explains charged-particle curvature used in spectrometers and cyclotrons."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- lorentz-force-magnetic (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "hall-effect",
@@ -2572,7 +5896,93 @@
     "position": {
       "x": 2072.388907248219,
       "y": -2044.7647317106994
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Magnetic deflection of carriers produces a transverse Hall voltage."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nV_H \\propto \\frac{IB}{nq}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V_H$",
+              "hall-voltage",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$B$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$nq$",
+              "charge-density",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Conductor or semiconductor has measurable carrier drift\n- Magnetic field has nonzero component normal to current"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides an experimental path to determine carrier sign and density."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- lorentz-force-magnetic (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-force-current-conductor",
@@ -2628,7 +6038,85 @@
     "position": {
       "x": 328.053553978271,
       "y": -1665.6492508378926
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Summed Lorentz forces on carriers produce net force on a current element in field."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F} = I\\vec{L}\\times\\vec{B}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}$",
+              "magnetic-force",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{L}$",
+              "current-element",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Connects microscopic carrier forces to macroscopic conductor actuation."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- lorentz-force-magnetic (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "torque-current-loop",
@@ -2684,7 +6172,78 @@
     "position": {
       "x": -563.7211050157593,
       "y": -1175.738132401113
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Current loops in magnetic fields experience torque that aligns dipole moment with field."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{\\tau} = \\vec{\\mu}\\times\\vec{B}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{\\tau}$",
+              "torque",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{\\mu}$",
+              "magnetic-dipole-moment",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Forms the basis of motors, meters, and magnetic actuation."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- magnetic-dipole (foundational, weight 0.80)\n- magnetic-force-current-conductor (supporting, weight 0.60)"
+        }
+      }
+    ]
   },
   {
     "id": "biot-savart-law",
@@ -2749,7 +6308,93 @@
     "position": {
       "x": 810.1951290140902,
       "y": -1253.058448466916
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Current elements generate differential magnetic fields summed by spatial integration."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nd\\vec{B}=\\frac{\\mu_0}{4\\pi}\\frac{I d\\vec{l}\\times\\hat{r}}{r^2}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$d\\vec{B}$",
+              "magnetic-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I d\\vec{l}$",
+              "current-element",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$r$",
+              "separation-distance",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\mu_0$",
+              "vacuum-permeability",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Steady or quasi-static current distribution\n- Field point and source geometry are resolvable"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides a direct integral method for magnetic field from arbitrary currents."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- magnetic-field (foundational, weight 0.80)\n- electric-current (foundational, weight 0.70)"
+        }
+      }
+    ]
   },
   {
     "id": "ampere-law",
@@ -2809,7 +6454,86 @@
     "position": {
       "x": 1168.6230629611523,
       "y": -962.9053886243446
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Magnetic circulation around a closed path is set by enclosed current."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\oint \\vec{B}\\cdot d\\vec{l}=\\mu_0 I_{\\mathrm{enc}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I_{\\mathrm{enc}}$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\mu_0$",
+              "vacuum-permeability",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Magnetostatic or symmetry-ready quasi-static regime\n- Amperian loop is defined through the field region"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Enables efficient magnetic-field solutions in high-symmetry current systems."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- biot-savart-law (supporting, weight 0.60)\n- magnetic-field (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-flux",
@@ -2861,7 +6585,78 @@
     "position": {
       "x": 2628.266062188729,
       "y": -1773.3549039706456
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Magnetic flux measures field threading through a chosen surface."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Phi_B = \\int \\vec{B}\\cdot d\\vec{A}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\Phi_B$",
+              "emf-induced",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$d\\vec{A}$",
+              "area-vector",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Defines the geometric field integral used in induction and Maxwell equations."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- magnetic-field (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "lenz-law",
@@ -2911,7 +6706,79 @@
     "position": {
       "x": 2308.6091053417103,
       "y": -1813.2436212520201
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Induced emf drives current that opposes the change in magnetic flux."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\mathcal{E} = -\\frac{d\\Phi_B}{dt}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\mathcal{E}$",
+              "emf-induced",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\Phi_B$",
+              "magnetic-flux",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Magnetic flux through loop changes in time\n- Loop orientation defines sign convention"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Determines induction direction via energy-consistent opposition to flux change."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- faradays-law-induction (foundational, weight 0.90)"
+        }
+      }
+    ]
   },
   {
     "id": "motional-emf",
@@ -2968,7 +6835,78 @@
     "position": {
       "x": 1349.705507424651,
       "y": -1201.4307853701462
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Charge separation in moving conductors through magnetic fields produces measurable emf."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\mathcal{E} = B\\ell v\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\mathcal{E}$",
+              "emf-induced",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$B$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$v$",
+              "velocity",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides the mechanical route to induction and generator behavior."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- lorentz-force-magnetic (foundational, weight 0.80)\n- faradays-law-induction (supporting, weight 0.65)"
+        }
+      }
+    ]
   },
   {
     "id": "self-inductance",
@@ -3025,7 +6963,85 @@
     "position": {
       "x": -300.16145689324577,
       "y": -2034.4355680930448
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Changing current in a circuit induces a back-emf proportional to current-change rate."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\mathcal{E}_L = -L\\frac{dI}{dt}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\mathcal{E}_L$",
+              "emf-induced",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$L$",
+              "inductance",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "current",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$t$",
+              "time",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Introduces inductive opposition to current transients and magnetic energy storage."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- faradays-law-induction (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "impedance-phasors",
@@ -3097,7 +7113,99 @@
     "position": {
       "x": 781.1011289880456,
       "y": -2049.457623118876
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Sinusoidal steady-state circuits are solved with complex amplitudes and complex impedance."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\tilde{V} = Z\\tilde{I}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$Z$",
+              "impedance",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\tilde{V}$",
+              "voltage-rms",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\tilde{I}$",
+              "current-rms",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\omega$",
+              "angular-frequency",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$X_L$",
+              "inductive-reactance",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$X_C$",
+              "capacitive-reactance",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Unifies resistor, capacitor, and inductor behavior under phasor algebra."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- alternating-current-rms (foundational, weight 0.80)\n- self-inductance (supporting, weight 0.60)"
+        }
+      }
+    ]
   },
   {
     "id": "resonance-rlc",
@@ -3159,7 +7267,85 @@
     "position": {
       "x": 242.59486735697448,
       "y": -2191.5283790635626
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "At resonance, reactive effects cancel and driven RLC response peaks."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\omega_0 = \\frac{1}{\\sqrt{LC}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$f_0$",
+              "resonant-frequency",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$L$",
+              "inductance",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$C$",
+              "capacitance-equivalent",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\omega$",
+              "angular-frequency",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Captures tuning behavior of oscillatory electric networks."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- impedance-phasors (foundational, weight 0.85)\n- self-inductance (supporting, weight 0.60)"
+        }
+      }
+    ]
   },
   {
     "id": "ideal-transformer",
@@ -3216,7 +7402,78 @@
     "position": {
       "x": 2672.503620870091,
       "y": -986.1142530920647
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Mutual induction between coils sets voltage ratio equal to turns ratio in ideal lossless operation."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\frac{V_s}{V_p}=\\frac{N_s}{N_p}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$V_s,V_p$",
+              "voltage",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$N_s$",
+              "turns-secondary",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$N_p$",
+              "turns-primary",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Models voltage conversion and power transfer with magnetic coupling."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- faradays-law-induction (foundational, weight 0.85)\n- magnetic-flux (supporting, weight 0.65)"
+        }
+      }
+    ]
   },
   {
     "id": "maxwell-equations",
@@ -3293,7 +7550,100 @@
     "position": {
       "x": 1522.2469133607926,
       "y": -15.363745721258752
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Four field equations unify electrostatics, magnetostatics, induction, and electromagnetic waves."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\nabla\\cdot\\vec{E}=\\frac{\\rho}{\\varepsilon_0},\\;\\nabla\\cdot\\vec{B}=0,\\;\\nabla\\times\\vec{E}=-\\partial_t\\vec{B},\\;\\nabla\\times\\vec{B}=\\mu_0\\vec{J}+\\mu_0\\varepsilon_0\\partial_t\\vec{E}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I_{\\mathrm{disp}}$",
+              "displacement-current",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\rho$",
+              "charge-density",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{J}$",
+              "current-density",
+              "driver",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Classical continuum-field electromagnetism\n- Fields and sources are differentiable over modeled scales"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Provides the complete classical field model from which wave propagation follows."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- gauss-law (foundational, weight 0.85)\n- ampere-law (foundational, weight 0.85)\n- faradays-law-induction (foundational, weight 0.85)"
+        }
+      }
+    ]
   },
   {
     "id": "displacement-current",
@@ -3354,7 +7704,85 @@
     "position": {
       "x": 375.6766416261307,
       "y": 355.0127906923619
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Changing electric flux contributes an effective current term in Ampere-Maxwell law."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nI_{\\mathrm{disp}} = \\varepsilon_0\\frac{d\\Phi_E}{dt}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$I_{\\mathrm{disp}}$",
+              "current-density",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\varepsilon_0$",
+              "vacuum-permittivity",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$t$",
+              "time",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Resolves capacitor-gap consistency and enables wave propagation in vacuum."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- maxwell-equations (foundational, weight 0.85)\n- capacitance (supporting, weight 0.55)"
+        }
+      }
+    ]
   },
   {
     "id": "em-wave-equation",
@@ -3411,7 +7839,85 @@
     "position": {
       "x": 1962.8401601478645,
       "y": -354.63413447661986
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Source-free Maxwell equations reduce to wave equations for electric and magnetic fields."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\nabla^2\\vec{E}=\\mu_0\\varepsilon_0\\frac{\\partial^2\\vec{E}}{\\partial t^2}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\mu_0$",
+              "vacuum-permeability",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\varepsilon_0$",
+              "vacuum-permittivity",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Derives propagating-field behavior and identifies the vacuum wave speed."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- maxwell-equations (foundational, weight 0.90)"
+        }
+      }
+    ]
   },
   {
     "id": "em-plane-wave",
@@ -3468,7 +7974,85 @@
     "position": {
       "x": 2335.8767648313083,
       "y": -71.6843506243589
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "In vacuum, electric and magnetic fields oscillate transversely and propagate at the speed of light."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nc = \\frac{1}{\\sqrt{\\mu_0\\varepsilon_0}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$c$",
+              "speed-of-light",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\lambda$",
+              "wavelength",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Characterizes wave geometry, orthogonality, and propagation speed of EM radiation."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- em-wave-equation (foundational, weight 0.90)"
+        }
+      }
+    ]
   },
   {
     "id": "poynting-vector",
@@ -3530,7 +8114,92 @@
     "position": {
       "x": 2660.251089263332,
       "y": -565.4401078761656
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electromagnetic energy flow density is given by the Poynting vector."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{S}=\\frac{1}{\\mu_0}\\vec{E}\\times\\vec{B}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$S$",
+              "poynting-vector-magnitude",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$p_{\\mathrm{rad}}$",
+              "radiation-pressure",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{E}$",
+              "electric-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{B}$",
+              "magnetic-field",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\mu_0$",
+              "vacuum-permeability",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Links field amplitudes to directional electromagnetic energy transport."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- em-plane-wave (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "radiation-pressure",
@@ -3581,7 +8250,78 @@
     "position": {
       "x": 3113.2909250410266,
       "y": -589.477806768909
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Electromagnetic waves carry momentum and exert pressure on absorbing or reflecting surfaces."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\np_{\\mathrm{rad}} = \\frac{I}{c}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$p_{\\mathrm{rad}}$",
+              "poynting-vector-magnitude",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$I$",
+              "frequency",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$c$",
+              "speed-of-light",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Quantifies wave-momentum transfer effects from optics to astrophysics."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- poynting-vector (foundational, weight 0.80)"
+        }
+      }
+    ]
   },
   {
     "id": "larmor-radiation",
@@ -3643,7 +8383,85 @@
     "position": {
       "x": 2179.7675336454745,
       "y": 390.22649534614067
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Accelerating charges radiate electromagnetic power."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nP_{\\mathrm{rad}} = \\frac{q^2 a^2}{6\\pi\\varepsilon_0 c^3}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$P_{\\mathrm{rad}}$",
+              "radiated-power",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$q$",
+              "charge",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$a$",
+              "acceleration",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\varepsilon_0$",
+              "vacuum-permittivity",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Gives classical radiative power scaling for accelerated point charges."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- em-plane-wave (supporting, weight 0.60)\n- maxwell-equations (foundational, weight 0.75)"
+        }
+      }
+    ]
   },
   {
     "id": "electromagnetic-spectrum",
@@ -3700,6 +8518,84 @@
     "position": {
       "x": 2776.8968621269178,
       "y": 199.8042765800721
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "All electromagnetic bands are the same wave phenomenon distinguished by frequency and wavelength."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nc = f\\lambda\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$f$",
+              "frequency",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\lambda$",
+              "wavelength",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$E_\\gamma$",
+              "electron-volt",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$c$",
+              "speed-of-light",
+              "parameter",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Organizes radio through gamma radiation into a single frequency-wavelength continuum."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- em-plane-wave (foundational, weight 0.85)"
+        }
+      }
+    ]
   }
 ]
