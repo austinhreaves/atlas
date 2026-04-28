@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { isStateAtLeast } from '../../lib/understanding'
 import NodePanelHeader from './NodePanelHeader'
+import BlockPanel from './BlockPanel'
 import ConceptPanel from './panels/ConceptPanel'
 import VariablePanel from './panels/VariablePanel'
 
@@ -147,7 +148,9 @@ export default function NodePanel({
             />
 
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
-              {selectedNode.layer === 'concept' ? (
+              {Array.isArray(selectedNode.blocks) && selectedNode.blocks.length > 0 ? (
+                <BlockPanel selectedNode={selectedNode} />
+              ) : selectedNode.layer === 'concept' ? (
                 <ConceptPanel
                   selectedNode={selectedNode}
                   prerequisiteLinks={prerequisiteLinks}

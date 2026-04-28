@@ -4,6 +4,7 @@ import { fireEvent, render, cleanup } from '@testing-library/react'
 import NodePanel from '../NodePanel'
 import { concepts as nodes } from '../../data'
 import variables from '../../data/variables.json'
+import { getBlockState } from '../../lib/blockState'
 
 describe('NodePanel formula rendering - integration', () => {
   beforeEach(() => {
@@ -195,6 +196,48 @@ describe('NodePanel formula rendering - integration', () => {
     expect(panel.getByText('Appears In')).not.toBeNull()
     fireEvent.click(panel.getByRole('button', { name: "Newton's Second Law" }))
     expect(onSelectEntity).toHaveBeenCalledWith('newtons-second-law')
+  })
+
+  it('uses block-first rendering path when selected node includes blocks', () => {
+    const blockNode = {
+      ...nodes[0],
+      blocks: [
+        {
+          block_id: 'md-1',
+          type: 'markdown-katex',
+          title: 'Overview',
+          data: { markdown: 'Hello block panel $F=ma$' },
+        },
+      ],
+    }
+    const panel = render(<NodePanel selectedNode={blockNode} onClose={() => {}} />)
+    expect(panel.container.textContent || '').toContain('Overview')
+    expect(panel.container.textContent || '').toContain('Hello block panel')
+    expect(panel.container.textContent || '').not.toContain('Principle')
+  })
+
+  it('persists interactive checklist block state by node and block id', () => {
+    const blockNode = {
+      ...nodes[0],
+      id: 'block-checklist-node',
+      blocks: [
+        {
+          block_id: 'check-1',
+          type: 'checklist',
+          title: 'Steps',
+          data: {
+            items: [{ id: 'step-1', text: 'Connect probes' }],
+          },
+        },
+      ],
+    }
+
+    const panel = render(<NodePanel selectedNode={blockNode} onClose={() => {}} />)
+    fireEvent.click(panel.container.querySelector('input[type="checkbox"]'))
+
+    expect(getBlockState('block-checklist-node', 'check-1')).toEqual({
+      checkedByItemId: { 'step-1': true },
+    })
   })
 
   it('writes concept understanding state via segmented controls and reset', () => {
