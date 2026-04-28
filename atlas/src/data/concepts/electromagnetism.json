@@ -447,5 +447,1560 @@
     "subject": "physics",
     "sub_domains": ["electrostatics"],
     "tags": ["kw-flux", "kw-field-symmetry", "kw-electromagnetism"]
+  },
+  {
+    "id": "electric-charge",
+    "layer": "concept",
+    "title": "Electric Charge",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "q = ne",
+    "causal_structure": "asymmetric",
+    "principle": "Electric charge is a conserved intrinsic property of matter quantized in units of elementary charge.",
+    "variables": [
+      { "id": "charge", "symbol": "q", "role": "response" },
+      { "id": "charge-number", "symbol": "n", "role": "parameter" },
+      { "id": "elementary-charge", "symbol": "e", "role": "parameter" }
+    ],
+    "description": "Defines charge and quantization for electrostatics and current models.",
+    "prerequisites": [],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "conservation-of-charge",
+    "layer": "concept",
+    "title": "Conservation of Charge",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\frac{\\partial \\rho}{\\partial t} + \\nabla\\cdot\\vec{J} = 0",
+    "causal_structure": "asymmetric",
+    "principle": "Net charge is conserved globally and locally through the continuity equation.",
+    "applicability_conditions": [
+      "Classical or quantum electrodynamics in closed accounting of charge",
+      "Charge density and current density are defined for the modeled medium"
+    ],
+    "variables": [
+      { "id": "charge-density", "symbol": "\\rho", "role": "driver" },
+      { "id": "current-density", "symbol": "\\vec{J}", "role": "response" }
+    ],
+    "description": "States that charge changes in a region only through charge flow across its boundary.",
+    "prerequisites": [
+      { "id": "electric-charge", "type": "foundational", "weight": 0.9 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics", "circuits"]
+  },
+  {
+    "id": "conductors-insulators",
+    "layer": "concept",
+    "title": "Conductors and Insulators",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{J} = \\sigma \\vec{E}",
+    "causal_structure": "asymmetric",
+    "principle": "Material conductivity controls how strongly charge carriers respond to electric fields.",
+    "variables": [
+      { "id": "current-density", "symbol": "\\vec{J}", "role": "response" },
+      { "id": "conductivity", "symbol": "\\sigma", "role": "parameter" },
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "driver" }
+    ],
+    "description": "Classifies materials by charge mobility and links to microscopic Ohm behavior.",
+    "prerequisites": [
+      { "id": "electric-charge", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics", "circuits"]
+  },
+  {
+    "id": "methods-of-charging",
+    "layer": "concept",
+    "title": "Methods of Charging",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\Delta q_{\\mathrm{system}} = 0",
+    "causal_structure": "asymmetric",
+    "principle": "Contact, friction, and induction redistribute charge while preserving total charge.",
+    "applicability_conditions": [
+      "System boundaries and grounding path are well-defined",
+      "Charge transfer mechanism is modeled macroscopically"
+    ],
+    "variables": [
+      { "id": "charge", "symbol": "q", "role": "response" },
+      { "id": "current-density", "symbol": "\\vec{J}", "role": "driver" }
+    ],
+    "description": "Summarizes classical charging processes used in electrostatic demonstrations.",
+    "prerequisites": [
+      { "id": "electric-charge", "type": "foundational", "weight": 0.85 },
+      { "id": "conservation-of-charge", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "electric-field",
+    "layer": "concept",
+    "title": "Electric Field",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{E} = \\frac{\\vec{F}}{q}",
+    "causal_structure": "asymmetric",
+    "principle": "The electric field gives force per unit positive test charge at each point.",
+    "variables": [
+      { "id": "electric-force", "symbol": "\\vec{F}", "role": "response" },
+      { "id": "charge", "symbol": "q", "role": "driver" },
+      { "id": "separation-distance", "symbol": "r", "role": "parameter" }
+    ],
+    "description": "Defines electric field as an independent physical field and as a force-density relation.",
+    "prerequisites": [
+      { "id": "coulombs-law", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "electric-field-lines",
+    "layer": "concept",
+    "title": "Electric Field Lines",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\text{line tangent} \\parallel \\vec{E}",
+    "causal_structure": "asymmetric",
+    "principle": "Field-line direction follows local electric-field direction and line density tracks magnitude.",
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "driver" },
+      { "id": "charge", "symbol": "q", "role": "parameter" }
+    ],
+    "description": "Provides a geometric representation for interpreting electric-field direction and strength.",
+    "prerequisites": [
+      { "id": "electric-field", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "electric-field-superposition",
+    "layer": "concept",
+    "title": "Electric Field Superposition",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\vec{E}_{\\mathrm{net}} = \\sum_i \\vec{E}_i",
+    "causal_structure": "asymmetric",
+    "principle": "Total electric field equals vector sum of fields from each source charge distribution.",
+    "applicability_conditions": [
+      "Linear Maxwell regime with additive field contributions",
+      "Fields are evaluated at the same observation point"
+    ],
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" },
+      { "id": "charge", "symbol": "q_i", "role": "driver" }
+    ],
+    "description": "Extends single-source field models to multi-source configurations.",
+    "prerequisites": [
+      { "id": "electric-field", "type": "foundational", "weight": 0.85 },
+      { "id": "coulombs-law", "type": "supporting", "weight": 0.6 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "conductor-electrostatic-equilibrium",
+    "layer": "concept",
+    "title": "Conductor in Electrostatic Equilibrium",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\vec{E}_{\\mathrm{inside}} = 0",
+    "causal_structure": "asymmetric",
+    "principle": "In electrostatic equilibrium, free charges redistribute until conductor interior field is zero.",
+    "applicability_conditions": [
+      "Steady electrostatic state with no time-varying fields",
+      "Material has mobile charge carriers"
+    ],
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" },
+      { "id": "charge-density", "symbol": "\\rho", "role": "driver" }
+    ],
+    "description": "Describes shielding and surface-charge behavior for conductors at electrostatic equilibrium.",
+    "prerequisites": [
+      { "id": "electric-field", "type": "foundational", "weight": 0.8 },
+      { "id": "conductors-insulators", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "electric-dipole",
+    "layer": "concept",
+    "title": "Electric Dipole",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{p} = q\\vec{d}",
+    "causal_structure": "asymmetric",
+    "principle": "A dipole is an equal and opposite charge pair separated by a displacement vector.",
+    "variables": [
+      { "id": "charge", "symbol": "q", "role": "driver" },
+      { "id": "separation-distance", "symbol": "d", "role": "driver" },
+      { "id": "electric-force", "symbol": "F", "role": "response" }
+    ],
+    "description": "Introduces dipole moment and field behavior for separated opposite charges.",
+    "prerequisites": [
+      { "id": "coulombs-law", "type": "foundational", "weight": 0.8 },
+      { "id": "electric-field-superposition", "type": "supporting", "weight": 0.6 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "electric-potential",
+    "layer": "concept",
+    "title": "Electric Potential",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "V = \\frac{U}{q}",
+    "causal_structure": "asymmetric",
+    "principle": "Electric potential is potential energy per unit charge in a conservative electrostatic field.",
+    "variables": [
+      { "id": "voltage", "symbol": "V", "role": "response" },
+      { "id": "electric-potential-energy", "symbol": "U", "role": "driver" },
+      { "id": "charge", "symbol": "q", "role": "parameter" }
+    ],
+    "description": "Connects electrostatic fields to scalar potential energy accounting.",
+    "prerequisites": [
+      { "id": "electric-field", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "electron-volt",
+    "layer": "concept",
+    "title": "Electron-Volt",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "1\\,\\mathrm{eV} = e\\cdot 1\\,\\mathrm{V}",
+    "causal_structure": "asymmetric",
+    "principle": "An electron-volt is the energy change of one elementary charge across one volt.",
+    "variables": [
+      { "id": "electric-potential-energy", "symbol": "\\mathrm{eV}", "role": "response" },
+      { "id": "elementary-charge", "symbol": "e", "role": "parameter" },
+      { "id": "voltage", "symbol": "V", "role": "driver" }
+    ],
+    "description": "Defines a convenient microscopic energy unit used across electromagnetism and modern physics.",
+    "prerequisites": [
+      { "id": "electric-potential", "type": "foundational", "weight": 0.75 },
+      { "id": "electric-charge", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "gradient-relation",
+    "layer": "concept",
+    "title": "Potential-Field Gradient Relation",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\vec{E} = -\\nabla V",
+    "causal_structure": "asymmetric",
+    "principle": "Electrostatic field equals the negative spatial gradient of potential.",
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" },
+      { "id": "electric-potential", "symbol": "V", "role": "driver" }
+    ],
+    "description": "Links scalar potential maps to vector electric-field predictions.",
+    "prerequisites": [
+      { "id": "electric-potential", "type": "foundational", "weight": 0.85 },
+      { "id": "electric-field", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "point-charge-potential",
+    "layer": "concept",
+    "title": "Point-Charge Potential",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "V = k\\frac{q}{r}",
+    "causal_structure": "asymmetric",
+    "principle": "Potential from a point charge scales with source charge and inverse distance.",
+    "variables": [
+      { "id": "electric-potential", "symbol": "V", "role": "response" },
+      { "id": "charge", "symbol": "q", "role": "driver" },
+      { "id": "separation-distance", "symbol": "r", "role": "driver" }
+    ],
+    "description": "Provides the scalar-potential counterpart to Coulomb's inverse-square field relation.",
+    "prerequisites": [
+      { "id": "electric-potential", "type": "foundational", "weight": 0.7 },
+      { "id": "coulombs-law", "type": "supporting", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "equipotential-surfaces",
+    "layer": "concept",
+    "title": "Equipotential Surfaces",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\Delta V = 0 \\Rightarrow W = 0",
+    "causal_structure": "asymmetric",
+    "principle": "All points on an equipotential share the same potential and require no work for charge motion along the surface.",
+    "variables": [
+      { "id": "electric-potential", "symbol": "V", "role": "parameter" },
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" }
+    ],
+    "description": "Supplies geometric intuition for field direction and work calculations.",
+    "prerequisites": [
+      { "id": "electric-potential", "type": "foundational", "weight": 0.8 },
+      { "id": "gradient-relation", "type": "supporting", "weight": 0.65 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "capacitance",
+    "layer": "concept",
+    "title": "Capacitance",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "C = \\frac{Q}{V}",
+    "causal_structure": "asymmetric",
+    "principle": "Capacitance measures stored charge per applied potential difference.",
+    "variables": [
+      { "id": "charge", "symbol": "Q", "role": "response" },
+      { "id": "electric-potential", "symbol": "V", "role": "driver" },
+      { "id": "capacitance-equivalent", "symbol": "C", "role": "parameter" }
+    ],
+    "description": "Defines charge storage behavior for conductors and capacitor geometries.",
+    "prerequisites": [
+      { "id": "electric-potential", "type": "foundational", "weight": 0.8 },
+      { "id": "conductor-electrostatic-equilibrium", "type": "supporting", "weight": 0.55 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits", "electrostatics"]
+  },
+  {
+    "id": "dielectrics",
+    "layer": "concept",
+    "title": "Dielectrics",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "C' = \\kappa C",
+    "causal_structure": "asymmetric",
+    "principle": "Polarizable media reduce effective field and increase capacitance.",
+    "applicability_conditions": [
+      "Material remains below dielectric-breakdown field",
+      "Linear dielectric approximation is acceptable"
+    ],
+    "variables": [
+      { "id": "dielectric-constant", "symbol": "\\kappa", "role": "driver" },
+      { "id": "capacitance-equivalent", "symbol": "C", "role": "response" },
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" }
+    ],
+    "description": "Explains how insulating media alter electric response and capacitor behavior.",
+    "prerequisites": [
+      { "id": "capacitance", "type": "foundational", "weight": 0.8 },
+      { "id": "electric-field", "type": "supporting", "weight": 0.65 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["electrostatics"]
+  },
+  {
+    "id": "capacitors-series-parallel",
+    "layer": "concept",
+    "title": "Capacitors in Series and Parallel",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "C_{\\mathrm{eq,parallel}}=\\sum_i C_i,\\;\\frac{1}{C_{\\mathrm{eq,series}}}=\\sum_i\\frac{1}{C_i}",
+    "causal_structure": "asymmetric",
+    "principle": "Network topology determines equivalent capacitance rules for series and parallel combinations.",
+    "variables": [
+      { "id": "capacitance-equivalent", "symbol": "C_{\\mathrm{eq}}", "role": "response" },
+      { "id": "charge", "symbol": "Q", "role": "driver" }
+    ],
+    "description": "Reduces multi-capacitor networks to equivalent single-capacitance models.",
+    "prerequisites": [
+      { "id": "capacitance", "type": "foundational", "weight": 0.9 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "capacitor-energy",
+    "layer": "concept",
+    "title": "Energy Stored in a Capacitor",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "U_C = \\frac{1}{2}CV^2",
+    "causal_structure": "asymmetric",
+    "principle": "Capacitor energy scales with capacitance and square of potential difference.",
+    "variables": [
+      { "id": "electric-potential-energy", "symbol": "U_C", "role": "response" },
+      { "id": "capacitance-equivalent", "symbol": "C", "role": "driver" },
+      { "id": "electric-potential", "symbol": "V", "role": "driver" }
+    ],
+    "description": "Quantifies electrical energy storage in electrostatic systems and circuit components.",
+    "prerequisites": [
+      { "id": "capacitance", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "electric-current",
+    "layer": "concept",
+    "title": "Electric Current",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "I = \\frac{dQ}{dt}",
+    "causal_structure": "asymmetric",
+    "principle": "Current is the rate of charge transport through a cross section.",
+    "variables": [
+      { "id": "current", "symbol": "I", "role": "response" },
+      { "id": "charge", "symbol": "Q", "role": "driver" },
+      { "id": "time", "symbol": "t", "role": "parameter" }
+    ],
+    "description": "Defines the central flow variable used in all circuit models.",
+    "prerequisites": [
+      { "id": "conservation-of-charge", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "drift-velocity",
+    "layer": "concept",
+    "title": "Drift Velocity",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "I = nqAv_d",
+    "causal_structure": "asymmetric",
+    "principle": "Macroscopic current emerges from average carrier drift through conductor area.",
+    "variables": [
+      { "id": "current", "symbol": "I", "role": "response" },
+      { "id": "charge-density", "symbol": "nq", "role": "driver" },
+      { "id": "cross-sectional-area", "symbol": "A", "role": "driver" }
+    ],
+    "description": "Connects microscopic charge-carrier motion to measured current.",
+    "prerequisites": [
+      { "id": "electric-current", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "resistance-resistivity",
+    "layer": "concept",
+    "title": "Resistance and Resistivity",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "R = \\rho_e\\frac{L}{A}",
+    "causal_structure": "asymmetric",
+    "principle": "Resistance is set by material resistivity and conductor geometry.",
+    "variables": [
+      { "id": "resistance", "symbol": "R", "role": "response" },
+      { "id": "resistivity", "symbol": "\\rho_e", "role": "driver" },
+      { "id": "resistor-length", "symbol": "L", "role": "driver" },
+      { "id": "cross-sectional-area", "symbol": "A", "role": "driver" }
+    ],
+    "description": "Links lumped resistance to microscopic transport material parameters.",
+    "prerequisites": [
+      { "id": "electric-current", "type": "foundational", "weight": 0.7 },
+      { "id": "ohms-law", "type": "supporting", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "electric-power",
+    "layer": "concept",
+    "title": "Electric Power",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "P = IV",
+    "causal_structure": "asymmetric",
+    "principle": "Electrical power is the rate of energy transfer in a circuit element.",
+    "variables": [
+      { "id": "current", "symbol": "I", "role": "response" },
+      { "id": "voltage", "symbol": "V", "role": "driver" },
+      { "id": "resistance", "symbol": "R", "role": "parameter" }
+    ],
+    "description": "Provides power and dissipation relationships used for component sizing and safety.",
+    "prerequisites": [
+      { "id": "ohms-law", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "alternating-current-rms",
+    "layer": "concept",
+    "title": "Alternating Current RMS",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "I_{\\mathrm{rms}} = \\frac{I_0}{\\sqrt{2}},\\;V_{\\mathrm{rms}} = \\frac{V_0}{\\sqrt{2}}",
+    "causal_structure": "asymmetric",
+    "principle": "RMS values map sinusoidal AC to equivalent DC heating behavior.",
+    "variables": [
+      { "id": "current-rms", "symbol": "I_{\\mathrm{rms}}", "role": "response" },
+      { "id": "voltage-rms", "symbol": "V_{\\mathrm{rms}}", "role": "response" },
+      { "id": "frequency", "symbol": "f", "role": "parameter" }
+    ],
+    "description": "Defines practical AC measurement values for power and instrumentation.",
+    "prerequisites": [
+      { "id": "electric-power", "type": "supporting", "weight": 0.65 },
+      { "id": "electric-current", "type": "foundational", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "electrical-safety",
+    "layer": "concept",
+    "title": "Electrical Safety",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "P = I^2R",
+    "causal_structure": "asymmetric",
+    "principle": "Shock and heating hazards scale with current path and dissipation through tissue and wiring.",
+    "applicability_conditions": [
+      "Human-body and circuit paths are represented by effective resistances",
+      "Exposure duration and current magnitude are in hazardous ranges"
+    ],
+    "variables": [
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "resistance", "symbol": "R", "role": "parameter" },
+      { "id": "electric-power", "symbol": "P", "role": "response" }
+    ],
+    "description": "Frames electrical hazard analysis for household and laboratory contexts.",
+    "prerequisites": [
+      { "id": "electric-power", "type": "foundational", "weight": 0.75 },
+      { "id": "ohms-law", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "nerve-conduction",
+    "layer": "concept",
+    "title": "Nerve Conduction as Ionic Current",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\Delta V_m \\leftrightarrow I_{\\mathrm{ion}}",
+    "causal_structure": "asymmetric",
+    "principle": "Biological signaling uses controlled ionic currents and membrane potential differences.",
+    "applicability_conditions": [
+      "Membrane-channel dynamics are represented at lumped-circuit level",
+      "Ionic concentrations define equilibrium potentials"
+    ],
+    "variables": [
+      { "id": "current", "symbol": "I_{\\mathrm{ion}}", "role": "response" },
+      { "id": "electric-potential", "symbol": "V_m", "role": "driver" },
+      { "id": "resistance", "symbol": "R_m", "role": "parameter" }
+    ],
+    "description": "Connects electrophysiology to core current and potential concepts.",
+    "prerequisites": [
+      { "id": "electric-current", "type": "foundational", "weight": 0.7 },
+      { "id": "electric-potential", "type": "foundational", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "resistors-series",
+    "layer": "concept",
+    "title": "Resistors in Series",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "R_{\\mathrm{eq}} = \\sum_i R_i",
+    "causal_structure": "asymmetric",
+    "principle": "Series resistors carry identical current and add directly.",
+    "variables": [
+      { "id": "resistance", "symbol": "R_i", "role": "driver" },
+      { "id": "current", "symbol": "I", "role": "parameter" }
+    ],
+    "description": "Gives equivalent-resistance reduction rule for one-current branches.",
+    "prerequisites": [
+      { "id": "ohms-law", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "resistors-parallel",
+    "layer": "concept",
+    "title": "Resistors in Parallel",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\frac{1}{R_{\\mathrm{eq}}} = \\sum_i\\frac{1}{R_i}",
+    "causal_structure": "asymmetric",
+    "principle": "Parallel resistors share voltage while branch currents add.",
+    "variables": [
+      { "id": "resistance", "symbol": "R_i", "role": "driver" },
+      { "id": "voltage", "symbol": "V", "role": "parameter" }
+    ],
+    "description": "Provides equivalent-resistance reduction rule for common-voltage branches.",
+    "prerequisites": [
+      { "id": "ohms-law", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "series-parallel-combinations",
+    "layer": "concept",
+    "title": "Series-Parallel Circuit Reduction",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\text{reduce network by local series/parallel substitutions}",
+    "causal_structure": "asymmetric",
+    "principle": "Complex resistor networks can be simplified recursively using local equivalence rules.",
+    "applicability_conditions": [
+      "Topology contains reducible series or parallel subgraphs",
+      "Elements are modeled as lumped linear resistors"
+    ],
+    "variables": [
+      { "id": "resistance", "symbol": "R_{\\mathrm{eq}}", "role": "response" },
+      { "id": "current", "symbol": "I", "role": "response" },
+      { "id": "voltage", "symbol": "V", "role": "driver" }
+    ],
+    "description": "Combines basic equivalence rules into a practical multi-step analysis workflow.",
+    "prerequisites": [
+      { "id": "resistors-series", "type": "foundational", "weight": 0.8 },
+      { "id": "resistors-parallel", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "emf-terminal-voltage",
+    "layer": "concept",
+    "title": "EMF and Terminal Voltage",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "V_{\\mathrm{term}} = \\mathcal{E} - Ir",
+    "causal_structure": "asymmetric",
+    "principle": "Internal resistance causes terminal voltage to drop below source emf under load.",
+    "variables": [
+      { "id": "terminal-voltage", "symbol": "V_{\\mathrm{term}}", "role": "response" },
+      { "id": "emf", "symbol": "\\mathcal{E}", "role": "driver" },
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "internal-resistance", "symbol": "r", "role": "parameter" }
+    ],
+    "description": "Relates source ideal voltage, internal losses, and observed output voltage.",
+    "prerequisites": [
+      { "id": "ohms-law", "type": "foundational", "weight": 0.75 },
+      { "id": "electric-current", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "kirchhoffs-rules",
+    "layer": "concept",
+    "title": "Kirchhoff's Junction and Loop Rules",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\sum I_{\\mathrm{in}} = \\sum I_{\\mathrm{out}},\\;\\sum \\Delta V = 0",
+    "causal_structure": "asymmetric",
+    "principle": "Charge conservation at nodes and energy conservation around loops constrain circuit solutions.",
+    "applicability_conditions": [
+      "Lumped-circuit approximation with negligible radiation",
+      "Branch currents and element voltage drops are well-defined"
+    ],
+    "variables": [
+      { "id": "current", "symbol": "I", "role": "response" },
+      { "id": "voltage", "symbol": "\\Delta V", "role": "response" }
+    ],
+    "description": "Provides the global equations used to solve nontrivial multi-loop circuits.",
+    "prerequisites": [
+      { "id": "conservation-of-charge", "type": "foundational", "weight": 0.85 },
+      { "id": "electric-potential", "type": "supporting", "weight": 0.65 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "voltmeters-ammeters",
+    "layer": "concept",
+    "title": "Voltmeters and Ammeters",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "R_V \\gg R_{\\mathrm{circuit}},\\;R_A \\ll R_{\\mathrm{branch}}",
+    "causal_structure": "asymmetric",
+    "principle": "Measurement instruments are designed to minimize circuit disturbance by extreme internal resistance targets.",
+    "variables": [
+      { "id": "voltage", "symbol": "V", "role": "response" },
+      { "id": "current", "symbol": "I", "role": "response" },
+      { "id": "resistance", "symbol": "R", "role": "parameter" }
+    ],
+    "description": "Encodes proper meter insertion and loading-error intuition.",
+    "prerequisites": [
+      { "id": "ohms-law", "type": "foundational", "weight": 0.8 },
+      { "id": "kirchhoffs-rules", "type": "supporting", "weight": 0.55 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "null-measurements",
+    "layer": "concept",
+    "title": "Null Measurements",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\Delta V_{\\mathrm{detector}} = 0",
+    "causal_structure": "asymmetric",
+    "principle": "Balancing a bridge to zero detector signal can increase precision and suppress loading effects.",
+    "applicability_conditions": [
+      "Bridge or comparator has an adjustable balancing element",
+      "Detector sensitivity around zero is sufficient"
+    ],
+    "variables": [
+      { "id": "voltage", "symbol": "\\Delta V", "role": "response" },
+      { "id": "resistance", "symbol": "R", "role": "driver" }
+    ],
+    "description": "Introduces a high-precision method for extracting unknown electrical quantities.",
+    "prerequisites": [
+      { "id": "voltmeters-ammeters", "type": "supporting", "weight": 0.6 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "rc-circuits",
+    "layer": "concept",
+    "title": "RC Circuits",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "V_C(t)=\\mathcal{E}(1-e^{-t/RC}),\\;\\tau=RC",
+    "causal_structure": "asymmetric",
+    "principle": "Charging and discharging in RC circuits follow exponential transients set by time constant.",
+    "variables": [
+      { "id": "time-constant", "symbol": "\\tau", "role": "response" },
+      { "id": "capacitor-energy", "symbol": "U_C", "role": "response" },
+      { "id": "resistance", "symbol": "R", "role": "driver" },
+      { "id": "capacitance-equivalent", "symbol": "C", "role": "driver" }
+    ],
+    "description": "Models first-order transient behavior central to timing and filtering circuits.",
+    "prerequisites": [
+      { "id": "capacitance", "type": "foundational", "weight": 0.75 },
+      { "id": "ohms-law", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits"]
+  },
+  {
+    "id": "magnetic-dipole",
+    "layer": "concept",
+    "title": "Magnetic Dipole",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{\\mu} = IA\\hat{n}",
+    "causal_structure": "asymmetric",
+    "principle": "Current loops and aligned moments act as magnetic dipoles in external fields.",
+    "variables": [
+      { "id": "magnetic-dipole-moment", "symbol": "\\vec{\\mu}", "role": "response" },
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "cross-sectional-area", "symbol": "A", "role": "driver" }
+    ],
+    "description": "Defines magnetic dipole moment used for torque and energy relations.",
+    "prerequisites": [
+      { "id": "electric-current", "type": "foundational", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "ferromagnetism",
+    "layer": "concept",
+    "title": "Ferromagnetism and Domains",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\text{domain alignment} \\Rightarrow M \\uparrow",
+    "causal_structure": "asymmetric",
+    "principle": "Ferromagnetic materials exhibit strong magnetization from collective dipole-domain alignment.",
+    "applicability_conditions": [
+      "Material is below Curie temperature",
+      "Domain-wall dynamics dominate macroscopic response"
+    ],
+    "variables": [
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "driver" },
+      { "id": "magnetic-dipole-moment", "symbol": "\\vec{\\mu}", "role": "response" }
+    ],
+    "description": "Explains hysteresis-ready material behavior used in cores and permanent magnets.",
+    "prerequisites": [
+      { "id": "magnetic-dipole", "type": "foundational", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "magnetic-field",
+    "layer": "concept",
+    "title": "Magnetic Field",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\vec{F}_B = q\\vec{v}\\times\\vec{B}",
+    "causal_structure": "asymmetric",
+    "principle": "Magnetic field determines velocity-dependent force on moving charge and current.",
+    "variables": [
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "magnetic-force", "symbol": "\\vec{F}_B", "role": "response" },
+      { "id": "charge", "symbol": "q", "role": "parameter" }
+    ],
+    "description": "Introduces magnetic field as the central driver in magnetism and induction.",
+    "prerequisites": [
+      { "id": "electric-current", "type": "supporting", "weight": 0.55 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "lorentz-force-magnetic",
+    "layer": "concept",
+    "title": "Magnetic Lorentz Force",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\vec{F}_B = q\\vec{v}\\times\\vec{B}",
+    "causal_structure": "asymmetric",
+    "principle": "Moving charges experience a magnetic force perpendicular to both velocity and magnetic field.",
+    "applicability_conditions": [
+      "Particle speed is in classical regime unless relativistic correction is added",
+      "External magnetic field is defined at particle location"
+    ],
+    "variables": [
+      { "id": "magnetic-force", "symbol": "\\vec{F}_B", "role": "response" },
+      { "id": "charge", "symbol": "q", "role": "driver" },
+      { "id": "velocity", "symbol": "\\vec{v}", "role": "driver" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "driver" }
+    ],
+    "description": "Sets force direction and magnitude rules for charged-particle dynamics in magnetic fields.",
+    "prerequisites": [
+      { "id": "magnetic-field", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "circular-motion-magnetic-field",
+    "layer": "concept",
+    "title": "Circular Motion in Magnetic Field",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "r = \\frac{mv}{qB}",
+    "causal_structure": "asymmetric",
+    "principle": "Uniform magnetic force provides centripetal acceleration for perpendicular velocity components.",
+    "variables": [
+      { "id": "radius-path", "symbol": "r", "role": "response" },
+      { "id": "mass", "symbol": "m", "role": "driver" },
+      { "id": "velocity", "symbol": "v", "role": "driver" },
+      { "id": "charge", "symbol": "q", "role": "driver" },
+      { "id": "magnetic-field", "symbol": "B", "role": "driver" }
+    ],
+    "description": "Explains charged-particle curvature used in spectrometers and cyclotrons.",
+    "prerequisites": [
+      { "id": "lorentz-force-magnetic", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "hall-effect",
+    "layer": "concept",
+    "title": "Hall Effect",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "V_H \\propto \\frac{IB}{nq}",
+    "causal_structure": "asymmetric",
+    "principle": "Magnetic deflection of carriers produces a transverse Hall voltage.",
+    "applicability_conditions": [
+      "Conductor or semiconductor has measurable carrier drift",
+      "Magnetic field has nonzero component normal to current"
+    ],
+    "variables": [
+      { "id": "hall-voltage", "symbol": "V_H", "role": "response" },
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "magnetic-field", "symbol": "B", "role": "driver" },
+      { "id": "charge-density", "symbol": "nq", "role": "parameter" }
+    ],
+    "description": "Provides an experimental path to determine carrier sign and density.",
+    "prerequisites": [
+      { "id": "lorentz-force-magnetic", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "magnetic-force-current-conductor",
+    "layer": "concept",
+    "title": "Force on Current-Carrying Conductor",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\vec{F} = I\\vec{L}\\times\\vec{B}",
+    "causal_structure": "asymmetric",
+    "principle": "Summed Lorentz forces on carriers produce net force on a current element in field.",
+    "variables": [
+      { "id": "magnetic-force", "symbol": "\\vec{F}", "role": "response" },
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "current-element", "symbol": "\\vec{L}", "role": "driver" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "driver" }
+    ],
+    "description": "Connects microscopic carrier forces to macroscopic conductor actuation.",
+    "prerequisites": [
+      { "id": "lorentz-force-magnetic", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "torque-current-loop",
+    "layer": "concept",
+    "title": "Torque on a Current Loop",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\vec{\\tau} = \\vec{\\mu}\\times\\vec{B}",
+    "causal_structure": "asymmetric",
+    "principle": "Current loops in magnetic fields experience torque that aligns dipole moment with field.",
+    "variables": [
+      { "id": "torque", "symbol": "\\vec{\\tau}", "role": "response" },
+      { "id": "magnetic-dipole-moment", "symbol": "\\vec{\\mu}", "role": "driver" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "driver" }
+    ],
+    "description": "Forms the basis of motors, meters, and magnetic actuation.",
+    "prerequisites": [
+      { "id": "magnetic-dipole", "type": "foundational", "weight": 0.8 },
+      { "id": "magnetic-force-current-conductor", "type": "supporting", "weight": 0.6 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "biot-savart-law",
+    "layer": "concept",
+    "title": "Biot-Savart Law",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "d\\vec{B}=\\frac{\\mu_0}{4\\pi}\\frac{I d\\vec{l}\\times\\hat{r}}{r^2}",
+    "causal_structure": "asymmetric",
+    "principle": "Current elements generate differential magnetic fields summed by spatial integration.",
+    "applicability_conditions": [
+      "Steady or quasi-static current distribution",
+      "Field point and source geometry are resolvable"
+    ],
+    "variables": [
+      { "id": "magnetic-field", "symbol": "d\\vec{B}", "role": "response" },
+      { "id": "current-element", "symbol": "I d\\vec{l}", "role": "driver" },
+      { "id": "separation-distance", "symbol": "r", "role": "driver" },
+      { "id": "vacuum-permeability", "symbol": "\\mu_0", "role": "parameter" }
+    ],
+    "description": "Provides a direct integral method for magnetic field from arbitrary currents.",
+    "prerequisites": [
+      { "id": "magnetic-field", "type": "foundational", "weight": 0.8 },
+      { "id": "electric-current", "type": "foundational", "weight": 0.7 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "ampere-law",
+    "layer": "concept",
+    "title": "Ampere's Law",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\oint \\vec{B}\\cdot d\\vec{l}=\\mu_0 I_{\\mathrm{enc}}",
+    "causal_structure": "asymmetric",
+    "principle": "Magnetic circulation around a closed path is set by enclosed current.",
+    "applicability_conditions": [
+      "Magnetostatic or symmetry-ready quasi-static regime",
+      "Amperian loop is defined through the field region"
+    ],
+    "variables": [
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "response" },
+      { "id": "current", "symbol": "I_{\\mathrm{enc}}", "role": "driver" },
+      { "id": "vacuum-permeability", "symbol": "\\mu_0", "role": "parameter" }
+    ],
+    "description": "Enables efficient magnetic-field solutions in high-symmetry current systems.",
+    "prerequisites": [
+      { "id": "biot-savart-law", "type": "supporting", "weight": 0.6 },
+      { "id": "magnetic-field", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "magnetic-flux",
+    "layer": "concept",
+    "title": "Magnetic Flux",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "\\Phi_B = \\int \\vec{B}\\cdot d\\vec{A}",
+    "causal_structure": "asymmetric",
+    "principle": "Magnetic flux measures field threading through a chosen surface.",
+    "variables": [
+      { "id": "emf-induced", "symbol": "\\Phi_B", "role": "response" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "driver" },
+      { "id": "area-vector", "symbol": "d\\vec{A}", "role": "driver" }
+    ],
+    "description": "Defines the geometric field integral used in induction and Maxwell equations.",
+    "prerequisites": [
+      { "id": "magnetic-field", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism"]
+  },
+  {
+    "id": "lenz-law",
+    "layer": "concept",
+    "title": "Lenz's Law",
+    "type": "principle",
+    "domain": "electromagnetism",
+    "formula": "\\mathcal{E} = -\\frac{d\\Phi_B}{dt}",
+    "causal_structure": "asymmetric",
+    "principle": "Induced emf drives current that opposes the change in magnetic flux.",
+    "applicability_conditions": [
+      "Magnetic flux through loop changes in time",
+      "Loop orientation defines sign convention"
+    ],
+    "variables": [
+      { "id": "emf-induced", "symbol": "\\mathcal{E}", "role": "response" },
+      { "id": "magnetic-flux", "symbol": "\\Phi_B", "role": "driver" }
+    ],
+    "description": "Determines induction direction via energy-consistent opposition to flux change.",
+    "prerequisites": [
+      { "id": "faradays-law-induction", "type": "foundational", "weight": 0.9 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction"]
+  },
+  {
+    "id": "motional-emf",
+    "layer": "concept",
+    "title": "Motional EMF",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\mathcal{E} = B\\ell v",
+    "causal_structure": "asymmetric",
+    "principle": "Charge separation in moving conductors through magnetic fields produces measurable emf.",
+    "variables": [
+      { "id": "emf-induced", "symbol": "\\mathcal{E}", "role": "response" },
+      { "id": "magnetic-field", "symbol": "B", "role": "driver" },
+      { "id": "velocity", "symbol": "v", "role": "driver" }
+    ],
+    "description": "Provides the mechanical route to induction and generator behavior.",
+    "prerequisites": [
+      { "id": "lorentz-force-magnetic", "type": "foundational", "weight": 0.8 },
+      { "id": "faradays-law-induction", "type": "supporting", "weight": 0.65 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism"]
+  },
+  {
+    "id": "self-inductance",
+    "layer": "concept",
+    "title": "Self-Inductance",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\mathcal{E}_L = -L\\frac{dI}{dt}",
+    "causal_structure": "asymmetric",
+    "principle": "Changing current in a circuit induces a back-emf proportional to current-change rate.",
+    "variables": [
+      { "id": "emf-induced", "symbol": "\\mathcal{E}_L", "role": "response" },
+      { "id": "inductance", "symbol": "L", "role": "parameter" },
+      { "id": "current", "symbol": "I", "role": "driver" },
+      { "id": "time", "symbol": "t", "role": "parameter" }
+    ],
+    "description": "Introduces inductive opposition to current transients and magnetic energy storage.",
+    "prerequisites": [
+      { "id": "faradays-law-induction", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "circuits"]
+  },
+  {
+    "id": "impedance-phasors",
+    "layer": "concept",
+    "title": "Impedance and Phasors",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\tilde{V} = Z\\tilde{I}",
+    "causal_structure": "asymmetric",
+    "principle": "Sinusoidal steady-state circuits are solved with complex amplitudes and complex impedance.",
+    "variables": [
+      { "id": "impedance", "symbol": "Z", "role": "parameter" },
+      { "id": "voltage-rms", "symbol": "\\tilde{V}", "role": "driver" },
+      { "id": "current-rms", "symbol": "\\tilde{I}", "role": "response" },
+      { "id": "angular-frequency", "symbol": "\\omega", "role": "driver" },
+      { "id": "inductive-reactance", "symbol": "X_L", "role": "parameter" },
+      { "id": "capacitive-reactance", "symbol": "X_C", "role": "parameter" }
+    ],
+    "description": "Unifies resistor, capacitor, and inductor behavior under phasor algebra.",
+    "prerequisites": [
+      { "id": "alternating-current-rms", "type": "foundational", "weight": 0.8 },
+      { "id": "self-inductance", "type": "supporting", "weight": 0.6 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits", "induction"]
+  },
+  {
+    "id": "resonance-rlc",
+    "layer": "concept",
+    "title": "RLC Resonance",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\omega_0 = \\frac{1}{\\sqrt{LC}}",
+    "causal_structure": "asymmetric",
+    "principle": "At resonance, reactive effects cancel and driven RLC response peaks.",
+    "variables": [
+      { "id": "resonant-frequency", "symbol": "f_0", "role": "response" },
+      { "id": "inductance", "symbol": "L", "role": "driver" },
+      { "id": "capacitance-equivalent", "symbol": "C", "role": "driver" },
+      { "id": "angular-frequency", "symbol": "\\omega", "role": "parameter" }
+    ],
+    "description": "Captures tuning behavior of oscillatory electric networks.",
+    "prerequisites": [
+      { "id": "impedance-phasors", "type": "foundational", "weight": 0.85 },
+      { "id": "self-inductance", "type": "supporting", "weight": 0.6 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["circuits", "induction"]
+  },
+  {
+    "id": "ideal-transformer",
+    "layer": "concept",
+    "title": "Ideal Transformer",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\frac{V_s}{V_p}=\\frac{N_s}{N_p}",
+    "causal_structure": "asymmetric",
+    "principle": "Mutual induction between coils sets voltage ratio equal to turns ratio in ideal lossless operation.",
+    "variables": [
+      { "id": "voltage", "symbol": "V_s,V_p", "role": "response" },
+      { "id": "turns-secondary", "symbol": "N_s", "role": "driver" },
+      { "id": "turns-primary", "symbol": "N_p", "role": "driver" }
+    ],
+    "description": "Models voltage conversion and power transfer with magnetic coupling.",
+    "prerequisites": [
+      { "id": "faradays-law-induction", "type": "foundational", "weight": 0.85 },
+      { "id": "magnetic-flux", "type": "supporting", "weight": 0.65 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "circuits"]
+  },
+  {
+    "id": "maxwell-equations",
+    "layer": "concept",
+    "title": "Maxwell's Equations",
+    "type": "law",
+    "domain": "electromagnetism",
+    "formula": "\\nabla\\cdot\\vec{E}=\\frac{\\rho}{\\varepsilon_0},\\;\\nabla\\cdot\\vec{B}=0,\\;\\nabla\\times\\vec{E}=-\\partial_t\\vec{B},\\;\\nabla\\times\\vec{B}=\\mu_0\\vec{J}+\\mu_0\\varepsilon_0\\partial_t\\vec{E}",
+    "causal_structure": "asymmetric",
+    "principle": "Four field equations unify electrostatics, magnetostatics, induction, and electromagnetic waves.",
+    "applicability_conditions": [
+      "Classical continuum-field electromagnetism",
+      "Fields and sources are differentiable over modeled scales"
+    ],
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "response" },
+      { "id": "displacement-current", "symbol": "I_{\\mathrm{disp}}", "role": "response" },
+      { "id": "charge-density", "symbol": "\\rho", "role": "driver" },
+      { "id": "current-density", "symbol": "\\vec{J}", "role": "driver" }
+    ],
+    "description": "Provides the complete classical field model from which wave propagation follows.",
+    "prerequisites": [
+      { "id": "gauss-law", "type": "foundational", "weight": 0.85 },
+      { "id": "ampere-law", "type": "foundational", "weight": 0.85 },
+      { "id": "faradays-law-induction", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism", "electrostatics"]
+  },
+  {
+    "id": "displacement-current",
+    "layer": "concept",
+    "title": "Displacement Current",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "I_{\\mathrm{disp}} = \\varepsilon_0\\frac{d\\Phi_E}{dt}",
+    "causal_structure": "asymmetric",
+    "principle": "Changing electric flux contributes an effective current term in Ampere-Maxwell law.",
+    "variables": [
+      { "id": "current-density", "symbol": "I_{\\mathrm{disp}}", "role": "response" },
+      { "id": "vacuum-permittivity", "symbol": "\\varepsilon_0", "role": "parameter" },
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "driver" },
+      { "id": "time", "symbol": "t", "role": "parameter" }
+    ],
+    "description": "Resolves capacitor-gap consistency and enables wave propagation in vacuum.",
+    "prerequisites": [
+      { "id": "maxwell-equations", "type": "foundational", "weight": 0.85 },
+      { "id": "capacitance", "type": "supporting", "weight": 0.55 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction"]
+  },
+  {
+    "id": "em-wave-equation",
+    "layer": "concept",
+    "title": "Electromagnetic Wave Equation",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\nabla^2\\vec{E}=\\mu_0\\varepsilon_0\\frac{\\partial^2\\vec{E}}{\\partial t^2}",
+    "causal_structure": "asymmetric",
+    "principle": "Source-free Maxwell equations reduce to wave equations for electric and magnetic fields.",
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "response" },
+      { "id": "vacuum-permeability", "symbol": "\\mu_0", "role": "parameter" },
+      { "id": "vacuum-permittivity", "symbol": "\\varepsilon_0", "role": "parameter" }
+    ],
+    "description": "Derives propagating-field behavior and identifies the vacuum wave speed.",
+    "prerequisites": [
+      { "id": "maxwell-equations", "type": "foundational", "weight": 0.9 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism"]
+  },
+  {
+    "id": "em-plane-wave",
+    "layer": "concept",
+    "title": "Electromagnetic Plane Wave",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "c = \\frac{1}{\\sqrt{\\mu_0\\varepsilon_0}}",
+    "causal_structure": "asymmetric",
+    "principle": "In vacuum, electric and magnetic fields oscillate transversely and propagate at the speed of light.",
+    "variables": [
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "response" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "response" },
+      { "id": "speed-of-light", "symbol": "c", "role": "parameter" },
+      { "id": "wavelength", "symbol": "\\lambda", "role": "parameter" }
+    ],
+    "description": "Characterizes wave geometry, orthogonality, and propagation speed of EM radiation.",
+    "prerequisites": [
+      { "id": "em-wave-equation", "type": "foundational", "weight": 0.9 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism"]
+  },
+  {
+    "id": "poynting-vector",
+    "layer": "concept",
+    "title": "Poynting Vector",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "\\vec{S}=\\frac{1}{\\mu_0}\\vec{E}\\times\\vec{B}",
+    "causal_structure": "asymmetric",
+    "principle": "Electromagnetic energy flow density is given by the Poynting vector.",
+    "variables": [
+      { "id": "poynting-vector-magnitude", "symbol": "S", "role": "response" },
+      { "id": "radiation-pressure", "symbol": "p_{\\mathrm{rad}}", "role": "response" },
+      { "id": "electric-field", "symbol": "\\vec{E}", "role": "driver" },
+      { "id": "magnetic-field", "symbol": "\\vec{B}", "role": "driver" },
+      { "id": "vacuum-permeability", "symbol": "\\mu_0", "role": "parameter" }
+    ],
+    "description": "Links field amplitudes to directional electromagnetic energy transport.",
+    "prerequisites": [
+      { "id": "em-plane-wave", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism", "induction"]
+  },
+  {
+    "id": "radiation-pressure",
+    "layer": "concept",
+    "title": "Radiation Pressure",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "p_{\\mathrm{rad}} = \\frac{I}{c}",
+    "causal_structure": "asymmetric",
+    "principle": "Electromagnetic waves carry momentum and exert pressure on absorbing or reflecting surfaces.",
+    "variables": [
+      { "id": "poynting-vector-magnitude", "symbol": "p_{\\mathrm{rad}}", "role": "response" },
+      { "id": "frequency", "symbol": "I", "role": "driver" },
+      { "id": "speed-of-light", "symbol": "c", "role": "parameter" }
+    ],
+    "description": "Quantifies wave-momentum transfer effects from optics to astrophysics.",
+    "prerequisites": [
+      { "id": "poynting-vector", "type": "foundational", "weight": 0.8 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism"]
+  },
+  {
+    "id": "larmor-radiation",
+    "layer": "concept",
+    "title": "Larmor Radiation",
+    "type": "equation",
+    "domain": "electromagnetism",
+    "formula": "P_{\\mathrm{rad}} = \\frac{q^2 a^2}{6\\pi\\varepsilon_0 c^3}",
+    "causal_structure": "asymmetric",
+    "principle": "Accelerating charges radiate electromagnetic power.",
+    "variables": [
+      { "id": "radiated-power", "symbol": "P_{\\mathrm{rad}}", "role": "response" },
+      { "id": "charge", "symbol": "q", "role": "driver" },
+      { "id": "acceleration", "symbol": "a", "role": "driver" },
+      { "id": "vacuum-permittivity", "symbol": "\\varepsilon_0", "role": "parameter" }
+    ],
+    "description": "Gives classical radiative power scaling for accelerated point charges.",
+    "prerequisites": [
+      { "id": "em-plane-wave", "type": "supporting", "weight": 0.6 },
+      { "id": "maxwell-equations", "type": "foundational", "weight": 0.75 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["induction", "magnetism"]
+  },
+  {
+    "id": "electromagnetic-spectrum",
+    "layer": "concept",
+    "title": "Electromagnetic Spectrum",
+    "type": "definition",
+    "domain": "electromagnetism",
+    "formula": "c = f\\lambda",
+    "causal_structure": "asymmetric",
+    "principle": "All electromagnetic bands are the same wave phenomenon distinguished by frequency and wavelength.",
+    "variables": [
+      { "id": "frequency", "symbol": "f", "role": "driver" },
+      { "id": "wavelength", "symbol": "\\lambda", "role": "response" },
+      { "id": "electron-volt", "symbol": "E_\\gamma", "role": "response" },
+      { "id": "speed-of-light", "symbol": "c", "role": "parameter" }
+    ],
+    "description": "Organizes radio through gamma radiation into a single frequency-wavelength continuum.",
+    "prerequisites": [
+      { "id": "em-plane-wave", "type": "foundational", "weight": 0.85 }
+    ],
+    "visual": { "type": "none", "url": null, "caption": null },
+    "author": "austin",
+    "review_state": "published",
+    "last_reviewed": "2026-04-27",
+    "subject": "physics",
+    "sub_domains": ["magnetism", "induction"]
   }
 ]
