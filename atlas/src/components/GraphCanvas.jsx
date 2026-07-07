@@ -7,7 +7,7 @@ import {
   useReactFlow,
   useNodesState,
 } from 'reactflow'
-import { isStateAtLeast, isStateAtMost } from '../lib/understanding'
+import { isProgressAtLeast, isProgressAtMost } from '../lib/understanding'
 import FloatingEdge from './FloatingEdge.jsx'
 import HoverCardOverlay from './HoverCardOverlay.jsx'
 import CameraController, { centerOnNodeInViewport } from './graph/CameraController.jsx'
@@ -19,6 +19,8 @@ const edgeTypes = { atlas: FloatingEdge }
 const MOBILE_LONG_PRESS_MS = 400
 const MOBILE_IDLE_DRAG_THRESHOLD = 9999
 const CLICK_SUPPRESSION_AFTER_DRAG_MS = 250
+const FRONTIER_SOURCE_PROGRESS_THRESHOLD = 66
+const FRONTIER_TARGET_PROGRESS_THRESHOLD = 33
 
 function getMiniMapNodeColor(node) {
   const domain = node?.data?.domain
@@ -236,7 +238,7 @@ function toFlowNodes(
   focalNodeIds,
   neighborNodeIds,
   distantNodeIds,
-  understandingStatesById,
+  progressById,
   frontierConceptIds,
   onSetHover,
   isDraggingNode,
@@ -266,10 +268,10 @@ function toFlowNodes(
         canonicalSymbol: node.canonical_symbol,
         mass: node.mass,
         visualState,
-        understandingState:
-          node.layer === 'concept' && typeof understandingStatesById?.[node.id] === 'string'
-            ? understandingStatesById[node.id]
-            : 'unseen',
+        progress:
+          node.layer === 'concept' && typeof progressById?.[node.id] === 'number'
+            ? progressById[node.id]
+            : 0,
         isFrontierConcept: node.layer === 'concept' && frontierConceptIds.has(node.id),
         onSetHover: typeof onSetHover === 'function' ? onSetHover : null,
         isDraggingNode,
@@ -279,7 +281,7 @@ function toFlowNodes(
   })
 }
 
-function getFrontierConceptIds(edges, nodeById, understandingStatesById) {
+function getFrontierConceptIds(edges, nodeById, progressById) {
   const ids = new Set()
   for (const edge of edges) {
     if (edge.type !== 'foundational') {
@@ -290,9 +292,12 @@ function getFrontierConceptIds(edges, nodeById, understandingStatesById) {
     if (sourceNode?.layer !== 'concept' || targetNode?.layer !== 'concept') {
       continue
     }
-    const sourceState = understandingStatesById?.[edge.source] ?? 'unseen'
-    const targetState = understandingStatesById?.[edge.target] ?? 'unseen'
-    if (isStateAtLeast(sourceState, 'apply') && isStateAtMost(targetState, 'seen')) {
+    const sourceProgress = progressById?.[edge.source] ?? 0
+    const targetProgress = progressById?.[edge.target] ?? 0
+    if (
+      isProgressAtLeast(sourceProgress, FRONTIER_SOURCE_PROGRESS_THRESHOLD) &&
+      isProgressAtMost(targetProgress, FRONTIER_TARGET_PROGRESS_THRESHOLD)
+    ) {
       ids.add(edge.target)
     }
   }
@@ -303,7 +308,7 @@ function toFlowEdges(
   edges,
   selectedNodeId,
   neighborNodeIds,
-  understandingStatesById,
+  progressById,
   nodeById,
   onSetHover,
   isMobile,
@@ -333,9 +338,12 @@ function toFlowEdges(
         if (sourceNode?.layer !== 'concept' || targetNode?.layer !== 'concept') {
           return false
         }
-        const sourceState = understandingStatesById?.[edge.source] ?? 'unseen'
-        const targetState = understandingStatesById?.[edge.target] ?? 'unseen'
-        return isStateAtLeast(sourceState, 'apply') && isStateAtMost(targetState, 'seen')
+        const sourceProgress = progressById?.[edge.source] ?? 0
+        const targetProgress = progressById?.[edge.target] ?? 0
+        return (
+          isProgressAtLeast(sourceProgress, FRONTIER_SOURCE_PROGRESS_THRESHOLD) &&
+          isProgressAtMost(targetProgress, FRONTIER_TARGET_PROGRESS_THRESHOLD)
+        )
       })(),
       rationale: typeof edge.rationale === 'string' ? edge.rationale : undefined,
       sourceTitle:
@@ -354,7 +362,7 @@ function toFlowEdges(
   }))
 }
 
-/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, viewPanelWidth?: number, isViewPanelOpen?: boolean, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, understandingStatesById?: Record<string, string>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onViewportActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void, autoRecenterEnabled?: boolean, isMobile?: boolean, hoveredEntity?: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null, onSetHover?: (nextHover: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null) => void }} props */
+/** @param {{ nodes: object[], edges: object[], selectedNodeId: string | null, isPanelOpen?: boolean, panelWidth?: number, viewPanelWidth?: number, isViewPanelOpen?: boolean, focalNodeIds: Set<string>, neighborNodeIds: Set<string>, distantNodeIds: Set<string>, progressById?: Record<string, number>, onNodeClick?: (node: object) => void, onNodePositionCommit?: (nodeId: string, position: {x:number,y:number}) => void, onViewportActionsChange?: (actions: { fitGraph: (() => void) | null, centerSelected: (() => void) | null } | null) => void, autoRecenterEnabled?: boolean, isMobile?: boolean, hoveredEntity?: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null, onSetHover?: (nextHover: { kind: 'node' | 'edge', id: string, screenX: number, screenY: number } | null) => void }} props */
 export default function GraphCanvas({
   nodes,
   edges,
@@ -368,7 +376,7 @@ export default function GraphCanvas({
   focalNodeIds,
   neighborNodeIds,
   distantNodeIds,
-  understandingStatesById = {},
+  progressById = {},
   onNodeClick,
   onNodePositionCommit,
   onViewportActionsChange,
@@ -412,8 +420,8 @@ export default function GraphCanvas({
   const emphasisSelectedNodeId = selectedNode?.layer === 'concept' ? selectedNodeId : null
   const nodeById = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes])
   const frontierConceptIds = useMemo(
-    () => getFrontierConceptIds(edges, nodeById, understandingStatesById),
-    [edges, nodeById, understandingStatesById],
+    () => getFrontierConceptIds(edges, nodeById, progressById),
+    [edges, nodeById, progressById],
   )
 
   const flowNodes = useMemo(() => {
@@ -467,7 +475,7 @@ export default function GraphCanvas({
       focalNodeIds,
       neighborNodeIds,
       distantNodeIds,
-      understandingStatesById,
+      progressById,
       frontierConceptIds,
       onSetHover,
       isDraggingNode,
@@ -480,7 +488,7 @@ export default function GraphCanvas({
     neighborNodeIds,
     nodes,
     edges,
-    understandingStatesById,
+    progressById,
     frontierConceptIds,
     isDraggingNode,
     onSetHover,
@@ -503,7 +511,7 @@ export default function GraphCanvas({
       filtered,
       emphasisSelectedNodeId,
       neighborNodeIds,
-      understandingStatesById,
+      progressById,
       nodeById,
       onSetHover,
       isMobile,
@@ -515,7 +523,7 @@ export default function GraphCanvas({
     neighborNodeIds,
     onSetHover,
     isMobile,
-    understandingStatesById,
+    progressById,
     nodeById,
   ])
 

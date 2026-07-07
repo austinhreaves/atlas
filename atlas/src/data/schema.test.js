@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { validateConceptNode, validateEntity, validateVariableNode } from './schema'
+import {
+  validateConceptNode,
+  validateEntity,
+  validateLabQuestionNode,
+  validateSopNode,
+  validateTaCheckpointNode,
+  validateVariableNode,
+} from './schema'
 
 const validConcept = {
   id: 'ohms-law',
@@ -22,6 +29,13 @@ const validConcept = {
   visual: { type: 'none', url: null, caption: null },
   sub_domains: [],
   tags: ['kw-electromagnetism'],
+  blocks: [
+    {
+      block_id: 'overview',
+      type: 'markdown-katex',
+      data: { markdown: "Ohm's law overview." },
+    },
+  ],
   author: 'austin',
   review_state: 'published',
 }
@@ -35,6 +49,29 @@ const validVariable = {
   dimension: 'Q/T',
   description: 'Rate of charge flow.',
   vector_or_scalar: 'scalar',
+  blocks: [
+    {
+      block_id: 'overview',
+      type: 'markdown-katex',
+      data: { markdown: 'Current metadata.' },
+    },
+  ],
+  author: 'austin',
+  review_state: 'published',
+}
+
+const validSop = {
+  id: 'sop-lab-intro',
+  layer: 'sop',
+  title: 'Lab Intro SOP',
+  description: 'Standard intro SOP.',
+  blocks: [
+    {
+      block_id: 'overview',
+      type: 'markdown-katex',
+      data: { markdown: 'Intro steps.' },
+    },
+  ],
   author: 'austin',
   review_state: 'published',
 }
@@ -44,11 +81,9 @@ describe('schema v3 validators', () => {
     expect(validateConceptNode(validConcept)).toEqual([])
   })
 
-  it('requires applicability conditions on laws', () => {
-    const errors = validateConceptNode({ ...validConcept, applicability_conditions: [] })
-    expect(errors).toContain(
-      'applicability_conditions must contain at least one entry for law/principle nodes.',
-    )
+  it('validates applicability_conditions shape when provided', () => {
+    const errors = validateConceptNode({ ...validConcept, applicability_conditions: [42] })
+    expect(errors).toContain('applicability_conditions must be an array of non-empty strings.')
   })
 
   it('accepts optional prerequisite rationale when provided as a string', () => {
@@ -161,6 +196,11 @@ describe('schema v3 validators', () => {
     expect(errors).toContain('vector_or_scalar must be one of: scalar, vector, tensor')
   })
 
+  it('requires non-empty blocks on concept and variable nodes', () => {
+    expect(validateConceptNode({ ...validConcept, blocks: [] })).toContain('blocks must be a non-empty array.')
+    expect(validateVariableNode({ ...validVariable, blocks: [] })).toContain('blocks must be a non-empty array.')
+  })
+
   it('rejects variable tags that are not in the registry', () => {
     const errors = validateVariableNode({ ...validVariable, tags: ['not-in-registry'] })
     expect(errors).toContain('tags[0] references unknown tag id: not-in-registry')
@@ -169,6 +209,45 @@ describe('schema v3 validators', () => {
   it('dispatches by entity.layer', () => {
     expect(validateEntity(validConcept)).toEqual([])
     expect(validateEntity(validVariable)).toEqual([])
-    expect(validateEntity({ layer: 'lab' })).toEqual(['Unsupported layer: lab'])
+    expect(validateEntity(validSop)).toEqual([])
+    expect(
+      validateEntity({
+        ...validSop,
+        layer: 'ta-checkpoint',
+        id: 'ta-checkpoint-lab-intro',
+      }),
+    ).toEqual([])
+    expect(
+      validateEntity({
+        ...validSop,
+        layer: 'lab-question',
+        id: 'lab-question-ohms-law',
+        blocks: [{ block_id: 'prompt', type: 'prompt-and-response', data: { prompt: 'Explain.' } }],
+      }),
+    ).toEqual([])
+    expect(validateEntity({ layer: 'unknown' })).toEqual(['Unsupported layer: unknown'])
+  })
+
+  it('validates new layer nodes through direct validator exports', () => {
+    expect(validateSopNode(validSop)).toEqual([])
+    expect(validateTaCheckpointNode({ ...validSop, layer: 'ta-checkpoint', id: 'ta-checkpoint-1' })).toEqual(
+      [],
+    )
+    expect(
+      validateLabQuestionNode({
+        ...validSop,
+        layer: 'lab-question',
+        id: 'lab-question-1',
+        blocks: [{ block_id: 'prompt', type: 'prompt-and-response', data: { prompt: 'Why?' } }],
+      }),
+    ).toEqual([])
+  })
+
+  it('enforces per-layer block allowlists', () => {
+    const errors = validateEntity({
+      ...validSop,
+      blocks: [{ block_id: 'bad', type: 'not-allowed', data: { anything: true } }],
+    })
+    expect(errors).toContain('blocks[0].type is not allowed for layer "sop": not-allowed')
   })
 })

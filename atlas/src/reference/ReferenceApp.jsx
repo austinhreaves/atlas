@@ -17,7 +17,7 @@ import { getTagDescription, getTagLabel, getVisibleTagRegistry } from '../data/t
 import useIsMobile, { MOBILE_BREAKPOINT_PX } from '../hooks/useIsMobile'
 import { computeLayout } from '../lib/layout'
 import { resolveRenderPosition } from '../lib/resolveRenderPosition'
-import { getAllStates, setState } from '../lib/understanding'
+import { getAllProgress, setProgress } from '../lib/understanding'
 import {
   buildLayoutExportPayload,
   clearUserLayoutStore,
@@ -369,7 +369,7 @@ export default function ReferenceApp() {
   const isMobile = useIsMobile()
   const [selectedNodeId, setSelectedNodeId] = useState(null)
   const [hoveredEntity, setHoveredEntity] = useState(null)
-  const [understandingVersion, setUnderstandingVersion] = useState(0)
+  const [progressVersion, setProgressVersion] = useState(0)
   const [panelWidth, setPanelWidth] = useState(() => readInitialPanelWidth())
   const [viewPanelWidth, setViewPanelWidth] = useState(() => readInitialViewPanelWidth())
   const [isViewPanelOpen, setIsViewPanelOpen] = useState(() => readInitialViewPanelOpen())
@@ -522,10 +522,10 @@ export default function ReferenceApp() {
     [filteredConceptEntities],
   )
   const appearsInByVariableId = useMemo(
-    () => computeAppearsIn(variableEntities, filteredConceptEntities),
-    [filteredConceptEntities, variableEntities],
+    () => computeAppearsIn(variableEntities, edges),
+    [edges, variableEntities],
   )
-  const understandingStatesById = useMemo(() => getAllStates(), [understandingVersion])
+  const progressById = useMemo(() => getAllProgress(), [progressVersion])
   const allDomains = useMemo(
     () =>
       [
@@ -885,12 +885,12 @@ export default function ReferenceApp() {
     setSelectedNodeId(null)
   }, [])
 
-  const handleUnderstandingStateChange = useCallback((entityId, nextState) => {
+  const handleProgressChange = useCallback((entityId, nextProgress) => {
     if (typeof entityId !== 'string' || entityId.length === 0) {
       return
     }
-    setState(entityId, nextState)
-    setUnderstandingVersion((value) => value + 1)
+    setProgress(entityId, nextProgress)
+    setProgressVersion((value) => value + 1)
   }, [])
 
   const handlePanelWidthChange = useCallback((nextWidth) => {
@@ -1071,43 +1071,54 @@ export default function ReferenceApp() {
 
   const enablesByNodeId = useMemo(() => {
     const map = new Map()
-    for (const node of conceptEntities) {
-      for (const prerequisite of node.prerequisites ?? []) {
-        if (!map.has(prerequisite.id)) {
-          map.set(prerequisite.id, [])
-        }
-        map.get(prerequisite.id).push({
-          id: node.id,
-          title: node.title,
-          type: prerequisite.type,
-          weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
-        })
+    for (const edge of edges) {
+      if (edge?.edge_type !== 'prerequisite') {
+        continue
       }
+      const sourceNode = nodeById.get(edge.source)
+      const targetNode = nodeById.get(edge.target)
+      if (sourceNode?.layer !== 'concept' || targetNode?.layer !== 'concept') {
+        continue
+      }
+
+      if (!map.has(edge.source)) {
+        map.set(edge.source, [])
+      }
+      map.get(edge.source).push({
+        id: targetNode.id,
+        title: targetNode.title,
+        type: edge.type,
+        weight: normalizePrerequisiteWeight(edge.type, edge.weight),
+      })
     }
 
     for (const dependents of map.values()) {
       dependents.sort((a, b) => b.weight - a.weight || a.title.localeCompare(b.title))
     }
     return map
-  }, [conceptEntities])
+  }, [edges, nodeById])
 
   const prerequisiteLinks = useMemo(() => {
     if (!selectedNode) {
       return []
     }
 
-    return (selectedNode.prerequisites ?? [])
-      .map((prerequisite) => {
-        const prerequisiteNode = nodeById.get(prerequisite.id)
-        return {
-          id: prerequisite.id,
-          title: prerequisiteNode?.title ?? prerequisiteNode?.name ?? prerequisite.id,
-          type: prerequisite.type,
-          weight: normalizePrerequisiteWeight(prerequisite.type, prerequisite.weight),
-        }
-      })
+    return edges
+      .filter(
+        (edge) =>
+          edge?.edge_type === 'prerequisite' &&
+          edge.target === selectedNode.id &&
+          nodeById.get(edge.source)?.layer === 'concept' &&
+          nodeById.get(edge.target)?.layer === 'concept',
+      )
+      .map((edge) => ({
+        id: edge.source,
+        title: nodeById.get(edge.source)?.title ?? nodeById.get(edge.source)?.name ?? edge.source,
+        type: edge.type,
+        weight: normalizePrerequisiteWeight(edge.type, edge.weight),
+      }))
       .sort((a, b) => b.weight - a.weight || a.title.localeCompare(b.title))
-  }, [nodeById, selectedNode])
+  }, [edges, nodeById, selectedNode])
 
   const enablesLinks = useMemo(() => {
     if (!selectedNodeId) {
@@ -1244,7 +1255,7 @@ export default function ReferenceApp() {
         focalNodeIds={focalNodeIds}
         neighborNodeIds={neighborNodeIds}
         distantNodeIds={distantNodeIds}
-        understandingStatesById={understandingStatesById}
+        progressById={progressById}
         onNodeClick={handleNodeClick}
         onNodePositionCommit={handleNodePositionCommit}
         onViewportActionsChange={handleViewportActionsChange}
@@ -1261,7 +1272,7 @@ export default function ReferenceApp() {
         prerequisiteLinks={prerequisiteLinks}
         enablesLinks={enablesLinks}
         onClose={handleClosePanel}
-        onUnderstandingStateChange={handleUnderstandingStateChange}
+        onProgressChange={handleProgressChange}
         onSelectEntity={handleSelectEntity}
         onSubdomainClick={focusSingleSubdomain}
         subdomainLabelById={subdomainLabelById}
@@ -1270,7 +1281,7 @@ export default function ReferenceApp() {
         tagDescriptionById={tagDescriptionById}
         conceptById={conceptById}
         appearsInByVariableId={appearsInByVariableId}
-        understandingStatesById={understandingStatesById}
+        progressById={progressById}
       />
     </main>
   )

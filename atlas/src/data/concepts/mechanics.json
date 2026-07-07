@@ -63,6 +63,102 @@
     "subject": "physics",
     "sub_domains": [
       "kinematics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Reported uncertainty quantifies how much confidence we should place in a measured value."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\%\\mathrm{unc} = \\frac{\\delta A}{A}\\times 100\\%\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\delta A$",
+              "absolute-uncertainty",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$A$",
+              "measured-quantity",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\%\\mathrm{unc}$",
+              "percent-uncertainty",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Measured quantity is nonzero so percent uncertainty is defined\n- Uncertainty estimate represents the instrument and procedure used"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- \\delta A = 0 -> Percent uncertainty is zero only in an idealized exact-measurement limit."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node teaches students how to report measurement quality so physics conclusions reflect both values and confidence bounds."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "A small percent uncertainty guarantees a correct model.",
+              "Small uncertainty indicates measurement precision, not that the chosen physical model is valid."
+            ]
+          ]
+        }
+      }
     ]
   },
   {
@@ -112,6 +208,70 @@
     "subject": "physics",
     "sub_domains": [
       "kinematics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Approximation by powers of ten provides fast sanity checks before and after detailed calculations."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nN \\approx 10^n\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$N$",
+              "measured-quantity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$n$",
+              "order-of-magnitude",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Target quantity is known only approximately\n- Estimate is used for scale reasoning rather than high-precision prediction"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node supports fast plausibility checks, helping students reject impossible results before detailed algebra."
+        }
+      }
     ]
   },
   {
@@ -174,6 +334,94 @@
     "sub_domains": [
       "kinematics",
       "one-d-motion"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Displacement is the signed change in position between initial and final states."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Delta x = x_f - x_0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$x_f$",
+              "final-position",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$x_0$",
+              "initial-position",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\Delta x$",
+              "displacement",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- x_f = x_0 -> Displacement is zero even if nonzero distance was traveled."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node separates net change in position from path length, which prevents common sign and interpretation errors."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Displacement always equals distance traveled.",
+              "Displacement depends only on initial and final positions, while distance depends on path."
+            ]
+          ]
+        }
+      }
     ]
   },
   {
@@ -237,6 +485,85 @@
     "sub_domains": [
       "kinematics",
       "one-d-motion"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Average velocity is displacement per elapsed time interval."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\bar{v} = \\frac{\\Delta x}{\\Delta t}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\Delta x$",
+              "displacement",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\Delta t$",
+              "elapsed-time",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\bar{v}$",
+              "average-velocity",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- \\Delta x = 0 -> Average velocity is zero even when the object moved during the interval."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node emphasizes that average velocity tracks net directional motion, not total path traveled per time."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- displacement-1d (definitional, weight 1.00)"
+        }
+      }
     ]
   },
   {
@@ -299,6 +626,94 @@
     "sub_domains": [
       "kinematics",
       "one-d-motion"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Average acceleration is the rate of velocity change over an interval."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\bar{a} = \\frac{\\Delta \\vec{v}}{\\Delta t}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\Delta \\vec{v}$",
+              "velocity-change",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\Delta t$",
+              "elapsed-time",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\bar{a}$",
+              "average-acceleration",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node frames acceleration as change in velocity state, preparing students for force-causality reasoning."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Zero velocity implies zero acceleration.",
+              "An object can have zero instantaneous velocity and nonzero acceleration, such as at a projectile apex."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- average-velocity-definition (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -371,6 +786,92 @@
     "subject": "physics",
     "sub_domains": [
       "kinematics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Under constant acceleration, velocity changes linearly with elapsed time."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{v} = \\vec{v}_0 + \\vec{a}t\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{a}$",
+              "acceleration",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$t$",
+              "time",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{v}_0$",
+              "initial-velocity",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{v}$",
+              "velocity",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- a = 0 -> Velocity remains equal to its initial value.\n- t = 0 -> Final and initial velocity are identical."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node gives the core constant-acceleration update law used to move from initial state to later velocity."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- average-acceleration-definition (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -443,6 +944,99 @@
     "subject": "physics",
     "sub_domains": [
       "kinematics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Under constant acceleration, position evolves with both linear and quadratic time dependence."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nx = x_0 + v_0 t + \\frac{1}{2}at^2\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$x_0$",
+              "initial-position",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$v_0$",
+              "initial-velocity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$a$",
+              "acceleration",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$t$",
+              "elapsed-time",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$x$",
+              "position",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- a = 0 -> The relation reduces to uniform-motion kinematics."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node clarifies how initial position, initial velocity, and acceleration jointly determine where an object is later."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- kinematics-velocity-time (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -515,6 +1109,101 @@
     "subject": "physics",
     "sub_domains": [
       "kinematics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Under constant acceleration, velocity change is linked to displacement without explicit time."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nv^2 = v_0^2 + 2a\\Delta x\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$v_0$",
+              "initial-velocity",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$a$",
+              "acceleration",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\Delta x$",
+              "displacement",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$v$",
+              "velocity",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node is the no-time kinematics tool for solving displacement-velocity questions when time is unknown."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Doubling speed doubles stopping distance under constant deceleration.",
+              "With fixed deceleration magnitude, stopping distance scales with the square of initial speed."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- kinematics-velocity-time (supporting, weight 0.60)\n- kinematics-position-time (supporting, weight 0.60)"
+        }
+      }
     ]
   },
   {
@@ -578,6 +1267,95 @@
     "sub_domains": [
       "kinematics",
       "gravity"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "In the no-drag idealization, gravity sets a constant downward acceleration independent of mass."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\na_y = -g\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$g$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$a_y$",
+              "acceleration-y",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- Air resistance \\rightarrow 0 -> The constant-acceleration free-fall model becomes a good approximation."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node defines the standard vertical-motion model near Earth, including its idealization boundaries."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Heavier objects fall faster in vacuum.",
+              "In the ideal no-drag model, all masses share the same gravitational acceleration."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- kinematics-velocity-time (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -645,6 +1423,101 @@
     "subject": "physics",
     "sub_domains": [
       "two-d-motion"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "A launch vector is resolved into orthogonal components by geometry and angle convention."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nv_{0x} = v_0\\cos\\theta_0,\\quad v_{0y} = v_0\\sin\\theta_0\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$v_0$",
+              "initial-velocity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\theta_0$",
+              "launch-angle",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$v_{0x}$",
+              "initial-velocity-x",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$v_{0y}$",
+              "initial-velocity-y",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node teaches the projection step that turns vector launch conditions into solvable axis components."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Sine always gives the vertical component regardless of angle convention.",
+              "Which trig function appears depends on how the angle is defined relative to the chosen axis."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- average-velocity-definition (supporting, weight 0.55)"
+        }
+      }
     ]
   },
   {
@@ -716,6 +1589,102 @@
     "sub_domains": [
       "kinematics",
       "two-d-motion"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Perpendicular components of motion are solved independently and coupled only through time."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nx(t)\\ \\text{and}\\ y(t)\\ \\text{share only}\\ t\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$t$",
+              "elapsed-time",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$a_x$",
+              "acceleration-x",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$a_y$",
+              "acceleration-y",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Reference frame is inertial\n- Forces do not couple axes through velocity-dependent drag in the model"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node is the conceptual hinge from 1D to 2D analysis: separate axis equations linked only by time."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Horizontal motion changes vertical fall time in no-drag projectile problems.",
+              "In the idealized model, horizontal and vertical equations are independent except for shared time."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- vector-decomposition (foundational, weight 0.85)\n- kinematics-position-time (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -817,6 +1786,137 @@
     "sub_domains": [
       "projectile",
       "two-d-motion"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Projectile trajectories combine uniform horizontal motion with gravitationally accelerated vertical motion."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nx = v_{0x}t,\\quad y = v_{0y}t - \\frac{1}{2}gt^2\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$v_{0x}$",
+              "initial-velocity-x",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$v_{0y}$",
+              "initial-velocity-y",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$g$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$t$",
+              "elapsed-time",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$x$",
+              "position-x",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$y$",
+              "position-y",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$v_x$",
+              "velocity-x",
+              "response",
+              "",
+              ""
+            ],
+            [
+              "$v_y$",
+              "velocity-y",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- \\theta_0 = 90^\\circ -> The motion reduces to vertical free fall with no horizontal displacement.\n- \\theta_0 = 0^\\circ -> The launch is horizontal and vertical motion is pure drop under gravity."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This application node operationalizes 2D decomposition for trajectory prediction under constant gravity."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Horizontal velocity must decrease continuously during projectile flight.",
+              "In the no-drag idealization, horizontal velocity is constant."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- independence-of-perpendicular-motion (foundational, weight 0.95)\n- free-fall (foundational, weight 0.90)"
+        }
+      }
     ]
   },
   {
@@ -883,6 +1983,92 @@
     "subject": "physics",
     "sub_domains": [
       "projectile"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "When launch and landing heights match, range is set by launch speed, launch angle, and gravity."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nR = \\frac{v_0^2\\sin(2\\theta_0)}{g}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$v_0$",
+              "initial-velocity",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\theta_0$",
+              "launch-angle",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$g$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$R$",
+              "range",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- \\theta_0 = 45^\\circ -> Range is maximized for fixed launch speed in the level-ground idealization."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This application node gives a fast range predictor for a narrow regime: equal launch/landing heights and negligible drag."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- projectile-motion (foundational, weight 0.95)"
+        }
+      }
     ]
   },
   {
@@ -928,6 +2114,63 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Only external forces contribute to the net force that drives system acceleration."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F}_{\\text{net}} = \\sum_i \\vec{F}_{\\text{ext},i}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}_{\\text{net}}$",
+              "force-net",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node establishes the accounting rule for dynamics: sum only external forces on the chosen system."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- vector-decomposition (supporting, weight 0.55)"
+        }
+      }
     ]
   },
   {
@@ -989,6 +2232,95 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Without net external force, motion state remains unchanged in inertial frames."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F}_{\\text{net}} = 0 \\Rightarrow \\vec{v}=\\text{constant}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}_{\\text{net}}$",
+              "force-net",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{v}$",
+              "velocity",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Reference frame is inertial\n- System is modeled with negligible net external force"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node formalizes inertia and frame assumptions that make Newtonian dynamics meaningful."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "A sustained force is required to keep an object moving at constant velocity.",
+              "Force is required to change velocity, not to maintain constant velocity."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- force-net-external (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -1074,6 +2406,127 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Net external force produces acceleration, mediated by inertia."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{a} = \\frac{\\vec{F}_{\\text{net}}}{m}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}_{\\text{net}}$",
+              "Net force",
+              "driver",
+              "$N$",
+              ""
+            ],
+            [
+              "$m$",
+              "Mass",
+              "parameter",
+              "$kg$",
+              ""
+            ],
+            [
+              "$\\vec{a}$",
+              "Acceleration",
+              "response",
+              "$m/s^2$",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Reference frame is approximately inertial\n- Speeds are well below relativistic regimes\n- Mass is effectively constant over the interval"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- m \\rightarrow \\infty -> For finite net force, acceleration approaches zero."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Second-law dynamics connects force models to observed acceleration."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "A larger velocity implies a larger net force even at constant velocity.",
+              "Net force tracks acceleration, so constant velocity requires zero net force."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "historical-context",
+        "type": "markdown-katex",
+        "title": "Historical Context",
+        "data": {
+          "markdown": "Published by Isaac Newton in 1687 as a core law of classical mechanics."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- kinematics-velocity-time (foundational, weight 0.85)\n- force-net-external (foundational, weight 0.90)"
+        }
+      },
+      {
+        "block_id": "simulation",
+        "type": "embed-iframe",
+        "title": "Simulation",
+        "data": {
+          "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
+          "title": "Forces and Motion Basics"
+        }
+      }
     ]
   },
   {
@@ -1135,6 +2588,95 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Interacting bodies exert equal-magnitude, opposite-direction forces on each other simultaneously."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{F}_{A\\ \\mathrm{on}\\ B} = -\\vec{F}_{B\\ \\mathrm{on}\\ A}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{F}$",
+              "force-net",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{a}$",
+              "acceleration",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Forces are identified on interacting body pairs\n- Classical interaction model applies"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node prevents a core analysis mistake by distinguishing interaction pairs from net force on a single body."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Action-reaction forces cancel on the same object.",
+              "Third-law forces act on different objects, so they are not summed on one free-body diagram."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- newtons-second-law (supporting, weight 0.55)"
+        }
+      }
     ]
   },
   {
@@ -1203,6 +2745,85 @@
     "sub_domains": [
       "dynamics",
       "gravity"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Weight is the gravitational force on mass in a local gravitational field."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\vec{w} = m\\vec{g}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$m$",
+              "mass",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{g}$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{w}$",
+              "force-weight",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- g \\rightarrow 0 -> Weight approaches zero while mass remains unchanged."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node separates mass from weight and links local field strength to gravitational force magnitude."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- newtons-second-law (foundational, weight 0.85)\n- free-fall (supporting, weight 0.55)"
+        }
+      }
     ]
   },
   {
@@ -1275,6 +2896,92 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Contact surfaces exert perpendicular reaction forces set by perpendicular force balance."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nN = mg\\cos\\theta\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$m$",
+              "mass",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$g$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\theta$",
+              "incline-angle",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$N$",
+              "normal-force",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- \\theta = 0 -> On level ground with no extra vertical forces, normal force matches weight magnitude."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node teaches contact-force response logic: normal force is geometry- and constraint-dependent, not a fixed value."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- weight-gravitational-force (foundational, weight 0.85)\n- vector-decomposition (supporting, weight 0.55)"
+        }
+      }
     ]
   },
   {
@@ -1347,6 +3054,92 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Tension transmits pulling forces along a connector and grows as support angle approaches horizontal."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nT = \\frac{mg}{2\\sin\\theta}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$m$",
+              "mass",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$g$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\theta$",
+              "incline-angle",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$T$",
+              "tension-force",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- \\theta \\rightarrow 0 -> Required tension grows very large, reflecting the near-horizontal support limit."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This application node highlights a counterintuitive geometry effect important for rope and cable safety reasoning."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- newtons-third-law (foundational, weight 0.75)\n- vector-decomposition (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -1414,6 +3207,94 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Gravity is decomposed into along-surface and perpendicular components relative to incline geometry."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nw_{\\parallel} = w\\sin\\theta,\\quad w_{\\perp} = w\\cos\\theta\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$w$",
+              "force-weight",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\theta$",
+              "incline-angle",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$N$",
+              "normal-force",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node provides the geometry translation needed to set up incline dynamics cleanly in chosen axes."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "The component parallel to the incline is mg\\cos\\theta when angle is measured from horizontal.",
+              "With that convention, the parallel component is mg\\sin\\theta and the perpendicular component is mg\\cos\\theta."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- vector-decomposition (foundational, weight 0.90)\n- weight-gravitational-force (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -1484,6 +3365,102 @@
     "subject": "physics",
     "sub_domains": [
       "dynamics"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Isolate one system, draw all external forces, and project Newton's second law onto chosen axes."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\sum \\vec{F}_{\\text{ext}} = m\\vec{a}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\sum \\vec{F}_{\\text{ext}}$",
+              "force-net",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$m$",
+              "mass",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$\\vec{a}$",
+              "acceleration",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- System boundary is explicitly defined\n- Only forces acting on the chosen system are drawn"
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node captures the standard mechanics workflow from physical scenario to axis-resolved equations."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "A free-body diagram should include forces the object exerts on other objects.",
+              "A free-body diagram includes only forces acting on the chosen system."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- newtons-second-law (foundational, weight 0.95)\n- vector-decomposition (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -1553,6 +3530,95 @@
     "subject": "physics",
     "sub_domains": [
       "energy"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Net work on a system equals the change in kinetic energy."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\Delta K = W_{\\text{net}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$W_{\\text{net}}$",
+              "work-net",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$\\Delta K$",
+              "kinetic-energy-change",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- W_{\\text{net}} = 0 -> Kinetic energy remains unchanged."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node provides an energy-based solution path that complements force-acceleration analysis."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Zero net work means all forces are zero.",
+              "Forces can be nonzero while doing zero net work over the displacement interval."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- newtons-second-law (foundational, weight 0.85)\n- kinematics-velocity-time (supporting, weight 0.60)"
+        }
+      }
     ]
   },
   {
@@ -1621,6 +3687,92 @@
     "sub_domains": [
       "energy",
       "gravity"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "Gravitational potential energy tracks configuration energy from vertical position in a field."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\nU = mgh\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$m$",
+              "mass",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$g$",
+              "gravitational-acceleration",
+              "parameter",
+              "",
+              ""
+            ],
+            [
+              "$h$",
+              "height",
+              "driver",
+              "",
+              ""
+            ],
+            [
+              "$U$",
+              "potential-energy",
+              "response",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- h = 0 -> Potential energy equals the chosen reference level value."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node defines gravitational configuration energy relative to a chosen reference level for energy methods."
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- work-energy-theorem (foundational, weight 0.85)"
+        }
+      }
     ]
   },
   {
@@ -1688,6 +3840,103 @@
     "sub_domains": [
       "momentum",
       "collisions"
+    ],
+    "blocks": [
+      {
+        "block_id": "principle",
+        "type": "markdown-katex",
+        "title": "Principle",
+        "data": {
+          "markdown": "In an isolated system, total momentum remains constant through interactions."
+        }
+      },
+      {
+        "block_id": "formula",
+        "type": "markdown-katex",
+        "title": "Formula",
+        "data": {
+          "markdown": "$$\n\\sum \\vec{p}_{\\text{initial}} = \\sum \\vec{p}_{\\text{final}}\n$$"
+        }
+      },
+      {
+        "block_id": "variables",
+        "type": "table",
+        "title": "Variables",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Variable",
+            "Role",
+            "Unit",
+            "Description"
+          ],
+          "rows": [
+            [
+              "$\\vec{p}$",
+              "momentum",
+              "conserved",
+              "",
+              ""
+            ],
+            [
+              "$\\sum \\vec{p}$",
+              "system-momentum",
+              "conserved",
+              "",
+              ""
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "applies-when",
+        "type": "markdown-katex",
+        "title": "Applies When",
+        "data": {
+          "markdown": "- Net external impulse on the system is negligible\n- System boundary includes all strongly interacting bodies"
+        }
+      },
+      {
+        "block_id": "limiting-cases",
+        "type": "markdown-katex",
+        "title": "Limiting Cases",
+        "data": {
+          "markdown": "- Perfectly isolated system -> Total momentum remains exactly constant."
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "This node gives a robust system-level constraint for collisions and interactions, including inelastic cases."
+        }
+      },
+      {
+        "block_id": "misconceptions",
+        "type": "table",
+        "title": "Common Misconceptions",
+        "data": {
+          "columns": [
+            "Wrong model",
+            "Correction"
+          ],
+          "rows": [
+            [
+              "Momentum conservation means each object's momentum is unchanged.",
+              "Only total system momentum is conserved; individual momenta can change substantially."
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "prerequisites",
+        "type": "markdown-katex",
+        "title": "Prerequisites",
+        "data": {
+          "markdown": "- newtons-second-law (supporting, weight 0.55)"
+        }
+      }
     ]
   }
 ]

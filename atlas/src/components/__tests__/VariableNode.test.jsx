@@ -14,7 +14,7 @@ vi.mock('reactflow', () => ({
   },
 }))
 
-function renderVariableNode(understandingState) {
+function renderVariableNode(progress = 0) {
   return render(
     <VariableNode
       selected={false}
@@ -22,23 +22,23 @@ function renderVariableNode(understandingState) {
         title: 'Mass',
         canonicalSymbol: 'm',
         visualState: 'base',
-        understandingState,
+        progress,
       }}
     />,
   )
 }
 
-describe('VariableNode understanding visuals', () => {
+describe('VariableNode visuals', () => {
   it('renders no arc and no understood badge', () => {
-    const { container } = renderVariableNode('derive')
+    const { container } = renderVariableNode(100)
 
     expect(container.querySelector('svg')).toBeNull()
     expect(container.textContent?.includes('✓')).toBe(false)
   })
 
-  it('keeps identical base opacity/filter across understanding states', () => {
-    const unseen = renderVariableNode('unseen')
-    const derive = renderVariableNode('derive')
+  it('keeps identical base opacity/filter across progress levels', () => {
+    const unseen = renderVariableNode(0)
+    const derive = renderVariableNode(100)
 
     const unseenRoot = unseen.container.firstElementChild
     const deriveRoot = derive.container.firstElementChild

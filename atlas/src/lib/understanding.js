@@ -1,14 +1,18 @@
+const STORAGE_KEY_V3 = 'atlas:state:v1:progress'
 const STORAGE_KEY_V2 = 'atlas_understanding_v2'
 const STORAGE_KEY_V1 = 'atlas_understood_v1'
+const STATE_SCHEMA_VERSION = 1
+const DEFAULT_PROGRESS = 0
+const PROGRESS_MIN = 0
+const PROGRESS_MAX = 100
+const VARIABLE_KNOWN_THRESHOLD = 66
 
-export const UNDERSTANDING_STATES = ['unseen', 'seen', 'recognize', 'apply', 'derive']
-
-const UNDERSTANDING_RANK = {
+const LEGACY_STATE_TO_PROGRESS = {
   unseen: 0,
-  seen: 1,
-  recognize: 2,
-  apply: 3,
-  derive: 4,
+  seen: 33,
+  recognize: 66,
+  apply: 100,
+  derive: 100,
 }
 
 function getStorage() {
@@ -21,15 +25,18 @@ function getStorage() {
   return null
 }
 
-function isUnderstandingState(value) {
-  return typeof value === 'string' && UNDERSTANDING_STATES.includes(value)
+function clampProgress(value) {
+  return Math.min(PROGRESS_MAX, Math.max(PROGRESS_MIN, value))
 }
 
-function normalizeState(value) {
-  return isUnderstandingState(value) ? value : 'unseen'
+function normalizeProgress(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return DEFAULT_PROGRESS
+  }
+  return clampProgress(Math.round(value))
 }
 
-function parseStateMap(raw) {
+function parseProgressMap(raw) {
   if (!raw) {
     return {}
   }
@@ -40,23 +47,90 @@ function parseStateMap(raw) {
       return {}
     }
 
+    if ('state_schema_version' in parsed || 'progress_by_id' in parsed) {
+      if (
+        parsed.state_schema_version !== STATE_SCHEMA_VERSION ||
+        !parsed.progress_by_id ||
+        typeof parsed.progress_by_id !== 'object' ||
+        Array.isArray(parsed.progress_by_id)
+      ) {
+        return {}
+      }
+      const entries = Object.entries(parsed.progress_by_id).filter(
+        ([entityId, progress]) =>
+          typeof entityId === 'string' &&
+          entityId.length > 0 &&
+          typeof progress === 'number' &&
+          Number.isFinite(progress),
+      )
+      return Object.fromEntries(
+        entries.map(([entityId, progress]) => [entityId, normalizeProgress(progress)]),
+      )
+    }
+
     const entries = Object.entries(parsed).filter(
-      ([entityId, state]) => typeof entityId === 'string' && entityId.length > 0 && isUnderstandingState(state),
+      ([entityId, progress]) =>
+        typeof entityId === 'string' &&
+        entityId.length > 0 &&
+        typeof progress === 'number' &&
+        Number.isFinite(progress),
     )
-    return Object.fromEntries(entries)
+    return Object.fromEntries(
+      entries.map(([entityId, progress]) => [entityId, normalizeProgress(progress)]),
+    )
   } catch {
     return {}
   }
 }
 
-function migrateLegacyUnderstoodSet(storage) {
+function parseLegacyStateMap(raw) {
+  if (!raw) {
+    return {}
+  }
+  try {
+    const parsed = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return {}
+    }
+    const entries = Object.entries(parsed).filter(
+      ([entityId, state]) =>
+        typeof entityId === 'string' &&
+        entityId.length > 0 &&
+        typeof state === 'string' &&
+        state in LEGACY_STATE_TO_PROGRESS,
+    )
+    return Object.fromEntries(entries.map(([entityId, state]) => [entityId, LEGACY_STATE_TO_PROGRESS[state]]))
+  } catch {
+    return {}
+  }
+}
+
+function writeProgressMap(storage, progressById) {
+  storage.setItem(
+    STORAGE_KEY_V3,
+    JSON.stringify({
+      state_schema_version: STATE_SCHEMA_VERSION,
+      progress_by_id: progressById,
+    }),
+  )
+}
+
+function migrateLegacyState(storage) {
   if (!storage) {
     return {}
   }
 
-  const existingV2Raw = storage.getItem(STORAGE_KEY_V2)
-  if (existingV2Raw !== null) {
-    return parseStateMap(existingV2Raw)
+  const existingV3Raw = storage.getItem(STORAGE_KEY_V3)
+  if (existingV3Raw !== null) {
+    return parseProgressMap(existingV3Raw)
+  }
+
+  const legacyV2Raw = storage.getItem(STORAGE_KEY_V2)
+  if (legacyV2Raw !== null) {
+    const migratedFromV2 = parseLegacyStateMap(legacyV2Raw)
+    writeProgressMap(storage, migratedFromV2)
+    storage.removeItem(STORAGE_KEY_V2)
+    return migratedFromV2
   }
 
   try {
@@ -72,10 +146,10 @@ function migrateLegacyUnderstoodSet(storage) {
 
     const migratedEntries = legacyParsed
       .filter((value) => typeof value === 'string' && value.length > 0)
-      .map((entityId) => [entityId, 'apply'])
+      .map((entityId) => [entityId, 100])
     const migrated = Object.fromEntries(migratedEntries)
 
-    storage.setItem(STORAGE_KEY_V2, JSON.stringify(migrated))
+    writeProgressMap(storage, migrated)
     storage.removeItem(STORAGE_KEY_V1)
     return migrated
   } catch {
@@ -83,28 +157,28 @@ function migrateLegacyUnderstoodSet(storage) {
   }
 }
 
-export function getAllStates() {
+export function getAllProgress() {
   const storage = getStorage()
   if (!storage) {
     return {}
   }
 
-  const migrated = migrateLegacyUnderstoodSet(storage)
+  const migrated = migrateLegacyState(storage)
   if (Object.keys(migrated).length > 0) {
     return migrated
   }
-  return parseStateMap(storage.getItem(STORAGE_KEY_V2))
+  return parseProgressMap(storage.getItem(STORAGE_KEY_V3))
 }
 
-export function getState(entityId) {
+export function getProgress(entityId) {
   if (typeof entityId !== 'string' || entityId.length === 0) {
-    return 'unseen'
+    return DEFAULT_PROGRESS
   }
-  const allStates = getAllStates()
-  return normalizeState(allStates[entityId])
+  const allProgress = getAllProgress()
+  return normalizeProgress(allProgress[entityId])
 }
 
-export function setState(entityId, state) {
+export function setProgress(entityId, progress) {
   if (typeof entityId !== 'string' || entityId.length === 0) {
     return
   }
@@ -114,29 +188,34 @@ export function setState(entityId, state) {
     return
   }
 
-  const normalized = normalizeState(state)
-  const next = { ...getAllStates() }
-  if (normalized === 'unseen') {
+  const normalized = normalizeProgress(progress)
+  const next = { ...getAllProgress() }
+  if (normalized <= DEFAULT_PROGRESS) {
     delete next[entityId]
   } else {
     next[entityId] = normalized
   }
 
   try {
-    storage.setItem(STORAGE_KEY_V2, JSON.stringify(next))
+    writeProgressMap(storage, next)
   } catch {
     // Ignore storage write failures.
   }
 }
 
-export function getUnderstandingRank(state) {
-  return UNDERSTANDING_RANK[normalizeState(state)]
+export function isProgressAtLeast(progress, threshold) {
+  return normalizeProgress(progress) >= normalizeProgress(threshold)
 }
 
-export function isStateAtLeast(state, threshold) {
-  return getUnderstandingRank(state) >= getUnderstandingRank(threshold)
+export function isProgressAtMost(progress, threshold) {
+  return normalizeProgress(progress) <= normalizeProgress(threshold)
 }
 
-export function isStateAtMost(state, threshold) {
-  return getUnderstandingRank(state) <= getUnderstandingRank(threshold)
-}
+export { STATE_SCHEMA_VERSION, STORAGE_KEY_V3 as PROGRESS_STORAGE_KEY, VARIABLE_KNOWN_THRESHOLD }
+
+// Backward-compatible aliases during Phase 5 migration.
+export const getAllStates = getAllProgress
+export const getState = getProgress
+export const setState = setProgress
+export const isStateAtLeast = isProgressAtLeast
+export const isStateAtMost = isProgressAtMost

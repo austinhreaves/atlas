@@ -5,13 +5,6 @@ import { getConceptDomainCardClass } from './domainVisuals'
 // fill/glow (domain) plus border style (mechanics = solid, electromagnetism = dashed).
 const floatingHandleClass =
   '!h-0 !w-0 !border-0 !bg-transparent !opacity-0 !pointer-events-none'
-const ARC_PROGRESS_BY_STATE = {
-  unseen: 0,
-  seen: 0.2,
-  recognize: 0.45,
-  apply: 0.7,
-  derive: 1,
-}
 const LABEL_PIN_ZOOM = 0.6
 const LABEL_MAX_ZOOM = 1.5
 
@@ -26,9 +19,8 @@ export default function ConceptNode({ data, selected }) {
   const selectionActive = visualState !== 'base'
   const opacity = selectionActive && visualState === 'distant' ? 0.3 : 1
   const accentRing = visualState === 'focal'
-  const understandingState =
-    typeof data.understandingState === 'string' ? data.understandingState : 'unseen'
-  const arcProgress = ARC_PROGRESS_BY_STATE[understandingState] ?? 0
+  const progress = typeof data.progress === 'number' ? data.progress : 0
+  const arcProgress = Math.min(1, Math.max(0, progress / 100))
   const arcStrokeWidth = 3
   const arcInset = 8
   const arcSvgSize = diameter + arcInset * 2

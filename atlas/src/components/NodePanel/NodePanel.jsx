@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { isStateAtLeast } from '../../lib/understanding'
+import { useCallback, useEffect, useRef } from 'react'
+import { VARIABLE_KNOWN_THRESHOLD, isProgressAtLeast } from '../../lib/understanding'
 import NodePanelHeader from './NodePanelHeader'
-import ConceptPanel from './panels/ConceptPanel'
-import VariablePanel from './panels/VariablePanel'
+import BlockPanel from './BlockPanel'
 
 const DESKTOP_MIN_PANEL_WIDTH = 360
 
@@ -18,36 +17,31 @@ function clampPanelWidth(width) {
   return Math.min(maxWidth, Math.max(minWidth, width))
 }
 
-/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, prerequisiteLinks?: any[], enablesLinks?: any[], onClose: () => void, onUnderstandingStateChange?: (entityId: string, state: string) => void, onSelectEntity?: (id: string) => void, onSubdomainClick?: (subdomainId: string) => void, subdomainLabelById?: Record<string, string>, subdomainDescriptionById?: Record<string, string>, tagLabelById?: Record<string, string>, tagDescriptionById?: Record<string, string>, conceptById?: Map<string, any>, appearsInByVariableId?: Record<string, string[]>, understandingStatesById?: Record<string, string> }} props */
+/** @param {{ selectedNode: any, panelWidth?: number, isMobile?: boolean, onPanelWidthChange?: (width: number) => void, onClose: () => void, onProgressChange?: (entityId: string, progress: number) => void, onSubdomainClick?: (subdomainId: string) => void, subdomainLabelById?: Record<string, string>, subdomainDescriptionById?: Record<string, string>, tagLabelById?: Record<string, string>, tagDescriptionById?: Record<string, string>, appearsInByVariableId?: Record<string, string[]>, progressById?: Record<string, number> }} props */
 export default function NodePanel({
   selectedNode,
   panelWidth = 440,
   isMobile = false,
   onPanelWidthChange,
-  prerequisiteLinks = [],
-  enablesLinks = [],
   onClose,
-  onUnderstandingStateChange,
-  onSelectEntity,
+  onProgressChange,
   onSubdomainClick,
   subdomainLabelById = {},
   subdomainDescriptionById = {},
   tagLabelById = {},
   tagDescriptionById = {},
-  conceptById = new Map(),
   appearsInByVariableId = {},
-  understandingStatesById = {},
+  progressById = {},
 }) {
-  const understandingState = selectedNode ? understandingStatesById[selectedNode.id] ?? 'unseen' : 'unseen'
+  const progress = selectedNode ? progressById[selectedNode.id] ?? 0 : 0
   const variableAppearsInConceptIds =
     selectedNode?.layer === 'variable' && Array.isArray(appearsInByVariableId[selectedNode.id])
       ? appearsInByVariableId[selectedNode.id]
       : []
   const isVariableKnown = variableAppearsInConceptIds.some((conceptId) =>
-    isStateAtLeast(understandingStatesById[conceptId] ?? 'unseen', 'recognize'),
+    isProgressAtLeast(progressById[conceptId] ?? 0, VARIABLE_KNOWN_THRESHOLD),
   )
 
-  const [showIdealizedAssumptions, setShowIdealizedAssumptions] = useState(false)
   const dragStateRef = useRef(null)
 
   const handlePointerMove = useCallback(
@@ -136,9 +130,9 @@ export default function NodePanel({
             <NodePanelHeader
               selectedNode={selectedNode}
               onClose={onClose}
-              understandingState={understandingState}
+              progress={progress}
               isVariableKnown={isVariableKnown}
-              onUnderstandingStateChange={onUnderstandingStateChange}
+              onProgressChange={onProgressChange}
               onSubdomainClick={onSubdomainClick}
               subdomainLabelById={subdomainLabelById}
               subdomainDescriptionById={subdomainDescriptionById}
@@ -147,23 +141,7 @@ export default function NodePanel({
             />
 
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
-              {selectedNode.layer === 'concept' ? (
-                <ConceptPanel
-                  selectedNode={selectedNode}
-                  prerequisiteLinks={prerequisiteLinks}
-                  enablesLinks={enablesLinks}
-                  showIdealizedAssumptions={showIdealizedAssumptions}
-                  setShowIdealizedAssumptions={setShowIdealizedAssumptions}
-                  onSelectEntity={onSelectEntity}
-                />
-              ) : selectedNode.layer === 'variable' ? (
-                <VariablePanel
-                  selectedNode={selectedNode}
-                  conceptById={conceptById}
-                  appearsInByVariableId={appearsInByVariableId}
-                  onSelectEntity={onSelectEntity}
-                />
-              ) : null}
+              <BlockPanel selectedNode={selectedNode} />
             </div>
           </div>
         ) : null}

@@ -15,7 +15,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Measured quantity**\n\n$A$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$varies$"
+            ],
+            [
+              "Dimension",
+              "$varies$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Placeholder for any measured physical quantity when discussing generic uncertainty propagation or reporting."
+        }
+      }
+    ]
   },
   {
     "id": "absolute-uncertainty",
@@ -33,7 +76,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Absolute uncertainty**\n\n$\\delta A$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$same as A$"
+            ],
+            [
+              "Dimension",
+              "$same as A$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Estimated absolute spread around a measured value, expressed in the same unit as the measurement."
+        }
+      }
+    ]
   },
   {
     "id": "percent-uncertainty",
@@ -51,7 +137,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Percent uncertainty**\n\n$\\%\\mathrm{unc}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$%$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Dimensionless uncertainty metric computed by dividing absolute uncertainty by the measured value and scaling by 100."
+        }
+      }
+    ]
   },
   {
     "id": "order-of-magnitude",
@@ -69,7 +198,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Order-of-magnitude exponent**\n\n$n$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$none$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Nearest power-of-ten exponent used to express the scale of a quantity for fast plausibility checks."
+        }
+      }
+    ]
   },
   {
     "id": "initial-position",
@@ -86,7 +258,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Initial position**\n\n$x_0$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Reference position assigned to the starting instant of a kinematics interval."
+        }
+      }
+    ]
   },
   {
     "id": "final-position",
@@ -103,7 +318,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Final position**\n\n$x_f$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Position assigned to the ending instant of a modeled interval."
+        }
+      }
+    ]
   },
   {
     "id": "displacement",
@@ -120,7 +378,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Displacement**\n\n$\\Delta x$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Net signed position change between initial and final states, independent of the path traveled."
+        }
+      }
+    ]
   },
   {
     "id": "elapsed-time",
@@ -137,7 +438,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Elapsed time**\n\n$\\Delta t$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$s$"
+            ],
+            [
+              "Dimension",
+              "$T$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Time interval duration used in average-rate and constant-acceleration relations."
+        }
+      }
+    ]
   },
   {
     "id": "average-velocity",
@@ -154,7 +498,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Average velocity**\n\n$\\bar{v}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Net displacement divided by elapsed time; differs from average speed when motion reverses direction."
+        }
+      }
+    ]
   },
   {
     "id": "velocity-change",
@@ -171,7 +558,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Velocity change**\n\n$\\Delta \\vec{v}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Difference between final and initial velocity vectors over an interval."
+        }
+      }
+    ]
   },
   {
     "id": "average-acceleration",
@@ -188,7 +618,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Average acceleration**\n\n$\\bar{a}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s^2$"
+            ],
+            [
+              "Dimension",
+              "$L T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Change in velocity vector per elapsed time interval, capturing both speed and direction changes."
+        }
+      }
+    ]
   },
   {
     "id": "position",
@@ -205,7 +678,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Position**\n\n$x$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Coordinate location along the chosen axis used to describe one-dimensional motion."
+        }
+      }
+    ]
   },
   {
     "id": "position-x",
@@ -223,7 +739,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Horizontal position**\n\n$x$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Horizontal coordinate component used in two-dimensional kinematics decomposition."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive in the chosen +x direction."
+        }
+      }
+    ]
   },
   {
     "id": "position-y",
@@ -241,7 +808,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Vertical position**\n\n$y$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vertical coordinate component used in two-dimensional kinematics decomposition."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive in the chosen +y direction."
+        }
+      }
+    ]
   },
   {
     "id": "velocity-x",
@@ -259,7 +877,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Horizontal velocity**\n\n$v_x$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Velocity component parallel to the horizontal axis in decomposed 2D motion."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive in the chosen +x direction."
+        }
+      }
+    ]
   },
   {
     "id": "velocity-y",
@@ -277,7 +946,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Vertical velocity**\n\n$v_y$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Velocity component parallel to the vertical axis in decomposed 2D motion."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive in the chosen +y direction."
+        }
+      }
+    ]
   },
   {
     "id": "initial-velocity-x",
@@ -294,7 +1014,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Initial horizontal velocity**\n\n$v_{0x}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Initial horizontal component obtained by resolving launch speed with launch angle convention."
+        }
+      }
+    ]
   },
   {
     "id": "initial-velocity-y",
@@ -311,7 +1074,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Initial vertical velocity**\n\n$v_{0y}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Initial vertical component obtained by resolving launch speed with launch angle convention."
+        }
+      }
+    ]
   },
   {
     "id": "acceleration-x",
@@ -329,7 +1135,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Horizontal acceleration**\n\n$a_x$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s^2$"
+            ],
+            [
+              "Dimension",
+              "$L T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Horizontal acceleration component used in axis-by-axis dynamics and kinematics analysis."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive in the chosen +x direction."
+        }
+      }
+    ]
   },
   {
     "id": "acceleration-y",
@@ -347,7 +1204,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Vertical acceleration**\n\n$a_y$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s^2$"
+            ],
+            [
+              "Dimension",
+              "$L T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vertical acceleration component used in free-fall and projectile-motion equations."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive in the chosen +y direction."
+        }
+      }
+    ]
   },
   {
     "id": "launch-angle",
@@ -365,7 +1273,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Launch angle**\n\n$\\theta_0$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$rad$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Initial launch direction angle used to resolve speed into horizontal and vertical components."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Measured counterclockwise from +x by convention."
+        }
+      }
+    ]
   },
   {
     "id": "range",
@@ -382,7 +1341,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Projectile range**\n\n$R$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Horizontal displacement between launch and landing points under the stated projectile assumptions."
+        }
+      }
+    ]
   },
   {
     "id": "force-weight",
@@ -399,7 +1401,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Weight force**\n\n$\\vec{w}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Force due to gravity acting on a mass in a local gravitational field."
+        }
+      }
+    ]
   },
   {
     "id": "normal-force",
@@ -417,7 +1462,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Normal force**\n\n$N$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Surface reaction force acting perpendicular to the contact interface."
+        }
+      }
+    ]
   },
   {
     "id": "tension-force",
@@ -435,7 +1523,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Tension force**\n\n$T$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Axial pulling force transmitted through a rope, cable, or string under tension."
+        }
+      }
+    ]
   },
   {
     "id": "incline-angle",
@@ -454,7 +1585,58 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Incline angle**\n\n$\\theta$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$rad$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Surface tilt angle measured from horizontal, used for force-component decomposition on inclines."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Measured from +x horizontal toward the incline surface."
+        }
+      }
+    ]
   },
   {
     "id": "force-net",
@@ -475,7 +1657,50 @@
     "position": {
       "x": -391.62901505509797,
       "y": -157.34999017603658
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Net force**\n\n$\\vec{F}_{\\text{net}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector sum of all external and internal forces acting on the chosen object or system. It is the effective force that sets translational acceleration through Newton's second law."
+        }
+      }
+    ]
   },
   {
     "id": "acceleration",
@@ -497,7 +1722,58 @@
     "position": {
       "x": -447.41878602897134,
       "y": -407.89069270430855
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Acceleration**\n\n$\\vec{a}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s^2$"
+            ],
+            [
+              "Dimension",
+              "$L T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Time rate of change of velocity, including both magnitude and direction changes. It quantifies how quickly motion state evolves in a chosen frame."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive along the chosen coordinate axis."
+        }
+      }
+    ]
   },
   {
     "id": "mass",
@@ -518,7 +1794,50 @@
     "position": {
       "x": -453.27825048574306,
       "y": -258.5311277898544
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Mass**\n\n$m$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$kg$"
+            ],
+            [
+              "Dimension",
+              "$M$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Measure of inertia that sets resistance to acceleration under applied force. In introductory mechanics it is treated as an intrinsic, approximately constant scalar property."
+        }
+      }
+    ]
   },
   {
     "id": "work-net",
@@ -540,7 +1859,50 @@
     "position": {
       "x": 42.51283237616984,
       "y": 45.94465981026558
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Net Work**\n\n$W_{\\text{net}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$J$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Algebraic sum of work contributions from all forces over a displacement. It equals the system's kinetic-energy change under the work-energy theorem."
+        }
+      }
+    ]
   },
   {
     "id": "kinetic-energy-change",
@@ -562,7 +1924,50 @@
     "position": {
       "x": -17.839342872688007,
       "y": 125.86953694543092
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Change in kinetic energy**\n\n$\\Delta K$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$J$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Difference between final and initial kinetic energy for the same system over an interval. Positive values indicate net kinetic-energy gain, negative values indicate loss."
+        }
+      }
+    ]
   },
   {
     "id": "momentum",
@@ -579,7 +1984,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Momentum**\n\n$\\vec{p}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$kg\\cdot m/s$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector quantity equal to mass times velocity for a body. It captures how difficult the body's motion is to change in interactions and collisions."
+        }
+      }
+    ]
   },
   {
     "id": "system-momentum",
@@ -601,7 +2049,50 @@
     "position": {
       "x": 667.853135582892,
       "y": -53.464658637683414
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**System momentum sum**\n\n$\\sum \\vec{p}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$kg\\cdot m/s$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector sum of momenta of all components in a defined system."
+        }
+      }
+    ]
   },
   {
     "id": "time",
@@ -623,7 +2114,50 @@
     "position": {
       "x": -133.1144216876885,
       "y": 126.51990557110736
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Time**\n\n$t$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$s$"
+            ],
+            [
+              "Dimension",
+              "$T$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Elapsed duration used to parameterize change in dynamical quantities. It defines the interval across which rates and accumulations are evaluated."
+        }
+      }
+    ]
   },
   {
     "id": "initial-velocity",
@@ -644,7 +2178,50 @@
     "position": {
       "x": -425.11788554841695,
       "y": 38.42571084655719
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Initial velocity**\n\n$\\vec{v}_0$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Velocity value at the initial instant of the modeled interval. It serves as the baseline state for kinematic update equations."
+        }
+      }
+    ]
   },
   {
     "id": "velocity",
@@ -665,7 +2242,50 @@
     "position": {
       "x": 69.20059183041937,
       "y": -48.88374120631316
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Velocity**\n\n$\\vec{v}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector rate of change of position with respect to time. Its sign and direction encode how position evolves in the coordinate system."
+        }
+      }
+    ]
   },
   {
     "id": "gravitational-acceleration",
@@ -686,7 +2306,50 @@
     "position": {
       "x": 433.9669456415079,
       "y": -47.49476755945452
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Gravitational acceleration**\n\n$g$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s^2$"
+            ],
+            [
+              "Dimension",
+              "$L T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Local magnitude of gravitational field acceleration near a massive body. Near Earth's surface it is commonly approximated as constant in introductory problems."
+        }
+      }
+    ]
   },
   {
     "id": "height",
@@ -709,7 +2372,58 @@
     "position": {
       "x": -253.36700966442444,
       "y": -143.69368523603706
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Height**\n\n$h$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vertical displacement measured from a defined reference level. The sign convention determines whether upward or downward displacements are positive."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Positive upward from the reference level unless otherwise stated."
+        }
+      }
+    ]
   },
   {
     "id": "potential-energy",
@@ -731,7 +2445,50 @@
     "position": {
       "x": 451.9560378393949,
       "y": 235.28242160569056
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Potential energy**\n\n$U$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$J$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Energy associated with system configuration, such as position in a conservative field. Differences in this quantity track the capacity to do work via configuration changes."
+        }
+      }
+    ]
   },
   {
     "id": "charge",
@@ -758,7 +2515,67 @@
     "position": {
       "x": 370.1947614642373,
       "y": -235.1562122554966
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric charge**\n\n$q$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$C$"
+            ],
+            [
+              "Dimension",
+              "$I T$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Intrinsic property of matter that sources electromagnetic fields and experiences electromagnetic forces. Its sign sets interaction direction and its magnitude sets interaction strength."
+        }
+      },
+      {
+        "block_id": "common-aliases",
+        "type": "table",
+        "title": "Common Aliases",
+        "data": {
+          "columns": [
+            "Symbol",
+            "Context"
+          ],
+          "rows": [
+            [
+              "$q_1, q_2$",
+              "Pair of interacting charges in Coulomb's law."
+            ]
+          ]
+        }
+      }
+    ]
   },
   {
     "id": "separation-distance",
@@ -780,7 +2597,50 @@
     "position": {
       "x": 358.7888499817299,
       "y": -766.6527831909136
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Separation distance**\n\n$r$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Scalar separation between two source points or effective centers. In inverse-square laws it controls interaction strength through geometric dilution."
+        }
+      }
+    ]
   },
   {
     "id": "coulomb-constant",
@@ -798,7 +2658,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Coulomb constant**\n\n$k$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N\\cdot m^2/C^2$"
+            ],
+            [
+              "Dimension",
+              "$M L^3 T^-4 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Proportionality constant in Coulomb's law for vacuum electrostatics. It sets the absolute force scale linking charge product and inverse-square separation."
+        }
+      }
+    ]
   },
   {
     "id": "electric-force",
@@ -816,7 +2719,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric force**\n\n$\\vec{F}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector force exerted on a charge by an electric field and other charges. Its direction follows field direction for positive charge and reverses for negative charge."
+        }
+      }
+    ]
   },
   {
     "id": "electric-field",
@@ -838,7 +2784,50 @@
     "position": {
       "x": 799.7064661727102,
       "y": 584.8079408050039
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric field**\n\n$\\vec{E}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N/C$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector field defined as force per unit positive test charge at each point in space. It encodes both interaction direction and local interaction strength."
+        }
+      }
+    ]
   },
   {
     "id": "voltage",
@@ -860,7 +2849,58 @@
     "position": {
       "x": 542.5408862533186,
       "y": 642.1304357192894
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Voltage**\n\n$V$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Electric potential difference between two points in a circuit or field. It represents energy transfer per unit charge between those points."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Defined as potential at point A minus potential at point B."
+        }
+      }
+    ]
   },
   {
     "id": "current",
@@ -882,7 +2922,58 @@
     "position": {
       "x": 539.2125759228081,
       "y": 70.38945720006964
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric current**\n\n$I$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$A$"
+            ],
+            [
+              "Dimension",
+              "$I$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Rate at which electric charge crosses a chosen surface or circuit cross-section. Conventional sign is defined by positive-charge flow direction."
+        }
+      },
+      {
+        "block_id": "sign-convention",
+        "type": "markdown-katex",
+        "title": "Sign Convention",
+        "data": {
+          "markdown": "Conventional current is positive in the direction of positive charge flow."
+        }
+      }
+    ]
   },
   {
     "id": "resistance",
@@ -903,7 +2994,50 @@
     "position": {
       "x": 1032.0009082299039,
       "y": 314.383037596047
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Resistance**\n\n$R$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$\\Omega$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Material or component property relating voltage drop to current in approximately linear (ohmic) operation. It quantifies opposition to charge flow under those conditions."
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-flux",
@@ -920,7 +3054,50 @@
     ],
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-25"
+    "last_reviewed": "2026-04-25",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Magnetic flux**\n\n$\\Phi_B$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$Wb$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Flux quantity equal to magnetic-field surface integral through an oriented area. It measures how much magnetic field passes through the chosen loop or surface."
+        }
+      }
+    ]
   },
   {
     "id": "emf-induced",
@@ -941,7 +3118,50 @@
     "position": {
       "x": 238.9966661749737,
       "y": 203.26702163440538
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Induced emf**\n\n$\\mathcal{E}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Induced potential difference generated when magnetic flux through a loop changes over time. It is the driving quantity for induced current in closed circuits."
+        }
+      }
+    ]
   },
   {
     "id": "enclosed-charge",
@@ -962,7 +3182,50 @@
     "position": {
       "x": 157.05987585176004,
       "y": 91.59351120827779
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Enclosed charge**\n\n$Q_{\\text{enc}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$C$"
+            ],
+            [
+              "Dimension",
+              "$I T$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Algebraic total charge enclosed by a chosen closed surface. It is the source term that determines net electric flux in Gauss's law."
+        }
+      }
+    ]
   },
   {
     "id": "vacuum-permittivity",
@@ -984,7 +3247,50 @@
     "position": {
       "x": 759.0571530493896,
       "y": -382.3598099966858
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Vacuum permittivity**\n\n$\\varepsilon_0$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$C^2/(N\\cdot m^2)$"
+            ],
+            [
+              "Dimension",
+              "$M^-1 L^-3 T^4 I^2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Fundamental constant that sets the relationship between electric field, charge, and flux in vacuum. It determines the proportionality in electrostatic field equations."
+        }
+      }
+    ]
   },
   {
     "id": "area-vector",
@@ -1006,7 +3312,50 @@
     "position": {
       "x": -88.69094726088841,
       "y": 183.85110059248947
-    }
+    },
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Differential area vector**\n\n$d\\vec{A}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m^2$"
+            ],
+            [
+              "Dimension",
+              "$L^2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Infinitesimal oriented area element used in surface and flux integrals. Its direction is normal to the local surface patch and sets sign in dot products."
+        }
+      }
+    ]
   },
   {
     "id": "elementary-charge",
@@ -1020,7 +3369,50 @@
     "variable_type": "constant",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Elementary charge**\n\n$e$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$C$"
+            ],
+            [
+              "Dimension",
+              "$T I$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Fundamental electric charge magnitude carried by a proton."
+        }
+      }
+    ]
   },
   {
     "id": "charge-number",
@@ -1034,7 +3426,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Charge quantum count**\n\n$n$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$none$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Integer multiplier that counts how many elementary charges are present."
+        }
+      }
+    ]
   },
   {
     "id": "charge-density",
@@ -1048,7 +3483,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Charge density**\n\n$\\rho$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$C/m^3$"
+            ],
+            [
+              "Dimension",
+              "$T I L^-3$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Charge per unit volume used in continuity and Maxwell equations."
+        }
+      }
+    ]
   },
   {
     "id": "current-density",
@@ -1062,7 +3540,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Current density**\n\n$\\vec{J}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$A/m^2$"
+            ],
+            [
+              "Dimension",
+              "$I L^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Current per cross-sectional area in a material or field region."
+        }
+      }
+    ]
   },
   {
     "id": "conductivity",
@@ -1076,7 +3597,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electrical conductivity**\n\n$\\sigma$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$S/m$"
+            ],
+            [
+              "Dimension",
+              "$M^-1 L^-3 T^3 I^2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Material coefficient linking electric field to current density."
+        }
+      }
+    ]
   },
   {
     "id": "electric-potential",
@@ -1090,7 +3654,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric potential**\n\n$V$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Electric potential energy per unit charge at a location."
+        }
+      }
+    ]
   },
   {
     "id": "electric-potential-energy",
@@ -1104,7 +3711,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric potential energy**\n\n$U$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$J$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Energy stored due to electric configuration."
+        }
+      }
+    ]
   },
   {
     "id": "electron-volt",
@@ -1118,7 +3768,50 @@
     "variable_type": "constant",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electron-volt**\n\n$\\mathrm{eV}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$J$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Energy unit equal to the work done moving one elementary charge across one volt."
+        }
+      }
+    ]
   },
   {
     "id": "dielectric-constant",
@@ -1132,7 +3825,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Relative permittivity**\n\n$\\kappa$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$none$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Dimensionless factor describing dielectric response relative to vacuum."
+        }
+      }
+    ]
   },
   {
     "id": "capacitor-energy",
@@ -1146,7 +3882,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Capacitor energy**\n\n$U_C$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$J$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Electrical energy stored in a capacitor."
+        }
+      }
+    ]
   },
   {
     "id": "capacitance-equivalent",
@@ -1160,7 +3939,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Equivalent capacitance**\n\n$C_{\\mathrm{eq}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$F$"
+            ],
+            [
+              "Dimension",
+              "$M^-1 L^-2 T^4 I^2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Single capacitance that reproduces network behavior of multiple capacitors."
+        }
+      }
+    ]
   },
   {
     "id": "resistivity",
@@ -1174,7 +3996,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electrical resistivity**\n\n$\\rho_e$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$\\Omega\\cdot m$"
+            ],
+            [
+              "Dimension",
+              "$M L^3 T^-3 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Material property that determines resistance per geometry."
+        }
+      }
+    ]
   },
   {
     "id": "resistor-length",
@@ -1188,7 +4053,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Resistor length**\n\n$L$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Conductor length used in the microscopic resistance model."
+        }
+      }
+    ]
   },
   {
     "id": "cross-sectional-area",
@@ -1202,7 +4110,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Cross-sectional area**\n\n$A$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m^2$"
+            ],
+            [
+              "Dimension",
+              "$L^2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Area normal to current flow in a conductor."
+        }
+      }
+    ]
   },
   {
     "id": "electric-power",
@@ -1216,7 +4167,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electric power**\n\n$P$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$W$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Rate of electrical energy transfer."
+        }
+      }
+    ]
   },
   {
     "id": "current-rms",
@@ -1230,7 +4224,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**RMS current**\n\n$I_{\\mathrm{rms}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$A$"
+            ],
+            [
+              "Dimension",
+              "$I$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Root-mean-square current equivalent to a DC heating effect."
+        }
+      }
+    ]
   },
   {
     "id": "voltage-rms",
@@ -1244,7 +4281,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**RMS voltage**\n\n$V_{\\mathrm{rms}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Root-mean-square voltage equivalent to a DC heating effect."
+        }
+      }
+    ]
   },
   {
     "id": "emf",
@@ -1258,7 +4338,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Electromotive force**\n\n$\\mathcal{E}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Work done per unit charge by a source."
+        }
+      }
+    ]
   },
   {
     "id": "terminal-voltage",
@@ -1272,7 +4395,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Terminal voltage**\n\n$V_{\\mathrm{term}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Observed potential difference across source terminals under load."
+        }
+      }
+    ]
   },
   {
     "id": "internal-resistance",
@@ -1286,7 +4452,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Internal resistance**\n\n$r$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$\\Omega$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Effective resistance internal to a source."
+        }
+      }
+    ]
   },
   {
     "id": "time-constant",
@@ -1300,7 +4509,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Time constant**\n\n$\\tau$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$s$"
+            ],
+            [
+              "Dimension",
+              "$T$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Characteristic exponential timescale for transient circuits."
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-field",
@@ -1314,7 +4566,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Magnetic field**\n\n$\\vec{B}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$T$"
+            ],
+            [
+              "Dimension",
+              "$M T^-2 I^-1$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Magnetic field intensity responsible for magnetic forces and flux."
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-force",
@@ -1328,7 +4623,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Magnetic force**\n\n$F_B$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Force on moving charges or current elements due to magnetic fields."
+        }
+      }
+    ]
   },
   {
     "id": "magnetic-dipole-moment",
@@ -1342,7 +4680,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Magnetic dipole moment**\n\n$\\vec{\\mu}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$A\\cdot m^2$"
+            ],
+            [
+              "Dimension",
+              "$I L^2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Vector quantity describing strength and orientation of a magnetic dipole."
+        }
+      }
+    ]
   },
   {
     "id": "torque",
@@ -1356,7 +4737,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Torque**\n\n$\\tau$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N\\cdot m$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Rotational effect of a force or field interaction."
+        }
+      }
+    ]
   },
   {
     "id": "radius-path",
@@ -1370,7 +4794,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Path radius**\n\n$r$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Radius of curved particle trajectory in a magnetic field."
+        }
+      }
+    ]
   },
   {
     "id": "hall-voltage",
@@ -1384,7 +4851,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Hall voltage**\n\n$V_H$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$V$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Transverse potential difference generated by a magnetic field in a current-carrying material."
+        }
+      }
+    ]
   },
   {
     "id": "current-element",
@@ -1398,7 +4908,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Current element**\n\n$I d\\vec{l}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$A\\cdot m$"
+            ],
+            [
+              "Dimension",
+              "$I L$"
+            ],
+            [
+              "Type",
+              "vector"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Infinitesimal current-segment vector used in Biot-Savart integration."
+        }
+      }
+    ]
   },
   {
     "id": "vacuum-permeability",
@@ -1412,7 +4965,50 @@
     "variable_type": "constant",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Vacuum permeability**\n\n$\\mu_0$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$N/A^2$"
+            ],
+            [
+              "Dimension",
+              "$M L T^-2 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Fundamental constant relating magnetic field to current in vacuum."
+        }
+      }
+    ]
   },
   {
     "id": "inductance",
@@ -1426,7 +5022,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Inductance**\n\n$L$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$H$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-2 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Proportionality constant between current change and induced emf."
+        }
+      }
+    ]
   },
   {
     "id": "impedance",
@@ -1440,7 +5079,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Impedance**\n\n$Z$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$\\Omega$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Complex opposition to alternating current."
+        }
+      }
+    ]
   },
   {
     "id": "inductive-reactance",
@@ -1454,7 +5136,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Inductive reactance**\n\n$X_L$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$\\Omega$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Frequency-dependent inductive contribution to impedance."
+        }
+      }
+    ]
   },
   {
     "id": "capacitive-reactance",
@@ -1468,7 +5193,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Capacitive reactance**\n\n$X_C$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$\\Omega$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3 I^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Frequency-dependent capacitive contribution to impedance."
+        }
+      }
+    ]
   },
   {
     "id": "angular-frequency",
@@ -1482,7 +5250,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Angular frequency**\n\n$\\omega$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$rad/s$"
+            ],
+            [
+              "Dimension",
+              "$T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Angular oscillation rate used in AC and wave analysis."
+        }
+      }
+    ]
   },
   {
     "id": "frequency",
@@ -1496,7 +5307,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Frequency**\n\n$f$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$Hz$"
+            ],
+            [
+              "Dimension",
+              "$T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Oscillation count per unit time."
+        }
+      }
+    ]
   },
   {
     "id": "resonant-frequency",
@@ -1510,7 +5364,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Resonant frequency**\n\n$f_0$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$Hz$"
+            ],
+            [
+              "Dimension",
+              "$T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Natural frequency at which driven response is maximal."
+        }
+      }
+    ]
   },
   {
     "id": "turns-primary",
@@ -1524,7 +5421,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Primary turns**\n\n$N_p$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$none$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Number of wire turns in a transformer's primary coil."
+        }
+      }
+    ]
   },
   {
     "id": "turns-secondary",
@@ -1538,7 +5478,50 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Secondary turns**\n\n$N_s$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$none$"
+            ],
+            [
+              "Dimension",
+              "$1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Number of wire turns in a transformer's secondary coil."
+        }
+      }
+    ]
   },
   {
     "id": "displacement-current",
@@ -1552,7 +5535,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Displacement current**\n\n$I_{\\mathrm{disp}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$A$"
+            ],
+            [
+              "Dimension",
+              "$I$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Effective current term produced by changing electric flux."
+        }
+      }
+    ]
   },
   {
     "id": "speed-of-light",
@@ -1566,7 +5592,50 @@
     "variable_type": "constant",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Speed of light**\n\n$c$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m/s$"
+            ],
+            [
+              "Dimension",
+              "$L T^-1$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Propagation speed of electromagnetic waves in vacuum."
+        }
+      }
+    ]
   },
   {
     "id": "poynting-vector-magnitude",
@@ -1580,7 +5649,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Poynting magnitude**\n\n$S$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$W/m^2$"
+            ],
+            [
+              "Dimension",
+              "$M T^-3$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Energy-flux magnitude transported by an electromagnetic field."
+        }
+      }
+    ]
   },
   {
     "id": "radiation-pressure",
@@ -1594,7 +5706,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Radiation pressure**\n\n$p_{\\mathrm{rad}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$Pa$"
+            ],
+            [
+              "Dimension",
+              "$M L^-1 T^-2$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Pressure exerted by electromagnetic momentum transfer."
+        }
+      }
+    ]
   },
   {
     "id": "radiated-power",
@@ -1608,7 +5763,50 @@
     "variable_type": "derived",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Radiated power**\n\n$P_{\\mathrm{rad}}$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$W$"
+            ],
+            [
+              "Dimension",
+              "$M L^2 T^-3$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Power emitted as electromagnetic radiation by accelerating charge."
+        }
+      }
+    ]
   },
   {
     "id": "wavelength",
@@ -1622,6 +5820,49 @@
     "variable_type": "quantity",
     "author": "austin",
     "review_state": "published",
-    "last_reviewed": "2026-04-27"
+    "last_reviewed": "2026-04-27",
+    "blocks": [
+      {
+        "block_id": "symbol",
+        "type": "markdown-katex",
+        "title": "Symbol",
+        "data": {
+          "markdown": "**Wavelength**\n\n$\\lambda$"
+        }
+      },
+      {
+        "block_id": "metadata",
+        "type": "table",
+        "title": "Metadata",
+        "data": {
+          "columns": [
+            "Field",
+            "Value"
+          ],
+          "rows": [
+            [
+              "Unit",
+              "$m$"
+            ],
+            [
+              "Dimension",
+              "$L$"
+            ],
+            [
+              "Type",
+              "scalar"
+            ]
+          ]
+        }
+      },
+      {
+        "block_id": "description",
+        "type": "markdown-katex",
+        "title": "Description",
+        "data": {
+          "markdown": "Spatial period of a propagating wave."
+        }
+      }
+    ]
   }
 ]

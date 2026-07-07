@@ -1,6 +1,7 @@
 import { getSubdomainValidationContext } from './subdomains'
 import { getSubjectValidationContext } from './subjects'
 import { getTagValidationContext } from './tags'
+import { LAYERS } from './layers'
 
 const REQUIRED_CONCEPT_FIELDS = [
   'id',
@@ -9,13 +10,8 @@ const REQUIRED_CONCEPT_FIELDS = [
   'title',
   'type',
   'domain',
-  'formula',
-  'causal_structure',
-  'principle',
-  'variables',
   'description',
-  'prerequisites',
-  'visual',
+  'blocks',
   'author',
   'review_state',
 ]
@@ -28,6 +24,7 @@ const REQUIRED_VARIABLE_FIELDS = [
   'dimension',
   'description',
   'vector_or_scalar',
+  'blocks',
   'author',
   'review_state',
 ]
@@ -77,6 +74,99 @@ function validateMetadata(entity, errors) {
   if ('last_reviewed' in entity) {
     validateLastReviewed(entity.last_reviewed, errors)
   }
+}
+
+function validateBlocksWhenPresent(node, errors, options = {}) {
+  if (!('blocks' in node)) {
+    return
+  }
+
+  if (!Array.isArray(node.blocks)) {
+    errors.push('blocks must be an array when provided.')
+    return
+  }
+
+  const seenBlockIds = new Set()
+  const validBlockTypes = Array.isArray(options.validBlockTypes)
+    ? new Set(options.validBlockTypes)
+    : null
+  node.blocks.forEach((block, index) => {
+    if (!block || typeof block !== 'object' || Array.isArray(block)) {
+      errors.push(`blocks[${index}] must be an object.`)
+      return
+    }
+
+    if (!isNonEmptyString(block.block_id)) {
+      errors.push(`blocks[${index}].block_id must be a non-empty string.`)
+    } else if (seenBlockIds.has(block.block_id)) {
+      errors.push(`blocks[].block_id values must be unique within a node: ${block.block_id}`)
+    } else {
+      seenBlockIds.add(block.block_id)
+    }
+
+    if (!isNonEmptyString(block.type)) {
+      errors.push(`blocks[${index}].type must be a non-empty string.`)
+    } else if (validBlockTypes && !validBlockTypes.has(block.type)) {
+      errors.push(`blocks[${index}].type is not allowed for layer "${node.layer}": ${block.type}`)
+    }
+
+    if (!('data' in block) || !block.data || typeof block.data !== 'object' || Array.isArray(block.data)) {
+      errors.push(`blocks[${index}].data must be an object.`)
+    }
+  })
+}
+
+function validateBlockLayerNode(node, expectedLayer, options = {}) {
+  const errors = []
+  const tagValidationContext = options.tagValidationContext ?? getTagValidationContext()
+  const subdomainValidationContext =
+    options.subdomainValidationContext ?? getSubdomainValidationContext()
+
+  if (!node || typeof node !== 'object' || Array.isArray(node)) {
+    return ['Node must be an object.']
+  }
+
+  if (!isNonEmptyString(node.id)) {
+    errors.push('id must be a non-empty string.')
+  } else if (!KEBAB_CASE_PATTERN.test(node.id)) {
+    errors.push('id must be kebab-case.')
+  }
+
+  if (node.layer !== expectedLayer) {
+    errors.push(`layer must be "${expectedLayer}".`)
+  }
+
+  if (!isNonEmptyString(node.title)) {
+    errors.push('title must be a non-empty string.')
+  }
+
+  if (!isNonEmptyString(node.description)) {
+    errors.push('description must be a non-empty string.')
+  }
+
+  validateBlocksWhenPresent(node, errors, { validBlockTypes: options.validBlockTypes })
+  if (!Array.isArray(node.blocks) || node.blocks.length === 0) {
+    errors.push('blocks must be a non-empty array.')
+  }
+
+  validateSubdomainsField({
+    entity: node,
+    fieldPath: 'sub_domains',
+    required: false,
+    errors,
+    validationContext: subdomainValidationContext,
+  })
+
+  validateTagsField({
+    entity: node,
+    fieldPath: 'tags',
+    required: false,
+    errors,
+    validationContext: tagValidationContext,
+  })
+
+  validateMetadata(node, errors)
+  return errors
 }
 
 function validateRegistryIdArray({
@@ -219,13 +309,14 @@ export function validateConceptNode(node, options = {}) {
     errors.push(`causal_structure must be one of: ${ALLOWED_CAUSAL_STRUCTURES.join(', ')}`)
   }
 
-  if (!isNonEmptyString(node.principle)) {
-    errors.push('principle must be a non-empty string.')
+  if ('principle' in node && !isNonEmptyString(node.principle)) {
+    errors.push('principle must be a non-empty string when provided.')
   }
 
-  if (!Array.isArray(node.variables) || node.variables.length === 0) {
-    errors.push('variables must be a non-empty array.')
-  } else {
+  if ('variables' in node) {
+    if (!Array.isArray(node.variables) || node.variables.length === 0) {
+      errors.push('variables must be a non-empty array when provided.')
+    } else {
     const variableIds = new Set()
 
     node.variables.forEach((variable, index) => {
@@ -265,6 +356,7 @@ export function validateConceptNode(node, options = {}) {
       }
     })
   }
+  }
 
   if (node.causal_structure === 'symmetric' && Array.isArray(node.variables)) {
     node.variables.forEach((variable, index) => {
@@ -293,9 +385,10 @@ export function validateConceptNode(node, options = {}) {
     errors.push('connections is not allowed. Use prerequisites instead.')
   }
 
-  if (!Array.isArray(node.prerequisites)) {
-    errors.push('prerequisites must be an array.')
-  } else {
+  if ('prerequisites' in node) {
+    if (!Array.isArray(node.prerequisites)) {
+      errors.push('prerequisites must be an array.')
+    } else {
     node.prerequisites.forEach((prerequisite, index) => {
       if (!prerequisite || typeof prerequisite !== 'object' || Array.isArray(prerequisite)) {
         errors.push(`prerequisites[${index}] must be an object.`)
@@ -331,12 +424,10 @@ export function validateConceptNode(node, options = {}) {
       }
     })
   }
+  }
 
-  if (
-    (node.type === 'law' || node.type === 'principle') &&
-    (!Array.isArray(node.applicability_conditions) || node.applicability_conditions.length === 0)
-  ) {
-    errors.push('applicability_conditions must contain at least one entry for law/principle nodes.')
+  if (!Array.isArray(node.blocks) || node.blocks.length === 0) {
+    errors.push('blocks must be a non-empty array.')
   }
 
   if ('applicability_conditions' in node) {
@@ -488,6 +579,7 @@ export function validateConceptNode(node, options = {}) {
   }
 
   validateMetadata(node, errors)
+  validateBlocksWhenPresent(node, errors, { validBlockTypes: options.validBlockTypes })
   return errors
 }
 
@@ -579,8 +671,25 @@ export function validateVariableNode(variable, options = {}) {
     validationContext: tagValidationContext,
   })
 
+  if (!Array.isArray(variable.blocks) || variable.blocks.length === 0) {
+    errors.push('blocks must be a non-empty array.')
+  }
+
   validateMetadata(variable, errors)
+  validateBlocksWhenPresent(variable, errors, { validBlockTypes: options.validBlockTypes })
   return errors
+}
+
+export function validateSopNode(node, options = {}) {
+  return validateBlockLayerNode(node, 'sop', options)
+}
+
+export function validateTaCheckpointNode(node, options = {}) {
+  return validateBlockLayerNode(node, 'ta-checkpoint', options)
+}
+
+export function validateLabQuestionNode(node, options = {}) {
+  return validateBlockLayerNode(node, 'lab-question', options)
 }
 
 export function validateEntity(entity, options = {}) {
@@ -596,19 +705,21 @@ export function validateEntity(entity, options = {}) {
     return ['Missing required field: layer']
   }
 
-  if (entity.layer === 'concept') {
-    return validateConceptNode(entity, {
-      tagValidationContext,
-      subdomainValidationContext,
-      subjectValidationContext,
-    })
+  const layerConfig = LAYERS[entity.layer]
+  if (!layerConfig) {
+    return [`Unsupported layer: ${entity.layer}`]
   }
 
-  if (entity.layer === 'variable') {
-    return validateVariableNode(entity, { tagValidationContext })
+  if (typeof layerConfig.schema_validator !== 'function') {
+    return [`No schema validator registered for layer: ${entity.layer}`]
   }
 
-  return [`Unsupported layer: ${entity.layer}`]
+  return layerConfig.schema_validator(entity, {
+    tagValidationContext,
+    subdomainValidationContext,
+    subjectValidationContext,
+    validBlockTypes: layerConfig.valid_block_types,
+  })
 }
 
 // Backward-compat alias during v2->v3 transition.
